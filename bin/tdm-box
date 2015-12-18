@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "`curl -s http://$1.local:51111/ping`" == "TDM server ready" ]; then
+   curl -s http://$1.local:51111/tdm
+   echo "Toggled $1 target display mode"
+else
+   echo "$1 target display mode server not running"
+fi

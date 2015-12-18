@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+puts 'Getting list of remote branches'
+remote_branches = `git ls-remote origin |\
+                   grep 'refs/heads/' |\
+                   cut -c53-`.split "\n"
+
+local_branches = `git branch |\
+                  tr -d ' *'`.split "\n"
+
+local_only = local_branches.select do |local|
+  !remote_branches.include? local
+end
+
+puts 'The following branches are local_only:'
+puts local_only
+
+unless ARGV[0] == '-i'
+  puts <<EOD
+[41;1m                                                                                [0m
+                            [41;1m:WARNING:[0m
+
+   Are you sure you want to irrecoverably DESTROY all these branches?!!
+   if so enter YES and press <return>
+
+   NOTE: To destroy branches interactively use the -i option
+[41;1m                                                                                [0m
+EOD
+
+  if STDIN.gets.chomp != 'YES'
+    puts 'Aborting'
+    exit 1
+  end
+end
+
+local_only.each do |candidate_for_destuction|
+  if ARGV[0] == '-i'
+    puts "[41;1m#{candidate_for_destuction}[0m"
+    puts 'Confirm delete (y/N/q)'
+    cfm = STDIN.gets.chomp.downcase
+    exit if cfm == 'q'
+    next unless cfm.chomp.downcase == 'y'
+  end
+  `git branch -D #{candidate_for_destuction}`
+  puts "[41;1mDeleted:[0m #{candidate_for_destuction}"
+end

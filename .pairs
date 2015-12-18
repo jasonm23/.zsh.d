@@ -1,0 +1,13 @@
+pairs:
+  jm: Jason Milkins
+
+email:
+  prefix: pair
+  domain: example.com
+  no_solo_prefix: true
+
+global: true
+
+pivotal_keys:
+  jm: d6a667b14a8c3b403b5b788222b00393
+

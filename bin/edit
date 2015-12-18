@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if [[ $EMACS == "yes" ]]; then
+  case $(uname) in
+    Darwin )
+      alternate="/Applications/Emacs.app/Contents/MacOS/Emacs"
+      ;;
+    Linux|FreeBSD )
+      alternate="emacs"
+      ;;
+  esac
+
+  if [[ $1 == "" ]]; then
+    emacsclient . -n -a $alternate &
+  else
+    if [[ $1 == "+" ]]; then
+      shift
+    fi
+    emacsclient $1 $2 -n -a $alternate &
+  fi
+else
+  vim $@
+fi

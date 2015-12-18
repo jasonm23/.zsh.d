@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Link .zshrc and .pairs (forced) to home
+echo "~IMPORTANT~ Your Current ~/.zshrc, ~/.zshenv and ~/.pairs files will be destroyed..."
+echo "Proceed? (Ctrl-C to abort, or press enter to continue)"
+read
+
+echo "Linking..."
+
+for dotfile in '.zshrc' '.zshenv' '.pairs' '.pryrc' '.irbrc'; do
+  ln -sfv ~/.zsh.d/${dotfile} ~/${dotfile}
+done
+
+ln -sfv ~/.zsh.d/modules/iterm-shell-integration.zsh ~/.iterm2_shell_integration.zsh
+
+echo "Done."

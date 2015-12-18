@@ -1,0 +1,14 @@
+#!/bin/bash
+
+git st |\
+    grep -Eo "spec/javascripts.*_spec\.js\.coffee$" |\
+    while read spec_file
+    do
+        grep -E "^describe" $spec_file |\
+            tr -d "()\"'," |\
+            cut -d' ' -f2 |\
+            while read spec
+            do
+                JASMINE_SPEC=$spec rake spec:jasmine_single_file
+            done
+    done
