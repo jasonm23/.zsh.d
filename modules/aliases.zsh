@@ -85,3 +85,5 @@ alias miroff='mirror -off'
 
 alias serve='ruby -run -e httpd . -p1234'
 
+
+alias gcln='git clean -fd'
