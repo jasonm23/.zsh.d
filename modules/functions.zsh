@@ -135,7 +135,5 @@ interactively-kill-ruby () {
 }
 
 is_ssh() {
-  [[ "" != `who -m | cut -c33-` ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
+  [[ "" != $( echo $(who -m) | cut -d' ' -f6) ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
 }
-
-
