@@ -21,9 +21,9 @@ antigen bundle npm
 antigen bundle nvm
 antigen bundle osx
 antigen bundle python
+antigen bundle rbenv
 antigen bundle rake
 antigen bundle ruby
-antigen bundle rvm
 antigen bundle ssh-agent
 antigen bundle svn
 antigen bundle thor
@@ -54,19 +54,6 @@ antigen apply
 
 # Let's have zmv
 autoload zmv
-
-if [ ! -f $HOME/Library/LaunchAgents/tdm-server.plist ]; then
-  echo "No Target Display Mode server, installing"
-  cd $HOME/Library/LaunchAgents/
-  ln -s $HOME/.zsh.d/LaunchAgents/tdm-server.plist
-  cd $HOME
-  if [ ! -d $HOME/.rvm/wrappers/ruby-2.2.3@zsh-bin ]; then
-    $HOME/.zsh.d/bin/tdm_server_setup.sh
-  fi
-  echo "Target Display Mode server installed"
-  launchctl load $HOME/Library/LaunchAgents/tdm-server.plist
-  echo "Target Display Mode Server Ready - visit http://`hostname`.local:51111/tdm to toggle"
-fi
 
 # Load local config
 if [ -f $HOME/.zsh.d/local.zsh ]; then

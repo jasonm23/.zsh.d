@@ -89,7 +89,6 @@ alias git_branch_clean_up= 'git branch --merged | grep -v \* | xargs git branch 
 
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "

@@ -87,3 +87,6 @@ alias serve='ruby -run -e httpd . -p1234'
 
 
 alias gcln='git clean -fd'
+alias gc.='gco .'
+
+alias gtypist='gtypist -b -S -s -i'

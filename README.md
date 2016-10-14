@@ -2,7 +2,7 @@
 
 This is my standard zsh startup for Mac OS X. It uses Antigen and
 oh-my-zsh, there is also support for additional modularized
-configuration. 
+configuration.
 
 ### Installation and Usage
 
@@ -30,7 +30,7 @@ your machines's `hostname` and it will auto load.
 This config is designed to be a master config for a team's machines.
 
 You can setup local configuration in a file called `~/.zshrc.local` (and/or
-a file called `~/.zsh.d/local.zsh` it will be _.gitignore_d) 
+a file called `~/.zsh.d/local.zsh` it will be _.gitignore_d)
 
 ### Quick Dirty Modules
 
@@ -62,19 +62,11 @@ There are many things in this config that need to be documented.
     - git-specs - TODO
     - mirror - turn on off mirroring on multiple screens
 
-- These files in ./bin run a small http server (via sinatra) to turn on / off target display mode.
-	- target-display-mode
-	- tdm-box
-	- tdm-server
-	- tdm_daemon.sh
-	- tdm_server_setup.sh
-
 - modules
-	- aliases.zsh - a big collection of useful aliases
-	- autoenv.zsh - autoenv config
-	- bindkey.zsh - unbind a couple of keys that 
-	- functions.zsh - many functions of varying usefulness 
-	- gitconfig.zsh - setup git config 
-	- iterm-shell-integration.zsh - iterm integration
-	- z.zsh - init z config (fuzzy matching cd alternative)
-
+    - aliases.zsh - a big collection of useful aliases
+    - autoenv.zsh - autoenv config
+    - bindkey.zsh - unbind a couple of keys that
+    - functions.zsh - many functions of varying usefulness
+    - gitconfig.zsh - setup git config
+    - iterm-shell-integration.zsh - iterm integration
+    - z.zsh - init z config (fuzzy matching cd alternative)
