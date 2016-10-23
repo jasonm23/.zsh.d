@@ -72,3 +72,5 @@ for z in $HOME/.zsh.d/modules/*.zsh; do
 done
 
 source $HOME/.iterm2_shell_integration.zsh
+
+export EMACS=yes
