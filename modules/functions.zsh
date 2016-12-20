@@ -137,3 +137,44 @@ interactively-kill-ruby () {
 is_ssh() {
   [[ "" != $( echo $(who -m) | cut -d' ' -f6) ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
 }
+
+addalias() {
+    if [[ "$1" == "" ]]; then
+	echo "No alias specified"
+    else
+	abbrev=$1
+	command="$2"
+	matching_alias=$(alias $abbrev)
+	if [[ $matching_alias == "" ]]; then
+	    tmp=$(tempfile)
+	    echo "$abbrev  => $command"
+	    echo "alias $abbrev='$command'" > $tmp
+	    source $tmp
+	    cat $tmp >> $HOME/.zsh_aliases
+	    rm $tmp
+	else
+	    echo "Alias: $abbrev is already defined"
+	    echo "$(alias $abbrev)"
+	fi
+    fi
+}
+
+rmalias() {
+    if [[ "$1" == "" ]]; then
+	echo "No alias specified"
+    else
+	abbrev=$1
+	matching_alias=$(alias $abbrev)
+	if [[ $matching_alias == "" ]]; then
+	    echo "Alias: $abbrev is not defined"
+	else
+	    echo "Removing: $abbrev"
+	    tmp=$(tempfile)
+	    grep "$abbrev=" -v $HOME/.zsh_aliases > $tmp
+	    cat $tmp > $HOME/.zsh_aliases
+	    rm $tmp
+	    unalias $abbrev
+	fi
+    fi
+}
+
