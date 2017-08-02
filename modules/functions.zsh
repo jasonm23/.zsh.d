@@ -22,17 +22,24 @@ git-commit-hotfix() {
 }
 
 git-authors() {
-  git --no-pager log --format='%aN : %ae' | sort -u
+  git --no-pager log --format='%aN : %ae' \
+    | sort -u
 }
 
 git-author-emails() {
-  git --no-pager log --format='%aN : %ae' | sort -u | tr "\n" " "
+  git --no-pager log --format='%aN : %ae' \
+    | sort -u \
+    | tr "\n" " "
 }
 
 git_pair_info(){
   git_email=$(git config user.email)
   if [[ $git_email =~ "pair+" ]]; then
-    pair=$(echo $git_email | sed -e 's/pair\+//' -e 's/@example.com//' | tr "+" " ")
+    pair=$(echo $git_email \
+             | sed \
+                 -e 's/pair\+//' \
+                 -e 's/@example.com//' \
+             | tr "+" " ")
     echo "Pair: $pair"
   else
     echo "Git: $git_email"
@@ -40,10 +47,10 @@ git_pair_info(){
 }
 
 origin() {
-  git remote -v |\
-    grep -E 'origin.*(fetch)' |\
-    sed -e 's/origin//' -e 's/(fetch)//'|\
-    tr -d "\t "
+  git remote -v \
+    | grep -E 'origin.*(fetch)' \
+    | sed -e 's/origin//' -e 's/(fetch)//' \
+    | tr -d "\t "
 }
 
 vid2gif() {
@@ -55,12 +62,17 @@ git-add-https-user () {
   if [ -z $1 ]; then
     echo "Username not set"
   else
-    https_remote=$(git remote -v | head -1 | grep -E -o 'https:[^ ]*')
-    existing_user=$(echo $https_remote | grep  -E -o "[^/]*@")
+    https_remote=$(git remote -v \
+                     | head -1 \
+                     | grep -E -o 'https:[^ ]*')
+    existing_user=$(echo $https_remote \
+                      | grep  -E -o "[^/]*@")
     if [ -z $existing_user ]; then
-      https_remote=$(echo $https_remote | sed "s/https:\/\//https:\/\/$1@/")
+      https_remote=$(echo $https_remote \
+                       | sed "s/https:\/\//https:\/\/$1@/")
     else
-      https_remote=$(echo $https_remote | sed "s/https:\/\/.*@/https:\/\/$1@/")
+      https_remote=$(echo $https_remote \
+                       | sed "s/https:\/\/.*@/https:\/\/$1@/")
     fi
     echo $https_remote
     git remote set-url origin $https_remote
@@ -68,19 +80,26 @@ git-add-https-user () {
 }
 
 get-git-remote-url() {
-  git remote -v | head -1 | grep -E -o "$1[^ ]*"
+  git remote -v \
+    | head -1 \
+    | grep -E -o "$1[^ ]*"
 }
 
 replace-github-https-with-ssh() {
-  echo $1 | sed -E \
-                -e 's/https:\/\/([[:alnum:]_.-]*@)?/git@/' \
-                -e 's/(.git)?$/.git/' \
-                -e 's/github\.com\//github.com:/'
+  echo $1 \
+    | sed -E \
+          -e 's/https:\/\/([[:alnum:]_.-]*@)?/git@/' \
+          -e 's/(.git)?$/.git/' \
+          -e 's/github\.com\//github.com:/'
 }
 
 git-ssh2https () {
   git_remote=$(get-git-remote-url "git@")
-  https_remote=$(echo $git_remote | sed -e 's/:/\//' -e 's/git@/https:\/\//' -e 's/\.git$//')
+  https_remote=$(echo $git_remote \
+                   | sed \
+                       -e 's/:/\//' \
+                       -e 's/git@/https:\/\//' \
+                       -e 's/\.git$//')
   git remote set-url origin $https_remote
 }
 
@@ -100,36 +119,48 @@ interactive-kill() {
 }
 
 numbers-only() {
-  echo $1 | sed 's/[^0-9]//g'
+  echo $1 \
+    | sed 's/[^0-9]//g'
 }
 
 interactively-kill-ruby () {
-  ruby_procs=$(ps aux | grep -E 'ruby|spring' | grep -v 'grep')
+  ruby_procs=$(ps aux \
+                 | grep -E 'ruby|spring' \
+                 | grep -v 'grep')
   ruby_procs_arr=()
-  echo $ruby_procs | while read prc; do
-    ruby_procs_arr+=("$prc")
-  done
-  pids=$(echo $ruby_procs | cut -c17-22)
+
+  echo $ruby_procs \
+    | \
+    while read prc; do
+      ruby_procs_arr+=("$prc")
+    done
+
+  pids=$(echo $ruby_procs | \
+           cut -c17-22)
+
   if [[ $ruby_procs = "" ]];then
     echo "No ruby / spring processes..."
     return
   fi
+
   echo "- Current Ruby processes ----> "
   echo $ruby_procs
   echo "- Aggressively kill -9 all? [i/y/N] (i = interactive)"
+
   read cfm
-  if [[ $cfm = "y" ]]
-  then
+
+  if [[ $cfm = "y" ]]; then
     for p in $pids
     do
       kill -9 $(numbers-only $p)
     done
   fi
-  if [[ $cfm = "i" ]]
-  then
+
+  if [[ $cfm = "i" ]]; then
     for rp in ${ruby_procs_arr[@]}
     do
-      interactive-kill $rp $(echo $rp | cut -c17-22)
+      interactive-kill $rp $(echo $rp \
+                               | cut -c17-22)
     done
   fi
 }
@@ -139,42 +170,65 @@ is_ssh() {
 }
 
 addalias() {
-    if [[ "$1" == "" ]]; then
-	echo "No alias specified"
+  if [[ "$1" == "" ]]; then
+    echo "No alias specified"
+  else
+    abbrev=$1
+    command="$2"
+    matching_alias=$(alias $abbrev)
+    if [[ $matching_alias == "" ]]; then
+      tmp=$(tempfile)
+      echo "$abbrev  => $command"
+      echo "alias $abbrev='$command'" > $tmp
+      source $tmp
+      cat $tmp >> $HOME/.zsh_aliases
+      rm $tmp
     else
-	abbrev=$1
-	command="$2"
-	matching_alias=$(alias $abbrev)
-	if [[ $matching_alias == "" ]]; then
-	    tmp=$(tempfile)
-	    echo "$abbrev  => $command"
-	    echo "alias $abbrev='$command'" > $tmp
-	    source $tmp
-	    cat $tmp >> $HOME/.zsh_aliases
-	    rm $tmp
-	else
-	    echo "Alias: $abbrev is already defined"
-	    echo "$(alias $abbrev)"
-	fi
+      echo "Alias: $abbrev is already defined"
+      echo "$(alias $abbrev)"
     fi
+  fi
 }
 
 rmalias() {
-    if [[ "$1" == "" ]]; then
-	echo "No alias specified"
+  if [[ "$1" == "" ]]; then
+    echo "No alias specified"
+  else
+    abbrev=$1
+    matching_alias=$(alias $abbrev)
+    if [[ $matching_alias == "" ]]; then
+      echo "Alias: $abbrev is not defined"
     else
-	abbrev=$1
-	matching_alias=$(alias $abbrev)
-	if [[ $matching_alias == "" ]]; then
-	    echo "Alias: $abbrev is not defined"
-	else
-	    echo "Removing: $abbrev"
-	    tmp=$(tempfile)
-	    grep "$abbrev=" -v $HOME/.zsh_aliases > $tmp
-	    cat $tmp > $HOME/.zsh_aliases
-	    rm $tmp
-	    unalias $abbrev
-	fi
+      echo "Removing: $abbrev"
+      tmp=$(tempfile)
+      grep "$abbrev=" -v $HOME/.zsh_aliases > $tmp
+      cat $tmp > $HOME/.zsh_aliases
+      rm $tmp
+      unalias $abbrev
     fi
+  fi
 }
 
+tmbvurl() {
+  u=$1
+  o=50
+  p=${2:-0}
+  ((c=$p * $o))
+  url="http://tumblrview.com/onepage.php?user=${u}&offset=$c&limit=${o}&page=${p}"
+  echo $url
+}
+
+getpage_tmb() {
+  u=$1
+  p=$2
+  curl -s `tmbvurl ${u} ${p}` \
+    | pup 'img attr{src}'
+}
+
+getpage_list_tmb() {
+  u=$1
+  o=50
+  curl -s "http://tumblrview.com/index.php?user=${u}&offset=0&limit=${o}&submit=GO" \
+    | pup ".number text{}" \
+    | tr "\n" " "
+}
