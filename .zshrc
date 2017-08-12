@@ -33,7 +33,7 @@ antigen bundle vagrant
 if [[ `uname -a` =~ "Darwin" ]]; then  
   [[ -r $HOME/.iterm2_shell_integration.zsh ]] && source  $HOME/.iterm2_shell_integration.zsh
   antigen bundle osx
-if
+fi
 
 # plugins... other sources
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -70,3 +70,4 @@ for z in $HOME/.zsh.d/modules/*.zsh; do
 done
 
 export EMACS=yes
+
