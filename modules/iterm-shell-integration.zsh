@@ -1,3 +1,6 @@
+
+if [[ `uname -a` =~ "Darwin" ]]; then  
+
 if [[ -o login ]]; then
   if [ "$TERM" != "screen" -a "$ITERM_SHELL_INTEGRATION_INSTALLED" = "" ]; then
     export ITERM_SHELL_INTEGRATION_INSTALLED=Yes
@@ -128,3 +131,5 @@ if [[ -o login ]]; then
   fi
 fi
 alias imgcat=~/.iterm2/imgcat; alias it2dl=~/.iterm2/it2dl
+
+fi

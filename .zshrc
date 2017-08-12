@@ -29,9 +29,7 @@ antigen bundle thor
 antigen bundle urltools
 antigen bundle vagrant
 
-
 if [[ `uname -a` =~ "Darwin" ]]; then  
-  [[ -r $HOME/.iterm2_shell_integration.zsh ]] && source  $HOME/.iterm2_shell_integration.zsh
   antigen bundle osx
 fi
 
@@ -41,8 +39,6 @@ antigen bundle djui/alias-tips
 antigen bundle mollifier/cd-gitroot
 
 antigen apply
-echo "List Antigen plugins"
-antigen list
 
 # Config ZSH Highlighter
 [[ ! -z $ZSH_HIGHLIGHT_HIGHLIGHTERS ]] && ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
@@ -68,9 +64,7 @@ autoload zmv
 # Load modules after loading config (in case environment is adjusted)
 # Source handmade modules
 for z in $HOME/.zsh.d/modules/*.zsh; do
-  echo "Loading [$z]"
   source "$z"
 done
 
 export EMACS=yes
-
