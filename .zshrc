@@ -1,5 +1,5 @@
-if [ ! -f $HOME/antigen/antigen.zsh ]; then
-  git clone git://github.com/zsh-users/antigen.git $HOME/antigen
+if [ ! -d $HOME/antigen ]; then
+  git clone https://github.com/zsh-users/antigen.git $HOME/antigen
 fi
 
 source $HOME/antigen/antigen.zsh
@@ -36,8 +36,8 @@ antigen bundle djui/alias-tips
 antigen bundle mollifier/cd-gitroot
 
 # Config ZSH Highlighter
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
-ZSH_HIGHLIGHT_STYLES[globbing]=fg=yellow
+[[ ! -z $ZSH_HIGHLIGHT_HIGHLIGHTERS ]] && ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+[[ ! -z $ZSH_HIGHLIGHT_STYLES ]] && ZSH_HIGHLIGHT_STYLES[globbing]=fg=yellow
 
 # apply theme
 host_theme=$HOME/.zsh.d/themes/$(hostname).zsh-theme
@@ -46,31 +46,22 @@ if [ -r $host_theme ]; then
   source $host_theme
 else
   # apply default theme
-  antigen theme ocodo/oh-my-zsh themes/ocodo
+  source $HOME/.zsh.d/themes/ocodo.zsh-theme
 fi
 
-# tell antigen we're done
-antigen apply
-
-# Let's have zmv
+# Get zmv
 autoload zmv
 
 # Load local config
-if [ -f $HOME/.zsh.d/local.zsh ]; then
-  source $HOME/.zsh.d/local.zsh
-fi
-
-if [ -f $HOME/.zshrc.local ]; then
-  source $HOME/.zshrc.local
-fi
+[[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
+[[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
 
 # Load modules after loading config (in case environment is adjusted)
-
 # Source handmade modules
 for z in $HOME/.zsh.d/modules/*.zsh; do
   source "$z"
 done
 
-source $HOME/.iterm2_shell_integration.zsh
+[[ -r $HOME/.iterm2_shell_integration.zsh ]] && source  $HOME/.iterm2_shell_integration.zsh
 
 export EMACS=yes

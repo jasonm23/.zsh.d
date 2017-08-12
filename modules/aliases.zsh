@@ -18,7 +18,7 @@ alias gquik='git-quick-amend'
 alias gquak='git-quick-amend'
 alias gqa='git-quick-amend'
 
-unalias gwip
+[[ ! -z "$(alias gwip)" ]] && unalias gwip
 alias gwip='git-wip' # from functions.zsh
 alias gcwip='git-wip' # from functions.zsh
 
@@ -33,7 +33,7 @@ alias gchor='git-commit-chore' # from functions.zsh
 alias gchore='git-commit-chore' # from functions.zsh
 
 # Hub
-alias git=hub
+[[ -x `which hub`  ]] && alias git=hub
 
 # Edit and Aliases
 alias ec='emacsclient -n'
