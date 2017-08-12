@@ -19,7 +19,6 @@ antigen bundle heroku
 antigen bundle knife
 antigen bundle npm
 antigen bundle nvm
-antigen bundle osx
 antigen bundle python
 antigen bundle rbenv
 antigen bundle rake
@@ -30,10 +29,18 @@ antigen bundle thor
 antigen bundle urltools
 antigen bundle vagrant
 
+
+if [[ `uname -a` =~ "Darwin" ]]; then  
+  [[ -r $HOME/.iterm2_shell_integration.zsh ]] && source  $HOME/.iterm2_shell_integration.zsh
+  antigen bundle osx
+if
+
 # plugins... other sources
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle djui/alias-tips
 antigen bundle mollifier/cd-gitroot
+
+antigen apply
 
 # Config ZSH Highlighter
 [[ ! -z $ZSH_HIGHLIGHT_HIGHLIGHTERS ]] && ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
@@ -61,7 +68,5 @@ autoload zmv
 for z in $HOME/.zsh.d/modules/*.zsh; do
   source "$z"
 done
-
-[[ -r $HOME/.iterm2_shell_integration.zsh ]] && source  $HOME/.iterm2_shell_integration.zsh
 
 export EMACS=yes
