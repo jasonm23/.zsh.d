@@ -232,3 +232,51 @@ getpage_list_tmb() {
     | pup ".number text{}" \
     | tr "\n" " "
 }
+
+psed() {
+  # use like non -i sed
+  perl -C -Mutf8 -pe $1
+}
+
+clean_video_names(){
+  find . -depth 1 -type f | grep -E -i '.*(XVid|DVDRip|BRRip|WEB|HDTV|PROPER|REPACK|HDRIP).*' | while read a
+  do
+    echo -v "$a" "$(echo $a | psed 's/\.(XVid|DVDRip|BRRip|WEB|HDTV|PROPER|REPACK|HDRIP).*\.(mp4|mkv|avi)/.\2/i')"
+    mv -v "$a" "$(echo $a | psed 's/\.(XVid|DVDRip|BRRip|WEB|HDTV|PROPER|REPACK|HDRIP).*\.(mp4|mkv|avi)/.\2/i')"
+  done
+}
+
+capitalize_video_names() {
+  find . -depth 1 | grep -E -v '[A-Z]' | while read a
+  do
+    mv $a $(echo "$a" \
+              | ruby -ne 'puts $_.gsub("./","").split(".").map(&:capitalize).join(".")' \
+              | psed 's/(mkv|avi|mp4)$/\L$1/i' \
+              | psed 's/s([0-9]+)e([0-9]+)/S$1E$2/i'
+       )
+  done
+}
+
+fix_show_names() {
+  clean_video_names
+  capitalize_video_names
+}
+
+fix_three_digit_show() {
+  find -E  . -depth 1 -iregex '.*\.[0-9]{3}\..*' | while read file; do
+    new_name=$(sed -E 's/(.*)\.([0-9])([0-9]{2})\.(.*)/\1.S0\2E\3.\4/' <<< $file)
+    echo "Confirm:"
+    echo "$file -> $new_name"
+    select confirm in Yes No Cancel
+    do
+      if [[ $confirm == "Cancel" ]]; then
+        return
+      elif [[ $confirm == "Yes" ]]; then
+        mv -v $file $new_name
+        continue 2
+      elif [[ $confirm == "No" ]]; then
+        continue 2
+      fi
+    done
+  done
+}
