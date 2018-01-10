@@ -239,26 +239,35 @@ psed() {
 }
 
 clean_video_names(){
-  find . -depth 1 -type f | grep -E -i '.*(XVid|DVDRip|BRRip|WEB|HDTV|PROPER|REPACK|HDRIP).*' | while read a
-  do
-    echo -v "$a" "$(echo $a | psed 's/\.(XVid|DVDRip|BRRip|WEB|HDTV|PROPER|REPACK|HDRIP).*\.(mp4|mkv|avi)/.\2/i')"
-    mv -v "$a" "$(echo $a | psed 's/\.(XVid|DVDRip|BRRip|WEB|HDTV|PROPER|REPACK|HDRIP).*\.(mp4|mkv|avi)/.\2/i')"
-  done
+  video_name_pruning_stem="(XVid|DVDRip|BRRip|BluRay|WEB|HDTV|PROPER|REPACK|HDRIP|INTERNAL)"
+  video_name_extensions="\.(mp4|mkv|avi|mpg|mov)"
+  find . -depth 1 -type f \
+    | grep -E -i ".*$video_name_pruning_stem.*" \
+    | \
+    while read a
+    do
+      new_name=$(psed "s/\.$video_name_pruning_stem.*$video_name_extensions$/.\2/i" <<< "${a}")
+      mv -v "$a" "${new_name}"
+    done
 }
 
 capitalize_video_names() {
   find . -depth 1 | grep -E -v '[A-Z]' | while read a
   do
-    mv $a $(echo "$a" \
-              | ruby -ne 'puts $_.gsub("./","").split(".").map(&:capitalize).join(".")' \
-              | psed 's/(mkv|avi|mp4)$/\L$1/i' \
-              | psed 's/s([0-9]+)e([0-9]+)/S$1E$2/i'
-       )
+    capitalized_name=$(echo "$a" \
+                         | ruby -ne 'puts $_.gsub("./","").split(".").map(&:capitalize).join(".")' \
+                         | psed 's/(mp4|mkv|avi|mpg|mov)$/\L$1/i' \
+                         | psed 's/s([0-9]+)e([0-9]+)/S$1E$2/i'
+                    )
+    echo "$a -> $capitalized_name"
+    mv "$a" "$capitalized_name"
   done
 }
 
 fix_show_names() {
+  echo "> Clean video names"
   clean_video_names
+  echo "> Capitalize video names"
   capitalize_video_names
 }
 
