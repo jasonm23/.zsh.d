@@ -251,11 +251,15 @@ clean_video_names(){
     done
 }
 
+capitalize_period_delimited_words() {
+  period_delimited_words=${1//./ }
+  echo ${(C)period_delimited_words// /.}
+}
+
 capitalize_video_names() {
   find . -depth 1 | grep -E -v '[A-Z]' | while read a
   do
-    capitalized_name=$(echo "$a" \
-                         | ruby -ne 'puts $_.gsub("./","").split(".").map(&:capitalize).join(".")' \
+    capitalized_name=$(capitalize_period_delimited_words "$a" \
                          | psed 's/(mp4|mkv|avi|mpg|mov)$/\L$1/i' \
                          | psed 's/s([0-9]+)e([0-9]+)/S$1E$2/i'
                     )
