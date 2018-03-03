@@ -238,6 +238,8 @@ psed() {
   perl -C -Mutf8 -pe $1
 }
 
+
+
 clean_video_names(){
   video_name_pruning_stem="(XVid|DVDRip|BRRip|BluRay|WEB|HDTV|PROPER|REPACK|HDRIP|INTERNAL)"
   video_name_extensions="\.(mp4|mkv|avi|mpg|mov)"
@@ -260,6 +262,7 @@ capitalize_video_names() {
   find . -depth 1 | grep -E -v '[A-Z]' | while read a
   do
     capitalized_name=$(capitalize_period_delimited_words "$a" \
+                         | psed 's/\.tv\./.TV./i' \
                          | psed 's/(mp4|mkv|avi|mpg|mov)$/\L$1/i' \
                          | psed 's/s([0-9]+)e([0-9]+)/S$1E$2/i'
                     )
