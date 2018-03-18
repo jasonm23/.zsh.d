@@ -296,3 +296,22 @@ fix_three_digit_show() {
     done
   done
 }
+
+abspath () { case "$1" in
+               /*)printf "%s\n" "$1";;
+               *)printf "%s\n" "$PWD/$1";;
+             esac; }
+
+sedrename() {
+  if [ $# -gt 1 ]; then
+    sed_pattern=$1
+    shift
+    for file in $(ls $@); do
+      target="$(sed $sed_pattern <<< $file)"
+      mkdir -p "$(dirname $(abspath $target))"
+      mv -v "$file" "$target"
+    done
+  else
+    echo "usage: $0 sed_pattern files..."
+  fi
+}
