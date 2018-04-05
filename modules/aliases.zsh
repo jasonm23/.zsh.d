@@ -36,7 +36,6 @@ alias gchore='git-commit-chore' # from functions.zsh
 [[ -x `which hub`  ]] && alias git=hub
 
 # Edit and Aliases
-alias ec='emacsclient -n'
 alias e='edit'
 alias ae='edit ~/.zsh.d/modules/aliases.zsh'
 alias ar='source ~/.zsh.d/modules/aliases.zsh'

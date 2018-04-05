@@ -315,3 +315,10 @@ sedrename() {
     echo "usage: $0 sed_pattern files..."
   fi
 }
+
+ec() {
+  emacsclient -n $@ 2> /dev/null
+  if [[ $? == 1 ]]; then
+    open -a http://Emacs.app  -- $@
+  fi
+}
