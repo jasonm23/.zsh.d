@@ -1,17 +1,14 @@
 # Customize to your needs...
-alias gitspec='rspec $(git st | grep "...spec/.*_spec.rb" | cut -c 4- | xargs)'
-alias gap='git add -p'
-alias gan='git add -N .'
-alias ganp='git add -N . && git add -p'
-alias gpb='`git push 2>&1 > /dev/null | grep "git push"`'
-alias gplush='git pull; git push'
+alias gap='git add -N . && git add -p'
+alias gpb='git push -u origin head'
+alias gup='git pull --rebase --autostash'
 
 alias grbrm='git-branch-remote-delete' # from functions.zsh
 alias gbrrm='git-branch-remote-delete' # from functions.zsh
 alias gbrd='git-branch-remote-delete' # from functions.zsh
 
 alias gwb='current_branch' # from oh-my-zsh
-alias gr-h='git reset --hard'
+alias grhd='git reset --hard'
 
 alias gquick='git-quick-amend'
 alias gquik='git-quick-amend'
@@ -74,7 +71,7 @@ alias gitx='/Applications/GitX.app/Contents/Resources/gitx'
 alias psq='psql -U postgres'
 
 # what's my IP?
-alias ifconfig-me='dig +short myip.opendns.com @resolver1.opendns.com'
+alias ifconfig_me='dig +short myip.opendns.com @resolver1.opendns.com'
 
 # unix timestamp
 alias timestamp='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
@@ -84,8 +81,7 @@ alias miroff='mirror -off'
 
 alias serve='ruby -run -e httpd . -p1234'
 
-
 alias gcln='git clean -fd'
-alias gc.='gco .'
+alias gc_='gco .'
 
 alias gtypist='gtypist -b -S -s -i'
