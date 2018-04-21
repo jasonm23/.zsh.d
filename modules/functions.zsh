@@ -319,6 +319,6 @@ sedrename() {
 ec() {
   emacsclient -n $@ 2> /dev/null
   if [[ $? == 1 ]]; then
-    open -a http://Emacs.app  -- $@
+    open -a Emacs.app  -- $@
   fi
 }
