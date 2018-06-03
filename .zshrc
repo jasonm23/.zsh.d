@@ -1,3 +1,5 @@
+export PATH=$PATH:/usr/libexec
+
 if [ ! -d $HOME/antigen ]; then
   git clone https://github.com/zsh-users/antigen.git $HOME/antigen
 fi
@@ -29,7 +31,7 @@ antigen bundle thor
 antigen bundle urltools
 antigen bundle vagrant
 
-if [[ `uname -a` =~ "Darwin" ]]; then  
+if [[ `uname -a` =~ "Darwin" ]]; then
   antigen bundle osx
 fi
 
