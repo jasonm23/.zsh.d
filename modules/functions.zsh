@@ -238,8 +238,6 @@ psed() {
   perl -C -Mutf8 -pe $1
 }
 
-
-
 clean_video_names(){
   video_name_pruning_stem="(XVid|DVDRip|BRRip|BluRay|WEB|HDTV|PROPER|REPACK|HDRIP|INTERNAL)"
   video_name_extensions="\.(mp4|mkv|avi|mpg|mov)"
