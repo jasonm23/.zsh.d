@@ -73,3 +73,9 @@ export EMACS=yes
 
 # Get useful completion with . - _ delimiters...
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# We bind M-l to it's default, oh-my-zsh clobbers M-l (Alt-l) by binding it to "ls<RET>"
+bindkey "l" down-case-word # Alt/Opt/Meta-l lowercase from cursor to word end
+
+# Make C-u consistent with bash backward-kill-line
+bindkey "\C-u" backward-kill-line
