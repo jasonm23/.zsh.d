@@ -70,3 +70,6 @@ for z in $HOME/.zsh.d/modules/*.zsh; do
 done
 
 export EMACS=yes
+
+# Get useful completion with . - _ delimiters...
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
