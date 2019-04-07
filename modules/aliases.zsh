@@ -85,3 +85,5 @@ alias gcln='git clean -fd'
 alias gc_='gco .'
 
 alias gtypist='gtypist -b -S -s -i'
+
+alias youtube-mp3="youtube-dl --extract-audio --audio-format mp3"

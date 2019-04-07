@@ -79,3 +79,6 @@ bindkey "l" down-case-word # Alt/Opt/Meta-l lowercase from cursor to word end
 
 # Make C-u consistent with bash backward-kill-line
 bindkey "\C-u" backward-kill-line
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
