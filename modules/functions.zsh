@@ -320,3 +320,12 @@ ec() {
     open -a Emacs.app  -- $@
   fi
 }
+
+get_gallery_jpgs () {
+	gallery_url="$1" 
+	curl -s "$gallery_url" | pup 'a[href$=".jpg"] attr{href}' | while read a
+	do
+		echo $a
+		wget $a
+	done
+}
