@@ -8,9 +8,9 @@ configuration.
 
 Just git clone
 
-    git clone git@github.com:jasonm23/zsh-d ~/.zsh.d
+    git clone git@github.com:jasonm23/.zsh.d ~/.zsh.d
 
-Now run `~/.zsh.d/init`, you're all done.
+Now run `~/.zsh.d/install`, you're all done.
 
 ### Antigen
 
