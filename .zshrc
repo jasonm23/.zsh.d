@@ -1,4 +1,4 @@
-export PATH=$PATH:/usr/libexec
+	export PATH=$PATH:/usr/libexec
 
 # For Termux
 if [[ $(which who) =~ "not found" ]]; then
@@ -86,7 +86,6 @@ bindkey "l" down-case-word # Alt/Opt/Meta-l lowercase from cursor to word end
 bindkey "\C-u" backward-kill-line
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"

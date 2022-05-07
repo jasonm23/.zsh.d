@@ -322,10 +322,40 @@ ec() {
 }
 
 get_gallery_jpgs () {
-	gallery_url="$1" 
-	curl -s "$gallery_url" | pup 'a[href$=".jpg"] attr{href}' | while read a
-	do
-		echo $a
-		wget $a
-	done
+  gallery_url="$1"
+  curl -s "$gallery_url" | pup 'a[href$=".jpg"] attr{href}' | while read a
+  do
+    echo $a
+    wget $a
+  done
+}
+
+srch() {
+  pth="$1"
+  name="$2"
+  find "$pth" -iregex ".*${name// /.*}.*"
+}
+
+# When a list of names / (ordered) keyword searches in the pasteboard, supply a path search for filename matches
+srch_pb() {
+  pbpaste | while read name
+  do
+    srch "$1" "$name"
+  done
+}
+
+randomize_timestamps_in_folder () {
+  for a in *
+  do
+    CC="20"
+    YY="$(printf "%02i" $(shuf -n 1 -i 0-22 ))"
+    MM="$(printf "%02i" $(shuf -n 1 -i 1-12 ))"
+    DD="$(printf "%02i" $(shuf -n 1 -i 1-28 ))"
+    hh="$(printf "%02i" $(shuf -n 1 -i 0-23 ))"
+    mm="$(printf "%02i" $(shuf -n 1 -i 0-59 ))"
+    ss="$(printf "%02i" $(shuf -n 1 -i 0-59 ))"
+    tstamp="${CC}${YY}${MM}${DD}${hh}${mm}.${ss}"
+    touch -t "${tstamp}" "${a}"
+    echo "$a $tstamp"
+  done
 }
