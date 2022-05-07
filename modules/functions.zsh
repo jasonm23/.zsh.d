@@ -166,10 +166,17 @@ interactively-kill-ruby () {
 }
 
 is_ssh() {
-  [[ "" != $( echo $(who -m) | cut -d' ' -f6) ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
+  if [[ $(which who) =~ "not found" ]]; then
+    # If there's no Who we're in a single user environment so do nothing
+  else
+    [[ "" != $( echo $(who -m) | cut -d' ' -f6) ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
+  fi
 }
 
 addalias() {
+  # addalias will add a persistent alias in ~/.zsh_aliases
+  # It will also ensure you're not overwriting an existing alias unintentionally.
+
   if [[ "$1" == "" ]]; then
     echo "No alias specified"
   else
