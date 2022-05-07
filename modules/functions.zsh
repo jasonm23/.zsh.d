@@ -166,11 +166,8 @@ interactively-kill-ruby () {
 }
 
 is_ssh() {
-  if [[ $(which who) =~ "not found" ]]; then
-    # If there's no Who we're in a single user environment so do nothing
-  else
-    [[ "" != $( echo $(who -m) | cut -d' ' -f6) ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
-  fi
+ [[ -n "$SSH_CLIENT" ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
+
 }
 
 addalias() {
