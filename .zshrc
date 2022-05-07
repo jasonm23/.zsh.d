@@ -1,10 +1,5 @@
 	export PATH=$PATH:/usr/libexec
 
-# For Termux
-if [[ $(which who) =~ "not found" ]]; then
-  alias who=echo
-fi
-
 if [ ! -d $HOME/antigen ]; then
   git clone https://github.com/zsh-users/antigen.git $HOME/antigen
 fi
