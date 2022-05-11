@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $EMACS == "yes" ]]; then
+if [[ $EMACS == "emacs" ]]; then
   case $(uname) in
     Darwin )
       alternate="/Applications/Emacs.app/Contents/MacOS/Emacs"
