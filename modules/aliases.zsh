@@ -54,7 +54,6 @@ alias rk='rake'
 alias rs='rails server'
 alias rc='rails console'
 alias rd='rails db'
-alias rg='rails generate'
 
 alias ikr='interactively-kill-ruby' # from functions.zsh
 
