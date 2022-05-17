@@ -49,7 +49,6 @@ alias la='ls -halF'
 alias rp='rspec'
 alias rpf='rspec --fail-fast'
 alias rspecf='rspec --fail-fast'
-alias rk='rake'
 
 alias rs='rails server'
 alias rc='rails console'
@@ -75,9 +74,6 @@ alias ifconfig_me='dig +short myip.opendns.com @resolver1.opendns.com'
 # unix timestamp
 alias timestamp='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 
-alias miron='mirror -on'
-alias miroff='mirror -off'
-
 alias serve='ruby -run -e httpd . -p1234'
 
 alias gcln='git clean -fd'
@@ -86,5 +82,3 @@ alias gc_='gco .'
 alias gtypist='gtypist -b -S -s -i'
 
 alias yump3='youtube-dl --extract-audio --audio-format mp3'
-
-alias go_fix_shows="cd /Volumes/Datum/Downloads && fix_show_names"

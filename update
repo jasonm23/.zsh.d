@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if [[ $(git pull) =~ "Already up-to-date." ]]; then
-  echo "At latest version - Update not necessary"
-else
-  echo "Updating to new version"
-  source $HOME/.zsh.d/init
-fi

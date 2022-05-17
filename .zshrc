@@ -30,6 +30,7 @@ antigen bundle svn
 antigen bundle thor
 antigen bundle urltools
 antigen bundle vagrant
+antigen bundle z
 
 if [[ `uname -a` =~ "Darwin" ]]; then
   antigen bundle osx

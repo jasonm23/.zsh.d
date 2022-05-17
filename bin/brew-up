@@ -1,7 +1,0 @@
-#!/bin/sh
-echo "Installing $1 to (`cat ~/LOCAL`)"
-for h in `cat ~/LOCAL`; do
-  echo "==> [ $h ]"
-  ssh $h.local brew install $1
-done
-echo "all done"
