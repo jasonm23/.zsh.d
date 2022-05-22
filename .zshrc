@@ -90,3 +90,10 @@ autoenv_activate="$HOME/.autoenv/activate.sh"
 if [[ -e "$autoenv_activate" ]]; then
     source "$autoenv_activate"
 fi
+
+setopt histignorespace
+setopt correctall
+setopt correct
+setopt globdots
+setopt histignoredups
+setopt interactivecomments
