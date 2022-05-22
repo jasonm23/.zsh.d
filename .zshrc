@@ -92,8 +92,6 @@ if [[ -e "$autoenv_activate" ]]; then
 fi
 
 setopt histignorespace
-setopt correctall
-setopt correct
 setopt globdots
 setopt histignoredups
 setopt interactivecomments
