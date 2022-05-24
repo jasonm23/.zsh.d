@@ -11,8 +11,6 @@ antigen use oh-my-zsh
 
 # plugins... oh-my-zsh
 antigen bundle aws
-antigen bundle bower
-antigen bundle brew
 antigen bundle bundler
 antigen bundle coffee
 antigen bundle gem
@@ -25,15 +23,13 @@ antigen bundle python
 antigen bundle rbenv
 antigen bundle rake
 antigen bundle ruby
-antigen bundle ssh-agent
-antigen bundle svn
 antigen bundle thor
 antigen bundle urltools
-antigen bundle vagrant
 antigen bundle z
 
 if [[ `uname -a` =~ "Darwin" ]]; then
   antigen bundle osx
+  antigen bundle brew
 fi
 
 # plugins... other sources
