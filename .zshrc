@@ -29,6 +29,7 @@ antigen bundle z
 
 if [[ `uname -a` =~ "Darwin" ]]; then
   antigen bundle osx
+  antigen bundle xcode
   antigen bundle brew
 fi
 
