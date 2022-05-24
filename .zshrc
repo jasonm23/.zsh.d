@@ -41,6 +41,9 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle djui/alias-tips
 antigen bundle mollifier/cd-gitroot
 
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-autosuggestions
+
 antigen apply
 
 # Config ZSH Highlighter
