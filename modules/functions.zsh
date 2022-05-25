@@ -53,10 +53,6 @@ origin() {
     | tr -d "\t "
 }
 
-git_needs_a_pull () {
-	[[ "$(git log -1 --format=format:"%H" origin/master)" == "$(git log -1 --format=format:"%H" master)" ]] || echo "⬇️"
-}
-
 vid2gif() {
   ffmpeg -i "$1" -vf scale=800:-1 -r 10 -f image2pipe -vcodec ppm - |\
     convert -delay 5 -layers Optimize -loop 0 - "$2"
