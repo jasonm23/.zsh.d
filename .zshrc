@@ -93,4 +93,6 @@ setopt globdots
 setopt histignoredups
 setopt interactivecomments
 
-eval "$(rbenv init - zsh)"
+if [[ "which rbenv" != "rbenv not found" ]]; then
+  eval "$(rbenv init - zsh)"
+fi
