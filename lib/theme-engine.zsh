@@ -12,7 +12,7 @@ ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[red]($fg_bold[white]"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$fg_bold[red])"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_GIT_PROMPT_DIRTY=" ✨ "
-ZSH_THEME_IS_SSH_SYMBOL="⚡️️ "
+ZSH_THEME_IS_SSH_SYMBOL="🌐"
 ZSH_THEME_GIT_PROMPT_BEHIND=""
 
 setopt prompt_subst

@@ -1,4 +1,4 @@
-	export PATH=$PATH:/usr/libexec
+export PATH=$PATH:/usr/libexec
 
 if [ ! -d $HOME/antigen ]; then
   git clone https://github.com/zsh-users/antigen.git $HOME/antigen
@@ -92,3 +92,5 @@ setopt histignorespace
 setopt globdots
 setopt histignoredups
 setopt interactivecomments
+
+eval "$(rbenv init - zsh)"
