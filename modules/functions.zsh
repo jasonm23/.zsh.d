@@ -161,7 +161,7 @@ rmalias() {
   fi
 }
 
-add-alias()
+add-alias() {
   addalias "$@"
 }
 
