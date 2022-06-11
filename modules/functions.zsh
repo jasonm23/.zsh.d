@@ -109,65 +109,13 @@ git-https2ssh () {
   hub remote set-url ${1:-origin} $ssh_remote
 }
 
-interactive-kill() {
-  echo "$1"
-  echo "Kill [N/y]"
-  read i_cfm
-  if [[ $i_cfm = "y" ]]; then
-    kill -9 $(numbers-only $2)
-  fi
-}
-
 numbers-only() {
   echo $1 \
     | sed 's/[^0-9]//g'
 }
 
-interactively-kill-ruby () {
-  ruby_procs=$(ps aux \
-                 | grep -E 'ruby|spring' \
-                 | grep -v 'grep')
-  ruby_procs_arr=()
-
-  echo $ruby_procs \
-    | \
-    while read prc; do
-      ruby_procs_arr+=("$prc")
-    done
-
-  pids=$(echo $ruby_procs | \
-           cut -c17-22)
-
-  if [[ $ruby_procs = "" ]];then
-    echo "No ruby / spring processes..."
-    return
-  fi
-
-  echo "- Current Ruby processes ----> "
-  echo $ruby_procs
-  echo "- Aggressively kill -9 all? [i/y/N] (i = interactive)"
-
-  read cfm
-
-  if [[ $cfm = "y" ]]; then
-    for p in $pids
-    do
-      kill -9 $(numbers-only $p)
-    done
-  fi
-
-  if [[ $cfm = "i" ]]; then
-    for rp in ${ruby_procs_arr[@]}
-    do
-      interactive-kill $rp $(echo $rp \
-                               | cut -c17-22)
-    done
-  fi
-}
-
 is_ssh() {
  [[ -n "$SSH_CLIENT" ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
-
 }
 
 addalias() {
@@ -211,6 +159,18 @@ rmalias() {
       unalias $abbrev
     fi
   fi
+}
+
+add-alias()
+  addalias "$@"
+}
+
+remove-alias() {
+  rmalias "$@"
+}
+
+removealias() {
+  rmalias "$@"
 }
 
 tmbvurl() {
@@ -337,7 +297,7 @@ get_gallery_jpgs () {
 srch() {
   pth="$1"
   name="$2"
-  find "$pth" -iregex ".*${name// /.*}.*"
+  find -E "$pth" -iregex ".*${name// /.*}.*"
 }
 
 # When a list of names / (ordered) keyword searches in the pasteboard, supply a path search for filename matches
@@ -378,6 +338,7 @@ google_translate_line () {
     --post-data "$escaped" \
     "https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=$target_lang&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e")
 }
+
 git-delete-remote-tag () {
-	hub push origin :refs/tags/${1}
+  git push origin :refs/tags/${1}
 }
