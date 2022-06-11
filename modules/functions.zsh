@@ -106,7 +106,7 @@ git-ssh2https () {
 git-https2ssh () {
   https_remote=$(get-git-remote-url "https:")
   ssh_remote=$(replace-github-https-with-ssh $https_remote)
-  git remote set-url origin $ssh_remote
+  hub remote set-url ${1:-origin} $ssh_remote
 }
 
 interactive-kill() {
