@@ -100,7 +100,7 @@ git-ssh2https () {
                        -e 's/:/\//' \
                        -e 's/git@/https:\/\//' \
                        -e 's/\.git$//')
-  git remote set-url origin $https_remote
+  git remote set-url ${1:-origin} $https_remote
 }
 
 git-https2ssh () {
