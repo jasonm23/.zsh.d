@@ -344,11 +344,12 @@ git-delete-remote-tag () {
 }
 
 ssh-fix-env() {
-  if (($(pgrep ssh-agent | wc -l) == 1 )); then
-    echo "export SSH_AGENT_PID=$(pgrep ssh-agent)"
-    echo "export SSH_AUTH_SOCK=$(lsof | grep ssh-agent | grep -E -o "/var/folders.*")"
+  echo "export SSH_AGENT_PID=$(pgrep ssh-agent)"
+  SSH_AUTH_SOCK=$(lsof | grep ssh-agent | grep -E -o "/var/folders.*")
+
+  if [[ "$SSH_AUTH_SOCK" == "" ]]; then
+    echo "export SSH_AUTH_SOCK=$(lsof  | grep ssh-agent | grep -E -o "/private/tmp/com.apple.*")"
   else
-    echo "More than one ssh-agent running... kill one?"
-    exit 1
+    echo "export SSH_AUTH_SOCK=${SSH_AUTH_SOCK}"
   fi
 }
