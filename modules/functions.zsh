@@ -353,3 +353,17 @@ ssh-fix-env() {
     echo "export SSH_AUTH_SOCK=${SSH_AUTH_SOCK}"
   fi
 }
+
+git-mass-status() {
+  for a in *
+  do
+    cd "$1"
+    if [[ -d $a ]]; then
+      echo "⟶   [$a]"
+      cd "$a"
+      git status --short
+      cd ..
+    fi
+  done
+}
+
