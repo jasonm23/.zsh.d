@@ -342,3 +342,13 @@ google_translate_line () {
 git-delete-remote-tag () {
   git push origin :refs/tags/${1}
 }
+
+ssh-fix-env() {
+  if (($(pgrep ssh-agent | wc -l) == 1 )); then
+    echo "export SSH_AGENT_PID=$(pgrep ssh-agent)"
+    echo "export SSH_AUTH_SOCK=$(lsof | grep ssh-agent | grep -E -o "/var/folders.*")"
+  else
+    echo "More than one ssh-agent running... kill one?"
+    exit 1
+  fi
+}
