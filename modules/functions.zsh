@@ -23,23 +23,23 @@ git-commit-hotfix() {
 
 git-authors() {
   git --no-pager log --format='%aN : %ae' \
-    | sort -u
+      | sort -u
 }
 
 git-author-emails() {
   git --no-pager log --format='%aN : %ae' \
-    | sort -u \
-    | tr "\n" " "
+      | sort -u \
+      | tr "\n" " "
 }
 
 git_pair_info(){
   git_email=$(git config user.email)
   if [[ $git_email =~ "pair+" ]]; then
     pair=$(echo $git_email \
-             | sed \
-                 -e 's/pair\+//' \
-                 -e 's/@example.com//' \
-             | tr "+" " ")
+        | sed \
+        -e 's/pair\+//' \
+        -e 's/@example.com//' \
+        | tr "+" " ")
     echo "Pair: $pair"
   else
     echo "Git: $git_email"
@@ -48,14 +48,14 @@ git_pair_info(){
 
 origin() {
   git remote -v \
-    | grep -E 'origin.*(fetch)' \
-    | sed -e 's/origin//' -e 's/(fetch)//' \
-    | tr -d "\t "
+      | grep -E 'origin.*(fetch)' \
+      | sed -e 's/origin//' -e 's/(fetch)//' \
+      | tr -d "\t "
 }
 
 vid2gif() {
   ffmpeg -i "$1" -vf scale=800:-1 -r 10 -f image2pipe -vcodec ppm - |\
-    convert -delay 5 -layers Optimize -loop 0 - "$2"
+      convert -delay 5 -layers Optimize -loop 0 - "$2"
 }
 
 git-add-https-user () {
@@ -63,16 +63,16 @@ git-add-https-user () {
     echo "Username not set"
   else
     https_remote=$(git remote -v \
-                     | head -1 \
-                     | grep -E -o 'https:[^ ]*')
+        | head -1 \
+        | grep -E -o 'https:[^ ]*')
     existing_user=$(echo $https_remote \
-                      | grep  -E -o "[^/]*@")
+        | grep  -E -o "[^/]*@")
     if [ -z $existing_user ]; then
       https_remote=$(echo $https_remote \
-                       | sed "s/https:\/\//https:\/\/$1@/")
+          | sed "s/https:\/\//https:\/\/$1@/")
     else
       https_remote=$(echo $https_remote \
-                       | sed "s/https:\/\/.*@/https:\/\/$1@/")
+          | sed "s/https:\/\/.*@/https:\/\/$1@/")
     fi
     echo $https_remote
     git remote set-url origin $https_remote
@@ -81,25 +81,25 @@ git-add-https-user () {
 
 get-git-remote-url() {
   git remote -v \
-    | head -1 \
-    | grep -E -o "$1[^ ]*"
+      | head -1 \
+      | grep -E -o "$1[^ ]*"
 }
 
 replace-github-https-with-ssh() {
   echo $1 \
-    | sed -E \
-          -e 's/https:\/\/([[:alnum:]_.-]*@)?/git@/' \
-          -e 's/(.git)?$/.git/' \
-          -e 's/github\.com\//github.com:/'
+      | sed -E \
+      -e 's/https:\/\/([[:alnum:]_.-]*@)?/git@/' \
+      -e 's/(.git)?$/.git/' \
+      -e 's/github\.com\//github.com:/'
 }
 
 git-ssh2https () {
   git_remote=$(get-git-remote-url "git@")
   https_remote=$(echo $git_remote \
-                   | sed \
-                       -e 's/:/\//' \
-                       -e 's/git@/https:\/\//' \
-                       -e 's/\.git$//')
+      | sed \
+      -e 's/:/\//' \
+      -e 's/git@/https:\/\//' \
+      -e 's/\.git$//')
   git remote set-url ${1:-origin} $https_remote
 }
 
@@ -111,11 +111,11 @@ git-https2ssh () {
 
 numbers-only() {
   echo $1 \
-    | sed 's/[^0-9]//g'
+      | sed 's/[^0-9]//g'
 }
 
 is_ssh() {
- [[ -n "$SSH_CLIENT" ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
+  [[ -n "$SSH_CLIENT" ]] && echo $ZSH_THEME_IS_SSH_SYMBOL
 }
 
 addalias() {
@@ -186,15 +186,15 @@ getpage_tmb() {
   u=$1
   p=$2
   curl -s `tmbvurl ${u} ${p}` \
-    | pup 'img attr{src}'
+      | pup 'img attr{src}'
 }
 
 getpage_list_tmb() {
   u=$1
   o=50
   curl -s "http://tumblrview.com/index.php?user=${u}&offset=0&limit=${o}&submit=GO" \
-    | pup ".number text{}" \
-    | tr "\n" " "
+      | pup ".number text{}" \
+      | tr "\n" " "
 }
 
 psed() {
@@ -206,13 +206,13 @@ clean_video_names(){
   video_name_pruning_stem="(XVid|DVDRip|BRRip|BluRay|WEB|HDTV|PROPER|REPACK|HDRIP|INTERNAL)"
   video_name_extensions="\.(mp4|mkv|avi|mpg|mov)"
   find . -depth 1 -type f \
-    | grep -E -i ".*$video_name_pruning_stem.*" \
-    | \
-    while read a
-    do
-      new_name=$(psed "s/\.$video_name_pruning_stem.*$video_name_extensions$/.\2/i" <<< "${a}")
-      mv -v "$a" "${new_name}"
-    done
+      | grep -E -i ".*$video_name_pruning_stem.*" \
+      | \
+      while read a
+      do
+        new_name=$(psed "s/\.$video_name_pruning_stem.*$video_name_extensions$/.\2/i" <<< "${a}")
+        mv -v "$a" "${new_name}"
+      done
 }
 
 capitalize_period_delimited_words() {
@@ -224,9 +224,9 @@ capitalize_video_names() {
   find . -depth 1 | grep -E -v '[A-Z]' | while read a
   do
     capitalized_name=$(capitalize_period_delimited_words "$a" \
-                         | psed 's/\.tv\./.TV./i' \
-                         | psed 's/(mp4|mkv|avi|mpg|mov)$/\L$1/i' \
-                         | psed 's/s([0-9]+)e([0-9]+)/S$1E$2/i'
+        | psed 's/\.tv\./.TV./i' \
+        | psed 's/(mp4|mkv|avi|mpg|mov)$/\L$1/i' \
+        | psed 's/s([0-9]+)e([0-9]+)/S$1E$2/i'
                     )
     echo "$a -> $capitalized_name"
     mv "$a" "$capitalized_name"
@@ -332,11 +332,11 @@ google_translate_line () {
   local escaped="sl=$source_lang&tl=$target_lang&q=$text"
 
   echo $(wget -qO- \
-    -U "AndroidTranslate/5.3.0.RC02.130475354-53000263 5.1 phone TRANSLATE_OPM5_TEST_1" \
-    --header "'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'" \
-    --header "'User-Agent': 'AndroidTranslate/5.3.0.RC02.130475354-53000263 5.1 phone TRANSLATE_OPM5_TEST_1'" \
-    --post-data "$escaped" \
-    "https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=$target_lang&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e")
+      -U "AndroidTranslate/5.3.0.RC02.130475354-53000263 5.1 phone TRANSLATE_OPM5_TEST_1" \
+      --header "'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'" \
+      --header "'User-Agent': 'AndroidTranslate/5.3.0.RC02.130475354-53000263 5.1 phone TRANSLATE_OPM5_TEST_1'" \
+      --post-data "$escaped" \
+      "https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=$target_lang&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e")
 }
 
 git-delete-remote-tag () {
