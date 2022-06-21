@@ -367,3 +367,17 @@ git-mass-status() {
   done
 }
 
+
+id3() {
+if (( $# != 5 )); then
+  echo "Usage: $0 <title> <artist> <album> <year> <genre>"
+else
+  id3v2 -2 \
+    -t "$1" \
+    -a "$2" \
+    -A "$3" \
+    -y "$4" \
+    -g "$5" \
+    "$6"
+fi
+}
