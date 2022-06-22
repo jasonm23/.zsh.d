@@ -369,7 +369,7 @@ git-mass-status() {
 
 
 id3() {
-if (( $# != 5 )); then
+if (( $# != 6 )); then
   echo "Usage: $0 <title> <artist> <album> <year> <genre>"
 else
   id3v2 -2 \
@@ -381,3 +381,18 @@ else
     "$6"
 fi
 }
+one-image-video() {
+  if (( $# != 3 )); then
+    echo "Usage: $0 <image.jpg> <audio-wav> <output.mp4>"
+  else
+    ffmpeg -loop 1 -i "$1" \
+      -i "$2" \
+      -c:v libx264 \
+      -tune stillimage \
+      -c:a aac \
+      -b:a 192k \
+      -pix_fmt yuv420p \
+      -shortest "$3"
+  fi
+}
+

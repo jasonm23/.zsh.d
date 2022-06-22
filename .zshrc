@@ -26,9 +26,10 @@ antigen bundle ruby
 antigen bundle thor
 antigen bundle urltools
 antigen bundle z
+antigen bundle flutter
 
 if [[ `uname -a` =~ "Darwin" ]]; then
-  antigen bundle osx
+  antigen bundle macos
   antigen bundle xcode
   antigen bundle brew
 fi
