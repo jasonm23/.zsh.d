@@ -295,8 +295,15 @@ get_gallery_jpgs () {
 }
 
 srch() {
-  pth="$1"
-  name="$2"
+  if (( $# == 1 )); then
+    pth=$(pwd)
+    name="$1"
+  else
+    pth=$1
+    name="$2"
+  fi
+
+  echo "Search: $pth $name"
   find -E "$pth" -iregex ".*${name// /.*}.*"
 }
 
@@ -343,15 +350,25 @@ git-delete-remote-tag () {
   git push origin :refs/tags/${1}
 }
 
-ssh-fix-env() {
-  echo "export SSH_AGENT_PID=$(pgrep ssh-agent)"
-  SSH_AUTH_SOCK=$(lsof | grep ssh-agent | grep -E -o "/var/folders.*")
-
-  if [[ "$SSH_AUTH_SOCK" == "" ]]; then
-    echo "export SSH_AUTH_SOCK=$(lsof  | grep ssh-agent | grep -E -o "/private/tmp/com.apple.*")"
+ssh-agent-check() {
+  SSH_AGENT_COUNT=$(pgrep ssh-agent | wc -l | tr -d " ")
+  if ((${SSH_AGENT_COUNT} != 1)); then
+    echo "(${SSH_AGENT_COUNT}) ssh-agents are running"
   else
-    echo "export SSH_AUTH_SOCK=${SSH_AUTH_SOCK}"
+    echo "ok"
   fi
+}
+
+ssh-agent-sock() {
+  agent_pid=$1
+  SSH_AUTH_SOCK=$(lsof | grep ssh-agent | grep -E -o "/var/folders.*")
+}
+
+ssh-fix-env() {
+  echo "export SSH_AGENT_PID=$(pgrep ssh-agent | head -1)"
+  echo "export SSH_AUTH_SOCK=$(lsof  | \
+      grep -E "ssh-agent.*/private/tmp/com.apple.launchd.*$" | \
+      grep -E -o "/private/tmp/com.apple.launchd.*$")"
 }
 
 git-mass-status() {
@@ -367,7 +384,6 @@ git-mass-status() {
   done
 }
 
-
 id3() {
 if (( $# != 6 )); then
   echo "Usage: $0 <title> <artist> <album> <year> <genre>"
@@ -381,9 +397,10 @@ else
     "$6"
 fi
 }
+
 one-image-video() {
   if (( $# != 3 )); then
-    echo "Usage: $0 <image.jpg> <audio-wav> <output.mp4>"
+    echo "Usage: $0 <image> <audio> <output.mp4>"
   else
     ffmpeg -loop 1 -i "$1" \
       -i "$2" \
