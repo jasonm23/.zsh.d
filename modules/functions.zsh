@@ -122,14 +122,14 @@ addalias() {
   # addalias will add a persistent alias in ~/.zsh_aliases
   # It will also ensure you're not overwriting an existing alias unintentionally.
 
-  if [[ "$1" == "" ]]; then
-    echo "No alias specified"
+  if (( $# != 2 )); then
+    echo "Usage: $0 <alias> <command>"
   else
     abbrev=$1
     command="$2"
     matching_alias=$(alias $abbrev)
     if [[ $matching_alias == "" ]]; then
-      tmp=$(tempfile)
+      tmp=$(mktemp /tmp/add-alias.XXXXXXXXXX)
       echo "$abbrev  => $command"
       echo "alias $abbrev='$command'" > $tmp
       source $tmp
@@ -144,7 +144,7 @@ addalias() {
 
 rmalias() {
   if [[ "$1" == "" ]]; then
-    echo "No alias specified"
+    echo "Usage: $0 <alias>"
   else
     abbrev=$1
     matching_alias=$(alias $abbrev)
@@ -152,7 +152,7 @@ rmalias() {
       echo "Alias: $abbrev is not defined"
     else
       echo "Removing: $abbrev"
-      tmp=$(tempfile)
+      tmp=$(mktemp /tmp/add-alias.XXXXXXXXXX)
       grep "$abbrev=" -v $HOME/.zsh_aliases > $tmp
       cat $tmp > $HOME/.zsh_aliases
       rm $tmp
