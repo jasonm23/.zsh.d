@@ -413,3 +413,7 @@ one-image-video() {
   fi
 }
 
+
+bluepower-toggle() {
+  blueutil --power 0; sleep 13; blueutil --power 1
+}

@@ -71,9 +71,15 @@ for z in $HOME/.zsh.d/modules/*.zsh; do
   source "$z"
 done
 
+# Export SSH_AUTH_SOCK and SSH_AGENT_PID
+$(ssh-fix-env)
+
 export EMACS=emacs
 
-# Get useful completion with . - _ delimiters...
+# Allow completion to expand around [._-], for example:
+# .z.d [TAB] -> .zsh.d
+# m-s [TAB] -> markdown-soma
+# M_A [TAB] -> Massive_Attack
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # We bind M-l to it's default, oh-my-zsh clobbers M-l (Alt-l) by binding it to "ls<RET>"
