@@ -32,7 +32,7 @@ pip install ffpb
 
 ### video-to-gif
 
-Take a video as `$1` and convert it to a looping gif output to `$2`
+From a `video` convert it to a looping `gif`.
 
 ```sh !
 # example usage
@@ -62,6 +62,8 @@ video-to-gif() {
 
 ### video-from-image-and-audio
 
+Using an `image` and a piece of `audio`, create video `output`
+
 ```sh !
 # example usage
 video-from-image-and-audio image.jpg music.mp3 output.mp4
@@ -89,7 +91,8 @@ video-from-image-and-audio() {
 
 ### video-loop-with-audio
 
-Create a new video which loops a short `video` until the `audio` finishes.
+Using a short `video` and longer `audio`, loop the video until the
+audio ends, `output` to a new video.
 
 ```sh !
 # example usage
@@ -117,7 +120,7 @@ video-loop-with-audio() {
 
 ### video-crop-resize
 
-This scales and crops a video to fit to 1920x1080. A better name for this would
+Resize and crops a video to fit to 1920x1080, maintaining aspect-ratio. A better name for this would
 probably be `video-fill-to-1080p`.
 
 ```sh !
@@ -145,8 +148,9 @@ video-crop-resize () {
 
 ### video-transparent-overlay
 
-Overlay a video with a transparent image. You must also set the overall
-transparency (a number between 0.0 and 1.0)
+Give an `opacity` setting `(0.0 - 1.00)`, a transparent `image` and a `video`. 
+Create a video with the transparent image on top of the video. Video and image 
+dimensions should match for best results.
 
 ```sh !
 # example usage
@@ -177,7 +181,7 @@ video-transparent-overlay(){
 
 ### video-pixelate
 
-Pixelate a video using pixels of the given size.
+With `pixels` of a given size, pixelate `video` to `output`
 
 ```sh !
 # example usage
@@ -202,8 +206,8 @@ video-pixelate() {
 
 ### video-overlay-text
 
-Place text on a video. You have to specify font, size, color as well as the text
-itself.
+Place text on a `video`. You have to specify `font`, `color`, `text_size` as well as the `text`
+itself.  Generates a new video to `output`
 
 ```sh !
 # example usage
