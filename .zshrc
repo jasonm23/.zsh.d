@@ -67,8 +67,17 @@ autoload zmv
 
 # Load modules after loading config (in case environment is adjusted)
 # Source handmade modules
+
 for z in $HOME/.zsh.d/modules/*.zsh; do
   source "$z"
+done
+
+# Load literate markdown shell scripts
+for z in $HOME/.zsh.d/literate/*.md; do
+  tempfile=$(mktemp)
+  $HOME/.zsh.d/bin/mdlit "$z" > $tempfile
+  source $tempfile
+  rm $tempfile
 done
 
 # Export SSH_AUTH_SOCK and SSH_AGENT_PID

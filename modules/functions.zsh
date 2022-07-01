@@ -53,11 +53,6 @@ origin() {
       | tr -d "\t "
 }
 
-vid2gif() {
-  ffmpeg -i "$1" -vf scale=800:-1 -r 10 -f image2pipe -vcodec ppm - |\
-      convert -delay 5 -layers Optimize -loop 0 - "$2"
-}
-
 git-add-https-user () {
   if [ -z $1 ]; then
     echo "Username not set"
@@ -398,105 +393,11 @@ else
 fi
 }
 
-bluepower-toggle() {
-  blueutil --power 0; sleep 13; blueutil --power 1
-}
-
 invert-image () {
   convert "$1" -channel RGB -negate "$2"
 }
 
-one-image-video() {
-  if (( $# != 3 )); then
-    echo "Usage: $0 <image> <audio> <output.mp4>"
-  else
-    ffmpeg -loop 1 -i "$1" \
-      -i "$2" \
-      -c:v libx264 \
-      -tune stillimage \
-      -c:a aac \
-      -b:a 192k \
-      -pix_fmt yuv420p \
-      -shortest \
-      "$3"
-  fi
+bluepower-toggle() {
+  blueutil --power 0; sleep 13; blueutil --power 1
 }
 
-video-loop-with-audio() {
-  if (( $# != 3 )); then
-    echo "Usage: $0 <video> <audio> <output>"
-  else
-    ffmpeg -stream_loop -1 \
-        -i "$1" \
-        -i "$2" \
-        -map 0:v:0 \
-        -map 1:a:0 \
-        -shortest \
-        -c copy \
-        "$3"
-  fi
-}
-
-video-crop-resize () {
-  if (( $# != 2 )); then
-    echo "Usage: $0 <input-video> <output-video>"
-  else
-    video="$1"
-    output="$2"
-
-    ffmpeg -i "$video" \
-        -vf "scale=1920:-2,crop=in_w:1080" \
-        -vcodec libx264 \
-        "$output"
-  fi
-}
-
-video-transparent-overlay(){
-  if (( $# != 3 )); then
-    echo "Usage: $0 <image-with-transparency> <input-video> <output-video>"
-  else
-    transparent_image=$1
-    video=$2
-    output=$3
-
-    ffmpeg \
-        -i $transparent_image \
-        -i $video \
-        -filter_complex "[1:v]format=argb, geq=r='r(X,Y)': a='1*alpha(X,Y)'[zork]; [0:v][zork]overlay" \
-        -vcodec libx264 \
-        $output
-  fi
-}
-
-video-transparent-overlay-50(){
-  if (( $# != 3 )); then
-    echo "Usage: $0 <image-with-transparency> <input-video> <output-video>"
-  else
-    transparent_image=$1
-    video=$2
-    output=$3
-
-    ffmpeg \
-        -i $transparent_image \
-        -i $video \
-        -filter_complex "[1:v]format=argb, geq=r='r(X,Y)': a='0.5*alpha(X,Y)'[zork]; [0:v][zork]overlay" \
-        -vcodec libx264 \
-        $output
-  fi
-}
-
-video-pixelate() {
-  if (( $# != 3 )); then
-    echo "Usage: $0 <pixel-size> <input-video> <output-video>"
-  else
-    pix="$1"
-    input="$2"
-    output="$3"
-    dimensions=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of "csv=p=0:s=\:" "$input")
-
-    echo "$dimensions"
-    echo "------------------------------"
-
-    ffmpeg -i "$input" -filter_complex "[0:v] scale='iw/${pix}:-1', scale='${dimensions}:flags=neighbor'" "$output"
-  fi
-}
