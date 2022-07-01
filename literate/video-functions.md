@@ -64,7 +64,7 @@ video-to-gif() {
 
 Using an `image` and a piece of `audio`, create video `output`
 
-```sh !
+```sh
 # example usage
 video-from-image-and-audio image.jpg music.mp3 output.mp4
 ```
@@ -94,7 +94,7 @@ video-from-image-and-audio() {
 Using a short `video` and longer `audio`, loop the video until the
 audio ends, `output` to a new video.
 
-```sh !
+```sh
 # example usage
 video-loop-with-audio short_video.mp4 long_audio.mp3 output.mp4
 ```
@@ -123,7 +123,7 @@ video-loop-with-audio() {
 Resize and crops a video to fit to 1920x1080, maintaining aspect-ratio. A better name for this would
 probably be `video-fill-to-1080p`.
 
-```sh !
+```sh
 # example usage
 video-crop-resize video.mp4 output.mp4
 ```
@@ -152,7 +152,7 @@ Give an `opacity` setting `(0.0 - 1.00)`, a transparent `image` and a `video`.
 Create a video with the transparent image on top of the video. Video and image 
 dimensions should match for best results.
 
-```sh !
+```sh
 # example usage
 video-transparent-overlay 0.9 opacity.png video.mp4 output.mp4
 ```
@@ -183,7 +183,7 @@ video-transparent-overlay(){
 
 With `pixels` of a given size, pixelate `video` to `output`
 
-```sh !
+```sh
 # example usage
 video-pixelate 50 video.mp4 output.mp4
 ```
@@ -209,7 +209,7 @@ video-pixelate() {
 Place text on a `video`. You have to specify `font`, `color`, `text_size` as well as the `text`
 itself.  Generates a new video to `output`
 
-```sh !
+```sh
 # example usage
 video-overlay-text video.mp4 \
                    /path/to/font.ttf "#FFFFFF" 24 "Oh hai!" output.mp4
