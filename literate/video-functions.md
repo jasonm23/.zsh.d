@@ -5,7 +5,7 @@ This document uses literate markdown for shell scripting.
 #### process and source via sed
 
 ```
-sed -n '/^```sh @code/,/^```/ p' < file.mdsh | sed '/^```/ d'
+sed -n '/^```sh @code/,/^```/ p' < video-functions.md | sed '/^```/ d'
 ```
 
 # Intro
