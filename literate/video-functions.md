@@ -4,7 +4,7 @@ This document uses literate markdown for shell scripting.
 
 #### process and source via sed
 
-```
+```sh
 sed -n '/^```sh @code/,/^```/ p' < video-functions.md | sed '/^```/ d'
 ```
 
@@ -26,7 +26,7 @@ Before we get into it, these functions all use `ffpb` a progress bar for
 The command can be switched back to `ffmpeg` in all cases.
 
 
-```sh !
+```sh
 pip install ffpb
 ```
 
@@ -34,7 +34,7 @@ pip install ffpb
 
 From a `video` convert it to a looping `gif`.
 
-```sh !
+```sh
 # example usage
 video-to-gif movie.mp4 looped.gif
 ```
