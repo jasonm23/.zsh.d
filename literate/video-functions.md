@@ -233,7 +233,7 @@ Code
 ```sh @code
 video-overlay-text () {
   if (( $# != 6 )); then
-    echo "Usage: $0 <input-video> <font_file> <text_color> <text_size> <text> <output-video>"
+    echo "Usage: $0 <input-video> <path_to/font_file> <text_color> <text_size> <text> <output-video>"
   else
     input="$1"
     fontfile="$2"
