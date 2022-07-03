@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-sed -n '/^```sh @code/,/^```/ p' < $1 | sed '/^```/ d'
+if (( $# != 1 )); then
+    printf "Usage: $(basename $0) <markdown-literate-sh.md>\n\nIn <markdown-literate-sh.md>, code blocks formatted as:\n\n\`\`\`sh @code\nsomeCodeHere() {...}\n\`\`\`\n\nWill be sent to stdout\n"
+else
+    sed -n '/^```sh @code/,/^```/ p' < $1 | sed '/^```/ d'
+fi

@@ -1,3 +1,4 @@
+
 ## ffmpeg handy functions
 
 This document uses literate markdown for shell scripting.
@@ -102,18 +103,21 @@ video-loop-with-audio short_video.mp4 long_audio.mp3 output.mp4
 Code 
 
 ```sh @code
+
 video-loop-with-audio() {
   if (( $# != 3 )); then
     echo "Usage: $0 <video> <audio> <output>"
   else
-    ffpb -stream_loop -1 \
-        -i "$1" \
-        -i "$2" \
-        -map 0:v:0 \
-        -map 1:a:0 \
-        -shortest \
-        -c copy \
-        "$3"
+    video="$1"
+    audio="$2"
+      ffpb -stream_loop -1 \
+           -i "$video" \
+           -i "$audio" \
+           -map 0:v:0 \
+           -map 1:a:0 \
+           -shortest \
+           -c copy \
+           "$3"
   fi
 }
 ```
@@ -138,8 +142,17 @@ video-crop-resize () {
     video="$1"
     output="$2"
 
-    ffpb -i "$video" \
-        -vf "scale=1920:-2,crop=in_w:1080" \
+    # width and height
+    $(ffprobe -v quiet -show_format -show_streams background.mp4  | grep -E '^(width|height)=')
+
+    if (( (1920.0 / $width) * $height > 1080 )); then
+      filter="scale=1920:-2,crop=in_w:1080"
+    else
+      filter="scale=-2:1080,crop=1920:in_h"
+    fi
+    
+   ffpb -i "$video" \
+        -vf "$filter" \
         -vcodec libx264 \
         "$output"
   fi
@@ -160,9 +173,9 @@ video-transparent-overlay 0.9 opacity.png video.mp4 output.mp4
 Code
 
 ```sh @code
-video-transparent-overlay(){
+video-transparent-overlay() {
   if (( $# != 4 )); then
-    echo "Usage: $0 <opacity 0-1> <image-with-transparency> <input-video> <output-video>"
+    echo "Usage: $0 <opacity 0-1> <transparent-image> <video> <output-video>"
   else
     alpha=$1
     transparent_image=$2
@@ -219,25 +232,29 @@ Code
 
 ```sh @code
 video-overlay-text () {
-  input="$1"
-  fontfile="$2"
-  text_color="$3"
-  text_size="$4"
-  text="$5"
-  output="$6"
-  ffmpeg -i "$input" -vf \
-  \
-      drawtext="fontfile=${fontfile}:
-                text='${text}':
-                fontcolor=${text_color}:
-                fontsize=${text_size}:
-                box=1:
-                boxcolor=black@0.5:
-                boxborderw=5:
-                x=(w-text_w)/2:
-                y=(h-text_h)/2" \
-  \
-                    -codec:a copy \
-                    "$output"
+  if (( $# != 6 )); then
+    echo "Usage: $0 <input-video> <font_file> <text_color> <text_size> <text> <output-video>"
+  else
+    input="$1"
+    fontfile="$2"
+    text_color="$3"
+    text_size="$4"
+    text="$5"
+    output="$6"
+    ffmpeg -i "$input" -vf \
+    \
+        drawtext="fontfile=${fontfile}:
+                  text='${text}':
+                  fontcolor=${text_color}:
+                  fontsize=${text_size}:
+                  box=1:
+                  boxcolor=black@0.5:
+                  boxborderw=5:
+                  x=(w-text_w)/2:
+                  y=(h-text_h)/2" \
+    \
+                      -codec:a copy \
+                      "$output"
+  fi
 }
 ```

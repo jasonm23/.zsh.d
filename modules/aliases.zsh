@@ -36,7 +36,7 @@ alias gchore='git-commit-chore' # from functions.zsh
 alias e='edit'
 alias ae='edit ~/.zsh.d/modules/aliases.zsh'
 alias ar='source ~/.zsh.d/modules/aliases.zsh'
-alias fur='source ~/.zsh.d/modules/functions.zsh'
+alias fur='source ~/.zsh.d/modules/functions.zsh; eval "$(mdlit ~/.zsh.d/literate/video-functions.md)"'
 alias ze='edit ~/.zshrc'
 alias zv='edit ~/.zshenv'
 
