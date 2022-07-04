@@ -70,3 +70,5 @@ There are many things in this config that need to be documented.
     - gitconfig.zsh - setup git config
     - iterm-shell-integration.zsh - iterm integration
     - z.zsh - init z config (fuzzy matching cd alternative)
+- literate
+    - [video-functions](literate/video-functions.md)
