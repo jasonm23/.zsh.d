@@ -1,4 +1,3 @@
-
 ## ffmpeg handy functions
 
 This document uses literate markdown for shell scripting.
