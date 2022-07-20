@@ -397,7 +397,51 @@ invert-image () {
   convert "$1" -channel RGB -negate "$2"
 }
 
-bluepower-toggle() {
+bluetooth-power-toggle() {
   blueutil --power 0; sleep 13; blueutil --power 1
 }
 
+addfunction() {
+	fn=$1
+    functions_zshd=
+	if [[ "$(which $fn)" =~ "() " ]]; then
+		<<-FN
+		$(which ${fn})
+
+		Add this to ~/.zsh.d/modules/functions.zsh ?
+		FN
+        read -sq
+		if [[ $? == 0 ]]; then
+          wc_l=$(which $fn | wc -l | tr -d ' \n' )
+          echo >> ~/.zsh.d/modules/functions.zsh
+          which $1 >> ~/.zsh.d/modules/functions.zsh
+          grep -n -A$wc_l "$fn" ~/.zsh.d/modules/functions.zsh
+		fi
+	else
+		<<-HELP
+		Usage: addfuncton <function>
+
+		Add function to ~/.zsh.d/modules/functions.zsh
+		HELP
+	fi
+}
+
+zshd() {
+    cd ~/.zsh.d
+}
+
+movie-missing-thai-srt () {
+    movies=${1:-/Volumes/NextStep/Movies}
+	fd --type directory . "$movies" | while read d
+	do
+		[[ "$(fd '.*srt$' "$d" | tr -d "\n" )" =~ "th.srt" ]] || echo $d
+	done
+}
+
+movie-has-thai-srt () {
+    movies=${1:-/Volumes/NextStep/Movies}
+	fd  --type directory . "$movies"  | while read d
+	do
+		[[ "$(fd '.*srt$' "$d" | tr -d "\n" )" =~ "th.srt" ]] && echo $d
+	done
+}
