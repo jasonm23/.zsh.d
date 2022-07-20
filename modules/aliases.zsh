@@ -77,9 +77,9 @@ alias timestamp='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 alias serve='ruby -run -e httpd . -p1234'
 
 alias gcln='git clean -fd'
-alias gc_='gco .'
 
 alias gtypist='gtypist -b -S -s -i'
 
 alias yump3='youtube-dl --extract-audio --audio-format mp3'
-alias get_subs="py ~/workspace/OpenSubtitlesDownload/OpenSubtitlesDownload.py -u jasonm23 -p \"$(security find-generic-password -w -s OpenSubtitlesKey -a OPEN_SUBS_KEY)\" --cli -l eng"
+
+alias diff='/usr/local/bin/diff'

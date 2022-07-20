@@ -1,5 +1,6 @@
 # Git helper functions
 # Note: Hub has replaced many homemade functions here. see https://github.com/github/hub
+
 git-branch-remote-delete() {
   branch_name=$1
   git push --force origin :$branch_name
@@ -403,7 +404,6 @@ bluetooth-power-toggle() {
 
 addfunction() {
 	fn=$1
-    functions_zshd=
 	if [[ "$(which $fn)" =~ "() " ]]; then
 		<<-FN
 		$(which ${fn})
@@ -438,10 +438,26 @@ movie-missing-thai-srt () {
 	done
 }
 
+movie-missing-srt () {
+    movies=${1:-/Volumes/NextStep/Movies}
+	fd --type directory . "$movies" | while read d
+	do
+		[[ "$(fd '.*srt$' "$d" | tr -d "\n" )" =~ ".srt" ]] || echo $d
+	done
+}
+
 movie-has-thai-srt () {
     movies=${1:-/Volumes/NextStep/Movies}
 	fd  --type directory . "$movies"  | while read d
 	do
 		[[ "$(fd '.*srt$' "$d" | tr -d "\n" )" =~ "th.srt" ]] && echo $d
 	done
+}
+
+get_subs() {
+	 py ~/workspace/OpenSubtitlesDownload/OpenSubtitlesDownload.py \
+         -u jasonm23 \
+         -p "$(security find-generic-password -w -s OpenSubtitlesKey -a OPEN_SUBS_KEY)" \
+         --cli \
+         -l eng
 }
