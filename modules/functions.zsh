@@ -459,5 +459,5 @@ get_subs() {
          -u jasonm23 \
          -p "$(security find-generic-password -w -s OpenSubtitlesKey -a OPEN_SUBS_KEY)" \
          --cli \
-         -l eng
+         -l eng "$1"
 }
