@@ -82,3 +82,4 @@ alias gc_='gco .'
 alias gtypist='gtypist -b -S -s -i'
 
 alias yump3='youtube-dl --extract-audio --audio-format mp3'
+alias get_subs="py ~/workspace/OpenSubtitlesDownload/OpenSubtitlesDownload.py -u jasonm23 -p \"$OPEN_SUBS_KEY\" --cli -l eng"
