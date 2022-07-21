@@ -461,3 +461,9 @@ get_subs() {
          --cli \
          -l eng "$1"
 }
+
+get_thai () {
+	encoded=$(urlencode "$1") 
+	url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=${encoded}" 
+	curl -s "${url}" | perl -pe 's/^.*?"(.*?)".*$/\1/'
+}
