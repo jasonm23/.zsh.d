@@ -83,3 +83,5 @@ alias gtypist='gtypist -b -S -s -i'
 alias yump3='youtube-dl --extract-audio --audio-format mp3'
 
 alias diff='/usr/local/bin/diff'
+
+alias doom='~/.emacs.d/bin/doom'
