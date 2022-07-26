@@ -20,7 +20,6 @@ antigen bundle knife
 antigen bundle npm
 antigen bundle nvm
 antigen bundle python
-antigen bundle rbenv
 antigen bundle rake
 antigen bundle ruby
 antigen bundle thor
@@ -109,6 +108,3 @@ setopt globdots
 setopt histignoredups
 setopt interactivecomments
 
-if [[ "which rbenv" != "rbenv not found" ]]; then
-  eval "$(rbenv init - zsh)"
-fi
