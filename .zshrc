@@ -108,3 +108,4 @@ setopt globdots
 setopt histignoredups
 setopt interactivecomments
 
+export PATH="/usr/local/opt/ruby/bin:$PATH"
