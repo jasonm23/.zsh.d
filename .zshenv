@@ -13,12 +13,20 @@ if [[ "$OSTYPE" == darwin* ]]; then
 fi
 
 #
-# Editors
+# Editors/Pagers
 #
 
 export EDITOR='~/.zsh.d/bin/edit'
 export PAGER=bat
 export BAT_THEME=gruvbox-dark
+
+#
+# fzf
+#
+
+export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || bat {} || tree -C {}) 2> /dev/null | head -200'"
+export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+
 #
 # Language
 #

@@ -367,18 +367,24 @@ ssh-fix-env() {
 }
 
 git-mass-status() {
-  for a in $(fd --type d --depth 1 --exclude .git)
+  for a in $(fd --type d --maxdepth 1 --exclude .git)
   do
     pushd -q "$a"
     if [[ -d .git ]]; then
       changes=$(git status --short | wc -l | tr -d " \n")
       if (( changes > 0 )); then
         suffix=$( (( changes > 1 )) && echo "changes" || echo "change" )
-        echo "⟶   [$a : $changes $suffix]"
+        echo "⟶ : $a : $changes $suffix"
       fi
     fi
     popd -q
-  done
+  done | fzf --header="[ Enter: add-all & commit | C-x: clean ]" \
+      -m  \
+      -d: \
+      --with-nth 2,3 \
+      --preview 'git-mass-status-preview status "{2}"' \
+      --bind 'ctrl-x:execute(git-mass-status-preview clean {2}):reload,enter:execute(git-mass-status-preview addall {2})+abort'
+
 }
 
 id3() {
@@ -404,7 +410,8 @@ bluetooth-power-toggle() {
 }
 
 addfunction() {
-	fn=$1
+  fn=${1:-$(fzf --preview 'builtin which {1}' <<<${(kF)functions})}
+
 	if [[ "$(which $fn)" =~ "() " ]]; then
 		<<-FN
 		$(which ${fn})
@@ -503,14 +510,17 @@ git-commits-this-week () {
 }
 
 func-to-script () {
-  fn=${1:-$(fzf <<<${(kF)functions})}
+  fn=${1:-$(fzf --preview 'builtin which {1}' <<<${(kF)functions})}
+  if [[ -z $fn  ]]; then
+    return 1
+  fi
   if [[ "" == "$2" ]]; then
     echo "Write $fn to filename: "
     read filename 
   else
     filename="$2"
   fi
-  if [[ "$#" == "2" && "$(which $fn)" =~ "() " ]]; then
+  if [[ "$fn" != "" && "$filename" != "" && "$(which $fn)" =~ "() " ]]; then
     if [[ -f "$filename"  ]]; then
       file_msg="overwrite ${filename}?"
     else
@@ -522,13 +532,13 @@ func-to-script () {
 
 		$file_msg
 		FN
-				read -sq
+		read -sq
 		if [[ $? == 0 ]]; then
-			<<-FN > "${filename}"
+      <<-WRITE > "${filename}"
 			#!/bin/sh
 			$(which ${fn} | sed '1d; $d')
-			FN
-			cat -n "${filename}"
+			WRITE
+			bat -n "${filename}"
 		fi
 	else
 		<<-HELP
@@ -537,4 +547,16 @@ func-to-script () {
 		Write FUNCTION to a script FILENAME.
 		HELP
 	fi
+}
+
+fmpc () {
+	host=192.168.1.100
+	local song_position
+	song_position=$(
+    mpc -h $host \
+    -f "%position%) %artist% - %title%" \
+    playlist \
+    | fzf --reverse )
+	i=$(echo "$song_position" | sed 's/^\([0-9]+\).*$/\1/' )
+	mpc -h $host -q play $i
 }
