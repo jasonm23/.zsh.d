@@ -274,9 +274,9 @@ sedrename() {
 }
 
 ec() {
-  emacsclient -n $@ 2> /dev/null
+  emacsclient -n "$@" 2> /dev/null
   if [[ $? == 1 ]]; then
-    open -a Emacs.app  -- $@
+    open -a Emacs.app  -- "$@"
   fi
 }
 
@@ -367,7 +367,7 @@ ssh-fix-env() {
 }
 
 git-mass-status() {
-  for a in $(find . -type d -depth 1)
+  for a in $(fd --type d --depth 1 --exclude .git)
   do
     pushd -q "$a"
     if [[ -d .git ]]; then
@@ -503,9 +503,14 @@ git-commits-this-week () {
 }
 
 func-to-script () {
-	fn=$1
-  filename="$2"
-	if [[ "$#" == "2" && "$(which $fn)" =~ "() " ]]; then
+  fn=${1:-$(fzf <<<${(kF)functions})}
+  if [[ "" == "$2" ]]; then
+    echo "Write $fn to filename: "
+    read filename 
+  else
+    filename="$2"
+  fi
+  if [[ "$#" == "2" && "$(which $fn)" =~ "() " ]]; then
     if [[ -f "$filename"  ]]; then
       file_msg="overwrite ${filename}?"
     else
@@ -533,4 +538,3 @@ func-to-script () {
 		HELP
 	fi
 }
-compdef _functions func-to-script
