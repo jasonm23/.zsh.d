@@ -1,3 +1,13 @@
+kill-ring () {
+  echo -n "${(@)killring}"
+}
+zle -N kill-ring 
+
+kill-ring-fzf () {
+	kill-ring | fzf --reverse
+}
+zle -N kill-ring-fzf
+
 pb-kill-line () {
   zle kill-line
   echo -n $CUTBUFFER | pbcopy
