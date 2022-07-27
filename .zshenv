@@ -16,7 +16,7 @@ fi
 # Editors/Pagers
 #
 
-export EDITOR='~/.zsh.d/bin/edit'
+export EDITOR=edit
 export PAGER=bat
 export BAT_THEME=gruvbox-dark
 
