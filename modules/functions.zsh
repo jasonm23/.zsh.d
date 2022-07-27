@@ -102,7 +102,7 @@ git-ssh2https () {
 git-https2ssh () {
   https_remote=$(get-git-remote-url "https:")
   ssh_remote=$(replace-github-https-with-ssh $https_remote)
-  hub remote set-url ${1:-origin} $ssh_remote
+  git remote set-url ${1:-origin} $ssh_remote
 }
 
 numbers-only() {
@@ -243,22 +243,21 @@ fix_three_digit_show() {
     echo "$file -> $new_name"
     select confirm in Yes No Cancel
     do
-      if [[ $confirm == "Cancel" ]]; then
-        return
-      elif [[ $confirm == "Yes" ]]; then
-        mv -v $file $new_name
-        continue 2
-      elif [[ $confirm == "No" ]]; then
-        continue 2
-      fi
+      case confirm in
+        Cancel)  return;;
+           Yes)  mv -v "$file" "$new_name"; return;;
+            No)  return;;
+      esac
     done
   done
 }
 
-abspath () { case "$1" in
-               /*)printf "%s\n" "$1";;
-               *)printf "%s\n" "$PWD/$1";;
-             esac; }
+abspath () {
+  case "$1" in
+    /*)printf "%s\n" "$1";;
+    *)printf "%s\n" "$PWD/$1";;
+  esac;
+}
 
 sedrename() {
   if [ $# -gt 1 ]; then
@@ -328,9 +327,9 @@ randomize_timestamps_in_folder () {
 }
 
 google_translate_line () {
-  source_lang="$1"
-  target_lang="$2"
-  text="$3"
+  text="$1"
+  source_lang="${2:-en}"
+  target_lang="${3:-th}"
 
   local escaped="sl=$source_lang&tl=$target_lang&q=$text"
 
@@ -368,15 +367,17 @@ ssh-fix-env() {
 }
 
 git-mass-status() {
-  for a in *
+  for a in $(find . -type d -depth 1)
   do
-    cd "$1"
-    if [[ -d $a ]]; then
-      echo "⟶   [$a]"
-      cd "$a"
-      git status --short
-      cd ..
+    pushd -q "$a"
+    if [[ -d .git ]]; then
+      changes=$(git status --short | wc -l | tr -d " \n")
+      if (( changes > 0 )); then
+        suffix=$( (( changes > 1 )) && echo "changes" || echo "change" )
+        echo "⟶   [$a : $changes $suffix]"
+      fi
     fi
+    popd -q
   done
 }
 
@@ -496,3 +497,40 @@ get-missing-subtitles () {
 		return 1
 	fi
 }
+
+git-commits-this-week () {
+	git log --oneline --since last-week | wc -l | tr -d '\n '
+}
+
+func-to-script () {
+	fn=$1
+  filename="$2"
+	if [[ "$#" == "2" && "$(which $fn)" =~ "() " ]]; then
+    if [[ -f "$filename"  ]]; then
+      file_msg="overwrite ${filename}?"
+    else
+      file_msg="Write to ${filename}?"
+    fi
+		<<-FN
+		#!/bin/sh
+		$(which ${fn} | sed '1d; $d')
+
+		$file_msg
+		FN
+				read -sq
+		if [[ $? == 0 ]]; then
+			<<-FN > "${filename}"
+			#!/bin/sh
+			$(which ${fn} | sed '1d; $d')
+			FN
+			cat -n "${filename}"
+		fi
+	else
+		<<-HELP
+		Usage: $0 <function> <filename>
+
+		Write FUNCTION to a script FILENAME.
+		HELP
+	fi
+}
+compdef _functions func-to-script

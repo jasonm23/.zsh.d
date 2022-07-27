@@ -64,6 +64,8 @@ autoload zmv
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
 [[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
 
+export FZF_DEFAULT_OPTS='--height 40% --border --info hidden'
+
 # Load modules after loading config (in case environment is adjusted)
 # Source handmade modules
 
@@ -106,6 +108,14 @@ fi
 setopt histignorespace
 setopt globdots
 setopt histignoredups
+setopt histignorealldups
 setopt interactivecomments
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
 
 export PATH="/usr/local/opt/ruby/bin:$PATH"
+
