@@ -17,8 +17,8 @@ fi
 #
 
 export EDITOR='~/.zsh.d/bin/edit'
-export PAGER='less'
-
+export PAGER=bat
+export BAT_THEME=gruvbox-dark
 #
 # Language
 #
