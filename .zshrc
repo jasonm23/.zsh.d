@@ -15,8 +15,7 @@ antigen bundle bundler
 antigen bundle coffee
 antigen bundle gem
 antigen bundle git
-antigen bundle heroku
-antigen bundle knife
+antigen bundle fzf
 antigen bundle npm
 antigen bundle nvm
 antigen bundle python
