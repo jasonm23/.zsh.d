@@ -101,9 +101,8 @@ git-delete-remote-tag () {
   git push origin :refs/tags/${1}
 }
 
-
 git-mass-status() {
-  for a in $(fd --type d --maxdepth 1 --exclude .git)
+  for a in $(fd --type d --maxdepth 1 --exclude .git --hidden)
   do
     pushd -q "$a"
     if [[ -d .git ]]; then
@@ -114,12 +113,26 @@ git-mass-status() {
       fi
     fi
     popd -q
-  done | fzf --header="[ Enter: add-all & commit | C-x: clean ]" \
+  done | fzf --header=" [ C-w: commit WIP | C-e: commit       | C-m: commit --amend | C-s: stash ]
+ [ C-a: add --all  | C-r: reset --hard | C-x: clean -fd                   ]
+" \
       -m  \
       -d: \
+      -n2 \
+      --cycle \
+      --reverse \
+      --margin 1 \
+      -0 \
       --with-nth 2,3 \
-      --preview 'git-mass-status-preview status "{2}"' \
-      --bind 'ctrl-x:execute(git-mass-status-preview clean {2}):reload,enter:execute(git-mass-status-preview addall {2})+abort'
+      --preview 'git-mass-status-preview "status --short" "{2}"' \
+      --bind "$(echo 'ctrl-s:execute(git-mass-status-preview "stash" "{2}"),
+ctrl-e:execute(git-mass-status-preview "commit" "{2}"),
+ctrl-m:execute(git-mass-status-preview "commit --amend" "{2}"),
+ctrl-w:execute(git-mass-status-preview "commit -m 'WIP'" "{2}"),
+ctrl-a:execute(git-mass-status-preview "add --all" "{2}"),
+ctrl-x:execute(git-mass-status-preview "clean -fd" "{2}"),
+ctrl-r:execute(git-mass-status-preview "reset --hard" {2})' | tr -d '\n')"
+
 }
 
 git-commits-this-week () {

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Debugging
+# echo "command: ${1}"
+# echo "dir: ${2}"
+
+command="$(echo "$1" | tr -d "'")"
+git_dir="$(echo "$2" | tr -d "'")"
+
+git --work-tree="$git_dir" --git-dir="$git_dir/.git" $command
