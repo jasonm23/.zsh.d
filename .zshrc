@@ -81,7 +81,7 @@ for z in $HOME/.zsh.d/literate/*.md; do
 done
 
 # Export SSH_AUTH_SOCK and SSH_AGENT_PID
-$(ssh-fix-env)
+ssh-fix-env quiet
 
 export EMACS=emacs
 
