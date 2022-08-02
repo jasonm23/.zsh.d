@@ -26,7 +26,6 @@ ssh-fix-env() {
   fi
 }
 
-
 ssh-agent-check() {
   SSH_AGENT_COUNT=$(pgrep ssh-agent | wc -l | tr -d " \n")
   SSH_AGENT_PLURAL=$((( SSH_AGENT_COUNT == 1 )) && echo "" || echo "s")
@@ -46,6 +45,7 @@ ssh-agent-check() {
 	SSH_AUTH_SOCK: $SSH_AUTH_SOCK
 	SSH_AGENT_PID: $SSH_AGENT_PID
 	Launchd ssh-agent (sock): $(launchctl getenv SSH_AUTH_SOCK)
+  lsof ssh-agent (sock): $(lsof | grep ssh-agent | grep -E -o "/private/tmp/com.apple.*")
 	SSH env not set correctly, run ssh-fix-env
 	WARN
   )
