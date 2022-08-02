@@ -7,6 +7,10 @@ ssh-fix-env() {
   fi
 
   export SSH_AUTH_SOCK=$(launchctl getenv SSH_AUTH_SOCK)
+  if [[ "$SSH_AUTH_SOCK" == "" ]]; then
+    export SSH_AUTH_SOCK=$(lsof | grep ssh-agent | grep -E -o "/private/tmp/com.apple.*")
+  fi
+
   export SSH_AGENT_PID=$(pgrep ssh-agent | head -1)
 
 	FIX=$(cat <<-FIX
