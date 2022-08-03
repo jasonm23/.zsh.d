@@ -102,7 +102,6 @@ video-loop-with-audio short_video.mp4 long_audio.mp3 output.mp4
 Code 
 
 ```sh @code
-
 video-loop-with-audio() {
   if (( $# != 3 )); then
     echo "Usage: $0 <video> <audio> <output>"
