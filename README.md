@@ -1,6 +1,6 @@
 # zsh-d
 
-This is my standard zsh startup for Mac OS X. It uses Antigen and
+This is my standard zsh startup for Mac OS X. It uses Antidote and
 oh-my-zsh, there is also support for additional modularized
 configuration.
 
@@ -12,13 +12,13 @@ Just git clone
 
 Now run `~/.zsh.d/install`, you're all done.
 
-### Antigen
+### Antidote
 
-You can update packages used by antigen (see .zshrc) by running
+You can update packages used by antidote (see .zshrc) by running
 
-    antigen update
+    antidote update
 
-For more info on antigen, see https://github.com/zsh-users/antigen
+For more info on antidote,  https://getantidote.github.io/ 
 
 ### Machine specific themes
 
@@ -40,35 +40,14 @@ They will be auto-included in your startup.
 Note: modules will run in alphabetical order. It's a simplistic system, and
 it's assumed that modules will be standalone.
 
-If dependenices are deemed necessary, create modules named
-`00_name.zsh` and order them as you would for `/etc/init.d`.
+If dependency ordering is necessary. Follow the `initrc` convention and use named
+ordering, e.g. `00_name.zsh`.
 
 ### Contributing
 
 Pull Requests are welcome, but this repo isn't really intended for general use, it's simply a useful template for teams which have no shared `~/` for zsh.
 
-### Undocumented
+# Notes...
 
-There are many things in this config that need to be documented.
-
-- bin
-    - brew-up - run a brew install on all machines listed in `~/LOCAL`
-    - edit - run edit using Emacs or Vim
-    - emacs-app - run emacs as app from the command line
-    - git-jasmine - run jasmine specs on suites added to git index
-    - git-pair - set up the git local user as a pair, see script for usage.
-    - git-rspec - run rspec spec on suites added to git index
-    - git-scrublocals - remove local only branches interactively
-    - git-specs - TODO
-    - mirror - turn on off mirroring on multiple screens
-
-- modules
-    - aliases.zsh - a big collection of useful aliases
-    - autoenv.zsh - autoenv config
-    - bindkey.zsh - unbind a couple of keys that
-    - functions.zsh - many functions of varying usefulness
-    - gitconfig.zsh - setup git config
-    - iterm-shell-integration.zsh - iterm integration
-    - z.zsh - init z config (fuzzy matching cd alternative)
-- literate
-    - [video-functions](literate/video-functions.md)
+- Literate experiment...
+    - [video-functions](literate/video-functions.md) uses `bin/mdlit`
