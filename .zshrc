@@ -1,46 +1,11 @@
 export PATH=$PATH:/usr/libexec
 
-if [ ! -d $HOME/antigen ]; then
-  git clone https://github.com/zsh-users/antigen.git $HOME/antigen
+if ! [[ -e ${ZDOTDIR:-~}/.antidote ]]; then
+  git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
 fi
 
-source $HOME/antigen/antigen.zsh
-
-# init antigen with oh-my-zsh
-antigen use oh-my-zsh
-
-# plugins... oh-my-zsh
-antigen bundle aws
-antigen bundle bundler
-antigen bundle coffee
-antigen bundle gem
-antigen bundle git
-antigen bundle fzf
-antigen bundle npm
-antigen bundle nvm
-antigen bundle python
-antigen bundle rake
-antigen bundle ruby
-antigen bundle thor
-antigen bundle urltools
-antigen bundle z
-antigen bundle flutter
-
-if [[ `uname -a` =~ "Darwin" ]]; then
-  antigen bundle macos
-  antigen bundle xcode
-  antigen bundle brew
-fi
-
-# plugins... other sources
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle djui/alias-tips
-antigen bundle mollifier/cd-gitroot
-
-antigen bundle zsh-users/zsh-completions
-antigen bundle zsh-users/zsh-autosuggestions
-
-antigen apply
+source ${ZDOTDIR:-~}/.antidote/antidote.zsh
+antidote load
 
 # Config ZSH Highlighter
 [[ ! -z $ZSH_HIGHLIGHT_HIGHLIGHTERS ]] && ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)

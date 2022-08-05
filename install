@@ -1,13 +1,22 @@
 #!/bin/bash
 
+dotfiles=('.zsh_plugins.txt' '.zshrc' '.zshenv' '.pairs' '.pryrc' '.irbrc')
+
 # Link .zshrc and .pairs (forced) to home
-echo "~IMPORTANT~ Your Current ~/.zshrc, ~/.zshenv and ~/.pairs files will be destroyed..."
+echo "!IMPORTANT! The following will be symlinked to $HOME"
+echo "Existing files/symlinks will be overwritten."
+
+for dotfile in $dotfiles; do
+  echo "${dotfile}"
+done
+
+echo ""
 echo "Proceed? (Ctrl-C to abort, or press enter to continue)"
-read
+read -r
 
 echo "Linking..."
 
-for dotfile in '.zshrc' '.zshenv' '.pairs' '.pryrc' '.irbrc'; do
+for dotfile in $dotfiles; do
   ln -sfv ~/.zsh.d/${dotfile} ~/${dotfile}
 done
 
