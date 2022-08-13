@@ -86,3 +86,5 @@ alias diff='/usr/local/bin/diff'
 
 alias doom='~/.emacs.d/bin/doom'
 alias bsr='brew services restart'
+alias ..='cd ..'
+alias ...='cd ../..'
