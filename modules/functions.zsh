@@ -133,3 +133,46 @@ fmpc () {
 	mpc -h $host -q play $i
 }
 
+
+emacs-package-version () {
+	version="$1" 
+	shift
+	for a in "$@"
+	do
+		sed -ibak "s/;; Version: [.0-9]*/;; Version: $version/" "$a"
+		rm "${a}bak"
+git-group-push () {
+	start="$(pwd)" 
+	for repo in "$@"
+	do
+		cd "$repo"
+		echo "Sync ${repo}"
+		git pull --rebase
+		git push
+		cd "$start"
+	done
+}
+
+git-group-pull () {
+	start="$(pwd)"
+	for repo in "$@"
+	do
+		cd "$repo"
+		echo "Sync ${repo}"
+		git pull --rebase
+		cd "$start"
+	done
+}
+
+git-group-commit () {
+	start="$(pwd)" 
+	message="$1" 
+	shift
+	for repo in "$@"
+	do
+		echo "$repo : Add all & commit"
+		cd "$repo"
+		git commit -a -m "${message}"
+		cd "$start"
+	done
+}
