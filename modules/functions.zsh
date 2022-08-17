@@ -133,7 +133,6 @@ fmpc () {
 	mpc -h $host -q play $i
 }
 
-
 emacs-package-version () {
 	version="$1" 
 	shift
@@ -141,6 +140,9 @@ emacs-package-version () {
 	do
 		sed -ibak "s/;; Version: [.0-9]*/;; Version: $version/" "$a"
 		rm "${a}bak"
+  done
+}
+
 git-group-push () {
 	start="$(pwd)" 
 	for repo in "$@"
