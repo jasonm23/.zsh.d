@@ -79,9 +79,9 @@ randomize_timestamps_in_folder () {
 }
 
 get_thai () {
-	encoded=$(urlencode "$1")
-	url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=${encoded}"
-	curl -s "${url}" | perl -pe 's/^.*?"(.*?)".*$/\1/'
+  encoded=$(urlencode "$1")
+  url="https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=th&dt=t&q=${encoded}"
+  curl -s "${url}" | perl -pe 's/^.*?"(.*?)".*$/\1/'
 }
 
 google_translate_line () {
@@ -122,59 +122,76 @@ bluetooth-power-toggle() {
 }
 
 fmpc () {
-	host=192.168.1.100
-	local song_position
-	song_position=$(
+  host=192.168.1.100
+  local song_position
+  song_position=$(
     mpc -h $host \
     -f "%position%) %artist% - %title%" \
     playlist \
     | fzf --reverse )
-	i=$(echo "$song_position" | sed 's/^\([0-9]+\).*$/\1/' )
-	mpc -h $host -q play $i
+  i=$(echo "$song_position" | sed 's/^\([0-9]+\).*$/\1/' )
+  mpc -h $host -q play $i
 }
 
 emacs-package-version () {
-	version="$1" 
-	shift
-	for a in "$@"
-	do
-		sed -ibak "s/;; Version: [.0-9]*/;; Version: $version/" "$a"
-		rm "${a}bak"
+  if (( $# < 2 )); then
+    echo "Usage: $0 <version> <elisp-package.el> [elisp-package.el ...]"
+    return
+  fi
+  version="$1"
+  shift
+  for a in "$@"
+  do
+    sed -ibak "s/;; Version: [.0-9]*/;; Version: $version/" "$a"
+    rm "${a}bak"
   done
 }
 
 git-group-push () {
-	start="$(pwd)" 
-	for repo in "$@"
-	do
-		cd "$repo"
-		echo "Sync ${repo}"
-		git pull --rebase
-		git push
-		cd "$start"
-	done
+  if (( $# < 1 )); then
+    echo "Usage: $0 <git-repo> [git-repo ...]"
+    return
+  fi
+  start="$(pwd)"
+  for repo in "$@"
+  do
+    cd "$repo"
+    echo "Push ${repo}"
+    git push
+    cd "$start"
+  done
 }
 
 git-group-pull () {
-	start="$(pwd)"
-	for repo in "$@"
-	do
-		cd "$repo"
-		echo "Sync ${repo}"
-		git pull --rebase
-		cd "$start"
-	done
+  if (( $# < 1 )); then
+    echo "Usage: $0 <git-repo> [git-repo ...]"
+    return
+  fi
+
+  start="$(pwd)"
+  for repo in "$@"
+  do
+    cd "$repo"
+    echo "Pull --rebase ${repo}"
+    git pull --rebase
+    cd "$start"
+  done
 }
 
 git-group-commit () {
-	start="$(pwd)" 
-	message="$1" 
-	shift
-	for repo in "$@"
-	do
-		echo "$repo : Add all & commit"
-		cd "$repo"
-		git commit -a -m "${message}"
-		cd "$start"
-	done
+  if (( $# < 2 )); then
+    echo "Usage: $0 <version> <commit-message> <git-repo> [git-repo ...]"
+    return
+  fi
+
+  start="$(pwd)"
+  message="$1"
+  shift
+  for repo in "$@"
+  do
+    echo "$repo : Add all & commit"
+    cd "$repo"
+    git commit -a -m "${message}"
+    cd "$start"
+  done
 }
