@@ -195,3 +195,17 @@ git-group-commit () {
     cd "$start"
   done
 }
+
+ogit() {
+  if (( $# < 2 )); then
+    echo "Usage: $0 <repo-dir> <git-sub-command> [ags ...]"
+    return
+  fi
+
+  worktree="${1%/}"
+  shift
+
+  gitdir="${worktree}/.git"
+
+  git --work-tree "$worktree" --git-dir "$gitdir" "$@"
+}
