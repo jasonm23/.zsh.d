@@ -17,7 +17,7 @@ fi
 #
 
 export EDITOR=edit
-export PAGER=bat
+export PAGER="bat --style=grid"
 export BAT_THEME=gruvbox-dark
 
 #
@@ -80,7 +80,6 @@ fi
 
 export LESSPIPE=`which src-hilite-lesspipe.sh`
 export LESSOPEN="| ${LESSPIPE} %s"
-export LESS=' -R -X -F '
 
 #
 # Temporary Files
