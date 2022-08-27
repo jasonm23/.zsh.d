@@ -209,3 +209,17 @@ ogit() {
 
   git --work-tree "$worktree" --git-dir "$gitdir" "$@"
 }
+
+ogit-group () {
+	if (( $# < 2 ))
+	then
+		echo "Usage: $0 'quoted command and switches' <git-repo> [git-repo...]"
+		return
+	fi
+	command="$1"
+	shift
+	for repo in $@
+	do
+		$(echo "git --work-tree $repo --git-dir ${repo%/}/.git $command")
+	done
+}
