@@ -197,17 +197,58 @@ git-group-commit () {
 }
 
 ogit() {
-  if (( $# < 2 )); then
-    echo "Usage: $0 <repo-dir> <git-sub-command> [ags ...]"
-    return
-  fi
-
-  worktree="${1%/}"
+  _PATH=$1
   shift
+  GIT_WORK_TREE="${_PATH%/.git}" GIT_DIR="${_PATH%/.git}"/.git git "$@"
+}
 
-  gitdir="${worktree}/.git"
+ogit-group() {
+  OGIT_PATHS_COMPLETED=0
+  OGIT_PATHS=()
+  for opt in "$@"; do
+    [[ "--" == "$opt" ]] && OGIT_PATHS_COMPLETED=1 && shift
+    [[ $OGIT_PATHS_COMPLETED == 1 ]] && break || OGIT_PATHS+=("$opt") && shift
+  done
+  for p in "$OGIT_PATHS[@]"; do
+    echo "${p} --- git $@"
+    ogit "$p" "$@"
+  done
+}
 
-  git --work-tree "$worktree" --git-dir "$gitdir" "$@"
+doom---upgrade () {
+  build_dir=$(find $HOME/.emacs.d/.local/straight -depth 1 -type d --iname "build*")
+	for package in $@
+	do
+		echo "checking $package..."
+    build=$(find "$build_dir" -depth 1 -type d -iname "${package}")
+    modified=$(find $HOME/.emacs.d/.local/straight/modified -depth 1 -type d -iname "${package}")
+		dir=$(find $HOME/.emacs.d/.local/straight/repos -depth 1 -type d -iname "${package}")
+		if [[ "$dir" == "" ]]
+		then
+			echo "$package not found\nRetry and refine package name: $package"
+		elif (( $(wc -l <<<$dir) > 1 ))
+		then
+			echo "$package found: \n$dir\nRetry and refine package name: $package"
+		else
+      if [[ "/" != "$modified" && ".." != "$modified" && "." != "$modified"  && -d "$modified" ]]; then
+        rm -rf "$modified"
+      fi
+      if [[ "/" != "$build" && ".." != "$build" && "." != "$build"  && -d "$build" ]]; then
+        rm -rf "$build"
+      fi
+			rm -rf "$dir"
+		fi
+	done
+	~/.emacs.d/bin/doom sync
+}
+
+doom-upgrade () {
+	if [[ "$1" == "" ]]
+	then
+		doom---upgrade $(find ~/.emacs.d/.local/straight/repos/ -type d -depth 1 | while read a; do echo $(basename $a); done | fzf -m | tr '\n' ' ' )
+	else
+		doom---upgrade "$@"
+	fi
 }
 
 ogit-group () {

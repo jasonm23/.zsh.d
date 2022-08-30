@@ -18,8 +18,8 @@ ohmyzsh/ohmyzsh path:plugins/macos
 ohmyzsh/ohmyzsh path:plugins/xcode
 ohmyzsh/ohmyzsh path:plugins/brew
 
-zsh-users/zsh-syntax-highlighting
 djui/alias-tips
 mollifier/cd-gitroot
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
+zdharma/fast-syntax-highlighting
