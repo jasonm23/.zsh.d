@@ -99,3 +99,5 @@ export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 export COLORTERM=truecolor
 export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
+export PATH="/Users/jason/.cask/bin:$PATH"
+
