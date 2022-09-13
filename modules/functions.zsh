@@ -197,21 +197,28 @@ git-group-commit () {
 }
 
 ogit() {
+  [[ $# < 2 ]] && echo "Usage: $0 repo/path commands..." && return
   _PATH=$1
   shift
-  GIT_WORK_TREE="${_PATH%/.git}" GIT_DIR="${_PATH%/.git}"/.git git "$@"
+  git -C "${_PATH}" "$@"
 }
 
 ogit-group() {
+  [[ $# < 3 ]] && [[ ! "$@" =~  " -- "   ]] && echo "Usage: $0 <repo/paths>[...] -- <commands>"  && return
   OGIT_PATHS_COMPLETED=0
   OGIT_PATHS=()
   for opt in "$@"; do
     [[ "--" == "$opt" ]] && OGIT_PATHS_COMPLETED=1 && shift
     [[ $OGIT_PATHS_COMPLETED == 1 ]] && break || OGIT_PATHS+=("$opt") && shift
   done
+  echo "git command: $@"
+  echo "repo paths: ";printf '%s\n' "${OGIT_PATHS[@]}"
+  echo "================================================================================"
   for p in "$OGIT_PATHS[@]"; do
-    echo "${p} --- git $@"
+    echo "${p}:"
+  echo "--------------------------------------------------------------------------------"
     ogit "$p" "$@"
+  echo ""
   done
 }
 
@@ -249,18 +256,4 @@ doom-upgrade () {
 	else
 		doom---upgrade "$@"
 	fi
-}
-
-ogit-group () {
-	if (( $# < 2 ))
-	then
-		echo "Usage: $0 'quoted command and switches' <git-repo> [git-repo...]"
-		return
-	fi
-	command="$1"
-	shift
-	for repo in $@
-	do
-		$(echo "git --work-tree $repo --git-dir ${repo%/}/.git $command")
-	done
 }

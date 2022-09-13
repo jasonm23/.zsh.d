@@ -29,8 +29,7 @@ alias gcchore='git-commit-chore' # from functions.zsh
 alias gchor='git-commit-chore' # from functions.zsh
 alias gchore='git-commit-chore' # from functions.zsh
 
-# Hub
-[[ -x `which hub`  ]] && alias git=hub
+alias ghclone='gh repo clone'
 
 # Edit and Aliases
 alias e='edit'
