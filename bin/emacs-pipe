@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ -t 0 ]; then
+    emacsclient -n "$@"
+else
+    # stdin has data
+    tmpf=$(mktemp --tmpdir emacs-edit.XXXXXXXX)
+    cat > $tmpf
+    trap 'rm -rf $tmpf; trap - EXIT; exit' EXIT INT HUP
+    emacs-eval <<-EOF
+    (progn
+      (let ((dir default-directory))
+        (find-file "$tmpf")
+        (setq default-directory dir)
+        (set-visited-file-name nil)
+        (rename-buffer "*stdin*" t)))
+    EOF
+fi

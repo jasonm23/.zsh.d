@@ -1,0 +1,4 @@
+#!/bin/sh
+
+[ -t 0 ] && sexp="($*)" || sexp="$(cat)"
+exec emacsclient -n -e "$sexp"
