@@ -4,7 +4,7 @@ if [ -t 0 ]; then
     emacsclient -n "$@"
 else
     # stdin has data
-    tmpf=$(mktemp --tmpdir emacs-edit.XXXXXXXX)
+    tmpf=$(mktemp emacs-edit.XXXXXXXX)
     cat > $tmpf
     trap 'rm -rf $tmpf; trap - EXIT; exit' EXIT INT HUP
     emacs-eval <<-EOF
