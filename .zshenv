@@ -101,3 +101,6 @@ export COLORTERM=truecolor
 export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 export PATH="/Users/jason/.cask/bin:$PATH"
 
+
+export LC_CTYPE="en_US.UTF-8"
+
