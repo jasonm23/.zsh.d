@@ -101,6 +101,14 @@ git-delete-remote-tag () {
   git push origin :refs/tags/${1}
 }
 
+git-delete-submodule () {
+  submodule_path="$1"
+
+  git submodule deinit -f $submodule_path
+  rm -rf .git/modules/$submodule_path
+  git rm -f $submodule_path
+}
+
 git-mass-status() {
   for a in $(fd --type d --maxdepth 1 --exclude .git --hidden)
   do
