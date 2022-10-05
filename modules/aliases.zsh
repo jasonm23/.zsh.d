@@ -73,7 +73,6 @@ alias ifconfig_me='dig +short myip.opendns.com @resolver1.opendns.com'
 # unix timestamp
 alias timestamp='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 
-alias serve='ruby -run -e httpd . -p1234'
 
 alias gcln='git clean -fd'
 
