@@ -104,3 +104,7 @@ export PATH="/usr/local/lib/ruby/gems/3.1.0/bin:$PATH"
 
 export LC_CTYPE="en_US.UTF-8"
 export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
+HISTSIZE=99999
+HISTFILESIZE=99999
+SAVEHIST=$HISTSIZE
+
