@@ -64,11 +64,11 @@ all_clips = assemble_clips(input_file, output_file)
 
 # puts "..."
 
-# unique = all_clips.reduce(Set[]) {|a,b|
-#   a.add([b[2],b[3],b[4],b[1]])
-# }
-#
-# puts unique.map {|u| ffmpeg_clip_cmd u }
+unique = all_clips.reduce(Set[]) {|a,b|
+  a.add([b[2],b[3],b[4],b[1]])
+}
+
+puts unique.map {|u| ffmpeg_clip_cmd u }
 
 print "ffmpeg "
 
