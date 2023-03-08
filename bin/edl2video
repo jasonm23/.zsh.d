@@ -80,4 +80,4 @@ print output_file
 
 puts ""
 
-puts "rm #{unique.join ' '}"
+puts "rm #{unique.map{ |u| u[-1] }.join ' '}"
