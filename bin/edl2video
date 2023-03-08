@@ -77,3 +77,7 @@ print  all_clips.map{ |c| "-i #{c[1]}" }.join " "
 print " -filter_complex '[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=#{all_clips.size}:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' "
 
 print output_file
+
+puts ""
+
+puts "rm #{unique.join ' '}"
