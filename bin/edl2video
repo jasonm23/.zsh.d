@@ -68,7 +68,13 @@ unique = all_clips.reduce(Set[]) {|a,b|
   a.add([b[2],b[3],b[4],b[1]])
 }
 
+puts "# Create unique work clips for EDL
+"
+
 puts unique.map {|u| ffmpeg_clip_cmd u }
+
+puts "# Concat clips for EDL
+"
 
 print "ffmpeg "
 
@@ -79,5 +85,8 @@ print " -filter_complex '[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=#{all_clip
 print output_file
 
 puts ""
+
+puts "# Remove unique work clips for EDL
+"
 
 puts "rm #{unique.map{ |u| u[-1] }.join ' '}"
