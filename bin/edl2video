@@ -1,0 +1,79 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'digest'
+
+def parse_line(line)
+  fields = line.split(',')
+  [
+    fields[0],
+    fields[1].to_f,
+    fields[2]&.to_f
+  ]
+end
+
+def assemble_clips(input_file, output_file)
+  input_lines = File.readlines(input_file)
+
+  clips = []
+
+  input_lines.map{|l| 
+    if l.include? "#" || l.blank?
+      nil 
+    else
+      l
+    end
+  }.compact.each_with_index do |line,idx|
+    # Use pattern matching to extract video file name and start/end times
+    video_file, start_time, length = parse_line(line)
+
+    ext = File.extname video_file
+    
+    if start_time
+      hash = Digest::MD5.hexdigest "#{video_file}#{start_time}#{length}"
+      clips << [idx, "#{hash}#{ext}", video_file, start_time, length]
+    else
+      hash = Digest::MD5.hexdigest "#{video_file}"
+      clips << [idx, "#{hash}#{ext}", video_file]
+    end
+  end
+
+  clips
+
+end
+
+
+def ffmpeg_clip_cmd(inputs)
+  cmd = "ffmpeg"                      
+  cmd += " -i #{inputs[0]}"
+  cmd += " -ss #{inputs[1]}"         
+  cmd += " -t #{inputs[2]}"
+  cmd += " -c copy"                   
+  cmd += " #{inputs[-1]}"
+
+  cmd
+end
+
+input_file = ARGV[0]
+output_file = ARGV[1]
+
+all_clips = assemble_clips(input_file, output_file)
+
+# puts "All clips:"
+# pp all_clips
+
+# puts "..."
+
+# unique = all_clips.reduce(Set[]) {|a,b|
+#   a.add([b[2],b[3],b[4],b[1]])
+# }
+#
+# puts unique.map {|u| ffmpeg_clip_cmd u }
+
+print "ffmpeg "
+
+print  all_clips.map{ |c| "-i #{c[1]}" }.join " "
+
+print " -filter_complex '[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=#{all_clips.size}:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' "
+
+print output_file

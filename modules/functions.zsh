@@ -257,3 +257,11 @@ doom-upgrade () {
 		doom---upgrade "$@"
 	fi
 }
+
+extract_frames() {
+    if [ "$#" -ne 5 ]; then
+        echo "Usage: extract_frames input_file start_time end_time fps output_name"
+        return 1
+    fi
+    ffmpeg -i "$1" -ss "$2" -to "$3" -vf fps="$4",scale=1920:1080 "$5".%03d.png
+}
