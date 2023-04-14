@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+require 'oga'
+require 'redcarpet'
+require 'fileutils'
+require 'reverse_markdown'
+require 'pry'
+
+# check for filename argument
+if ARGV.length != 1
+  puts "Usage: html_to_md.rb <filename>"
+  exit
+end
+
+# parse HTML file
+filename = ARGV[0]
+doc = Oga.parse_html(File.read(filename))
+
+# title
+title_node = doc.at_css('.title')
+title = title_node&.text&.strip
+
+# extract datestamp
+date_node = doc.at_css('.heading')
+timestamp_regex = /\w{3} \d{1,2}, \d{4}, \d{1,2}:\d{2}:\d{2}.?[AP]M/
+datestamp = date_node.text.match(timestamp_regex).to_s
+
+# extract content and convert to markdown
+content_node = doc.at_css('.content')
+
+markdown = ReverseMarkdown.convert(content_node)
+
+# create output filename
+if title
+   output_filename = "#{title}-#{datestamp}.md"
+else
+   output_filename = "#{datestamp}.md"
+end
+
+output_directory = 'output'
+FileUtils.mkdir_p(output_directory)
+
+# write markdown to file
+File.write("#{output_directory}/#{output_filename}", markdown)
+
+puts "Converted #{ARGV[0]} to #{output_filename}"
