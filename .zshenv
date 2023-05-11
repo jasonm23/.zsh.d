@@ -108,3 +108,7 @@ HISTSIZE=99999
 HISTFILESIZE=99999
 SAVEHIST=$HISTSIZE
 
+export PATH="/usr/local/opt/libpq/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/libpq/lib"
+export CPPFLAGS="-I/usr/local/opt/libpq/include"
+export PKG_CONFIG_PATH="/usr/local/opt/libpq/lib/pkgconfig"
