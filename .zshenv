@@ -108,3 +108,5 @@ export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
 HISTSIZE=99999
 HISTFILESIZE=99999
 SAVEHIST=$HISTSIZE
+
+export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
