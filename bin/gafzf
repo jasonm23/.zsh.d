@@ -1,3 +1,11 @@
 #!/bin/sh
 
-git add $(git status --short | cut -c4- | fzf --multi --reverse --header "Select files for git add" )
+git add $(git status --short \
+    | grep -E '^(.D|.M|\?\?)' \
+    | fzf \
+    --ansi \
+    --multi \
+    --reverse \
+    --border \
+    --header "Select files for git add" \
+    | cut -c4- )
