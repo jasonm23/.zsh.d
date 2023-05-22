@@ -95,3 +95,4 @@ alias gmm='git commit -m'
 alias doom='/Users/jason/.config/emacs/bin/doom'
 alias tidy='/usr/local/bin/tidy'
 alias guard='/usr/local/lib/ruby/gems/3.2.0/bin/guard'
+alias xclean-whitespace="find . | grep '[.]swift' | xargs sed -i '' -E 's/[[:blank:]]+$//'"
