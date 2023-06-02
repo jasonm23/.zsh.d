@@ -92,8 +92,6 @@ if [[ -d "$TMPDIR" ]]; then
   fi
 fi
 
-alias git_branch_clean_up= 'git branch --merged | grep -v \* | xargs git branch -d'
-
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
@@ -105,8 +103,9 @@ export PATH="/usr/local/lib/ruby/gems/3.1.0/bin:$PATH"
 export LC_CTYPE="en_US.UTF-8"
 export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
 
-HISTSIZE=99999
-HISTFILESIZE=99999
-SAVEHIST=$HISTSIZE
+export HISTSIZE=99999
+export HISTFILESIZE=99999
+export SAVEHIST=$HISTSIZE
 
 export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+export APPLE_SSH_ADD_BEHAVIOR=macos
