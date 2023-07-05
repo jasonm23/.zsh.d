@@ -1,0 +1,44 @@
+#!/bin/bash
+
+input_folder="$1"
+output_folder="$2"
+
+# Create the output folder if it doesn't exist
+mkdir -p "$output_folder"
+
+# Loop through all PNG files in the input folder
+for file in "${input_folder}"/*.png; do
+    # Get the filename and extension
+    filename=$(basename "$file")
+    filename="${filename%.*}"
+
+    # Get the image dimensions
+    width=$(identify -format '%w' "$file")
+    height=$(identify -format '%h' "$file")
+
+    # Determine the dimensions for resizing and cropping
+    if (( width > height )); then
+        # Landscape image
+        new_width=1024
+        new_height=$(( width * 1024 / height ))
+        crop_offset=$(( (new_height - new_width) / 2 ))
+        resize_geometry="1024x${new_height}"
+        crop_geometry="1024x1024+0+${crop_offset}"
+    elif (( height > width )); then
+        # Portrait image
+        new_width=$(( height * 1024 / width ))
+        new_height=1024
+        crop_offset=$(( (new_width - new_height) / 2 ))
+        resize_geometry="${new_width}x1024"
+        crop_geometry="1024x1024+${crop_offset}+0"
+    else
+        # Square image
+        resize_geometry="1024x1024"
+        crop_geometry=""
+    fi
+
+    # Resize and crop the image
+    convert "${file}" -resize "${resize_geometry}^" -gravity center -crop "${crop_geometry}" +repage "${output_folder}/${filename}.png"
+
+    echo "Converted ${filename}.png"
+done
