@@ -41,7 +41,7 @@ def focus_text(*args):
 parser = argparse.ArgumentParser(
     prog="choose.py",
     description="Provide a autocomplete selection GUI usable from a script.",
-    epilog="Suggestions are read as lines from stdin or input file."
+    epilog="By default autocomplete suggestions are read as lines from stdin."
 )
 
 parser.add_argument('-i', '--input', help="Suggestions file", type=str)
@@ -59,7 +59,6 @@ if args.input:
         print(f"{args.input} does not exist")
         exit(1)
 else:
-    print("reading stdin")
     suggestions = []
     try:
         while True:
@@ -69,7 +68,7 @@ else:
         pass
 
     if len(suggestions) == 0:
-        print("no data on stdin")
+        print("Error: No suggestions input", file=sys.stderr)
         exit(1)
 
 title = args.title
