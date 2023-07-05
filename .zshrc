@@ -46,7 +46,9 @@ for z in $HOME/.zsh.d/literate/*.md; do
 done
 
 # Export SSH_AUTH_SOCK and SSH_AGENT_PID
-ssh-fix-env quiet
+if [[ $(uname) == "Darwin" ]];then
+   ssh-fix-env quiet
+fi
 
 export EMACS=emacs
 
