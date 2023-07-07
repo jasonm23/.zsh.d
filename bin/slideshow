@@ -12,6 +12,7 @@ import pyglet
 import pyperclip
 
 update_interval_seconds = 6.0
+mouse_hide_delay = 3.0
 pan_speed_x = 0
 pan_speed_y = 0
 zoom_speed = 0
@@ -23,7 +24,7 @@ sprite = None
 ken_burns = True
 random_image = False
 staus_label = None
-status_label_display_duration = 2
+status_label_hide_delay = 2
 paused = False
 window = pyglet.window.Window(resizable=True,style='borderless')
 
@@ -31,7 +32,7 @@ def osd(message):
     pyglet.clock.unschedule(hide_status_message)
     status_label.text = message
     status_label.opacity = 255
-    pyglet.clock.schedule_once(hide_status_message, status_label_display_duration)
+    pyglet.clock.schedule_once(hide_status_message, status_label_hide_delay)
 
 def hide_status_message(dt):
     status_label.opacity = 0
@@ -120,6 +121,9 @@ def update_image(dt):
 
     window.clear()
 
+def hide_mouse(dt):
+    window.set_mouse_visible(visible=False)
+
 def get_image_paths(input_dir='.'):
     paths = []
     for f in os.listdir(input_dir):
@@ -191,6 +195,15 @@ def toggle_random_image():
     else:
         osd(f"Sequence")
 
+def window_max_size():
+    screen = window.display.get_default_screen()
+    width = screen.width
+    height = screen.height
+
+    window.set_location(0,0)
+    window.width = width
+    window.height = height
+
 @window.event
 def on_draw():
     window.clear()
@@ -210,6 +223,9 @@ def on_key_release(symbol, modifiers):
 
     elif key.R == symbol:
         toggle_random_image()
+
+    elif key.F == symbol:
+        window_max_size()
 
     elif key.K == symbol:
         toggle_ken_burns()
@@ -263,6 +279,11 @@ def on_mouse_scroll(x, y, scroll_x, scroll_y):
     reset_clock()
 
 @window.event
+def on_mouse_motion(x, y, dx, dy):
+    window.set_mouse_visible(visible=True)
+    pyglet.clock.schedule_once(hide_mouse, mouse_hide_delay)
+
+@window.event
 def on_resize(width,height):
     setup_sprite()
 
@@ -294,6 +315,7 @@ if __name__ == '__main__':
       pyglet.clock.schedule_interval(update_image, update_interval_seconds)
       pyglet.clock.schedule_interval(update_pan, 1/60.0)
       pyglet.clock.schedule_interval(update_zoom, 1/60.0)
+      pyglet.clock.schedule_once(hide_mouse, mouse_hide_delay)
 
       window.set_caption(f"Slideshow {args.dir}")
 
