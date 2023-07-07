@@ -21,7 +21,7 @@ sprite = None
 staus_label = None
 status_label_display_duration = 2
 paused = False
-window = pyglet.window.Window(fullscreen=True)
+window = pyglet.window.Window(resizable=True)
 
 def osd(message):
     pyglet.clock.unschedule(hide_status_message)
@@ -105,11 +105,11 @@ def update_image(dt):
 
 def get_image_paths(input_dir='.'):
     paths = []
-    for root, dirs, files in os.walk(input_dir, topdown=True):
-        for file in sorted(files):
-            if file.endswith(('jpg', 'png', 'gif')):
-                path = os.path.abspath(os.path.join(root, file))
-                paths.append(path)
+    for f in os.listdir(input_dir):
+        if f.endswith(('jpg', 'jpeg', 'png', 'gif')):
+            path = os.path.abspath(os.path.join(input_dir, f))
+            paths.append(path)
+
     return paths
 
 def is_landscape(image):
@@ -215,7 +215,7 @@ if __name__ == '__main__':
 
     status_label = pyglet.text.Label(
         '',
-        font_name='Helvetica Neue',
+        font_name='Arial',
         font_size=18,
         x=10,
         y=10,

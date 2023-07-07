@@ -29,7 +29,7 @@ bitrate="$(ffprobe -v error -select_streams v:0 -show_entries stream=bit_rate -o
 resolution="$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$input_file")"
 
 # Set output file name and extension
-output_file="${input_filename}_converted.mp4"
+output_file="${input_filename}.mp4"
 
 # Convert AVI to MP4 using FFmpeg
 ffmpeg -i "$input_file" -vf "scale=$resolution" -c:v libx264 -crf 23 -b:v "$bitrate" -c:a aac -b:a 128k "$output_file"
