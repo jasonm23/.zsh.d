@@ -4,10 +4,12 @@
 # Licenced under GPL v3 see LICENSE
 # See README.md for more info
 
+import os
+import sys
 import argparse
 import random
-import os
 import pyglet
+import pyperclip
 
 update_interval_seconds = 6.0
 pan_speed_x = 0
@@ -15,13 +17,15 @@ pan_speed_y = 0
 zoom_speed = 0
 image_paths = []
 image_index = 0
+image_filename = ""
+img = None
+sprite = None
 ken_burns = True
 random_image = False
-sprite = None
 staus_label = None
 status_label_display_duration = 2
 paused = False
-window = pyglet.window.Window(resizable=True)
+window = pyglet.window.Window(resizable=True,style='borderless')
 
 def osd(message):
     pyglet.clock.unschedule(hide_status_message)
@@ -32,11 +36,11 @@ def osd(message):
 def hide_status_message(dt):
     status_label.opacity = 0
 
-def update_pan_zoom_speeds():
+def randomize_pan_zoom_speeds():
     global pan_speed_x, pan_speed_y, zoom_speed
     pan_speed_x = random.randint(-8, 8)
     pan_speed_y = random.randint(-8, 8)
-    zoom_speed = random.uniform(-0.02, 0.02)
+    zoom_speed = random.uniform(-0.01,-0.001)
 
 def update_pan(dt):
     if ken_burns:
@@ -49,57 +53,70 @@ def update_zoom(dt):
             sprite.scale += dt * (zoom_speed * 3)
         else:
             sprite.scale += dt * zoom_speed
-
         sprite.scale = max(sprite.scale, 1)
 
-def previous_image():
-    global random_image, image_index, image_paths
-    if random_image:
-        image = random.choice(image_paths)
-        image_index = image_paths.index(image)
-        return pyglet.image.load(image)
-    else:
-        if image_index > 0:
-            image_index -= 1
-        else:
-            image_index = len(image_paths) - 1
+def load_image(image):
+    image = pyglet.image.load(image)
+    return image
 
-    img = pyglet.image.load(image_paths[image_index])
-    sprite.image = img
-    sprite.scale = get_initial_scale(window, img)
-    sprite.x = (window.width - sprite.width) / 2
-    sprite.y = (window.height - sprite.height) / 2
-    update_pan_zoom_speeds()
-    window.clear()
-
-def next_image():
-    global random_image, image_index
-    if random_image:
-        image = random.choice(image_paths)
-        image_index = image_paths.index(image)
-        return pyglet.image.load(image)
-    else:
-        if image_index < len(image_paths) - 1:
-            image_index += 1
-        else:
-            image_index = 0
-
-        return pyglet.image.load(image_paths[image_index])
-
-def update_image(dt):
-    img = next_image()
-    sprite.image = img
-
+def setup_sprite():
     if ken_burns:
-        sprite.scale = get_initial_scale(window, img)
+        sprite.scale = get_oversize_scale(window, img)
     else:
         sprite.scale = get_fit_scale(window, img)
 
     sprite.x = (window.width - sprite.width) / 2
     sprite.y = (window.height - sprite.height) / 2
 
+def previous_image():
+    global random_image, image_index, image_filename, img
+    if random_image:
+        image_filename = random.choice(image_paths)
+        image_index = image_paths.index(image_filename)
+        return load_image(image_filename)
+    else:
+        if image_index > 0:
+            image_index -= 1
+        else:
+            image_index = len(image_paths) - 1
+
+    image_filename = image_paths[image_index]
+    img = load_image(image_filename)
+    sprite.image = img
+
+    setup_sprite()
+
     if ken_burns:
-        update_pan_zoom_speeds()
+        randomize_pan_zoom_speeds()
+
+    window.clear()
+
+def next_image():
+    global random_image, image_index, image_filename, img
+    if random_image:
+        image_filename = random.choice(image_paths)
+        image_index = image_paths.index(image_filename)
+        img = load_image(image_filename)
+        return img
+    else:
+        if image_index < len(image_paths) - 1:
+            image_index += 1
+        else:
+            image_index = 0
+
+        image_filename = image_paths[image_index]
+        img = load_image(image_filename)
+        return img
+
+def update_image(dt):
+    global img
+    img = next_image()
+    sprite.image = img
+
+    setup_sprite()
+
+    if ken_burns:
+        randomize_pan_zoom_speeds()
 
     window.clear()
 
@@ -115,17 +132,23 @@ def get_image_paths(input_dir='.'):
 def is_landscape(image):
     return image.width > image.height
 
-def get_initial_scale(window, image):
+def is_larger(image, window):
+    return image.width > window.width and image.height > window.height
+
+def get_oversize_scale(window, image):
     if is_landscape(image):
-        scale = window.width * random.uniform(1, 1.3) / image.width
+        scale = window.width * 1.3 / image.width
     else:
-        scale = window.height * random.uniform(1, 1.3) / image.height
+        scale = window.height * 1.3 / image.height
 
     return scale
 
 def get_fit_scale(window, image):
     if is_landscape(image):
-        scale = window.width / image.width
+        if is_larger(image, window):
+            scale = window.height / image.height
+        else:
+            scale = window.width / image.width
     else:
         scale = window.height / image.height
 
@@ -144,6 +167,30 @@ def resume():
     osd("Resume")
     pyglet.clock.schedule_interval(update_image, update_interval_seconds)
 
+def toggle_ken_burns():
+    global ken_burns
+    ken_burns = not ken_burns
+    if ken_burns:
+        osd(f"Ken Burns Effect: On")
+    else:
+        osd(f"Ken Burns Effect: Off")
+
+def toggle_pause():
+    global paused
+    paused = not paused
+    if paused:
+        pause()
+    else:
+        resume()
+
+def toggle_random_image():
+    global random_image
+    random_image = not random_image
+    if random_image:
+        osd(f"Random")
+    else:
+        osd(f"Sequence")
+
 @window.event
 def on_draw():
     window.clear()
@@ -152,32 +199,24 @@ def on_draw():
 
 @window.event
 def on_key_release(symbol, modifiers):
-    global random_image, update_interval_seconds, ken_burns, paused
+    global update_interval_seconds
     key = pyglet.window.key
 
     if key.Q == symbol or key.ESCAPE == symbol:
         pyglet.app.exit()
 
     elif key.SPACE == symbol:
-        paused = not paused
-        if paused:
-            pause()
-        else:
-            resume()
+        toggle_pause()
 
     elif key.R == symbol:
-        random_image = not random_image
-        if random_image:
-            osd(f"Random")
-        else:
-            osd(f"Sequence")
+        toggle_random_image()
 
     elif key.K == symbol:
-        ken_burns = not ken_burns
-        if ken_burns:
-            osd(f"Ken Burns Effect: On")
-        else:
-            osd(f"Ken Burns Effect: Off")
+        toggle_ken_burns()
+
+    elif key.I == symbol:
+        osd(f"Filename copied to clipboard...")
+        pyperclip.copy(image_filename)
 
     elif key.LEFT == symbol:
         previous_image()
@@ -194,12 +233,38 @@ def on_key_release(symbol, modifiers):
         reset_clock()
 
     elif symbol in [key._1, key._2, key._3, key._4, key._5, key._6, key._7, key._8, key._9]:
-        update_interval_seconds = float(symbol - 48) / 2.0
+        update_interval_seconds = float(symbol - 48)
         reset_clock()
 
 @window.event
-def on_mouse_release(*args):
-    update_image(0)
+def on_mouse_release(x, y, button, modifiers):
+    width = window.width
+    if button == pyglet.window.mouse.LEFT:
+        if x < width * 0.5:
+            previous_image()
+        elif x > width * 0.5:
+            update_image(0)
+    elif button == pyglet.window.mouse.RIGHT:
+        if x < width * 0.3:
+            toggle_random_image()
+        elif x > width * 0.6:
+            toggle_ken_burns()
+        else:
+            toggle_pause()
+
+@window.event
+def on_mouse_scroll(x, y, scroll_x, scroll_y):
+    global update_interval_seconds
+    if scroll_y < 0:
+        update_interval_seconds = max(update_interval_seconds + 0.5, 0.5)
+    else:
+        update_interval_seconds = max(update_interval_seconds - 0.5, 0.5)
+
+    reset_clock()
+
+@window.event
+def on_resize(width,height):
+    setup_sprite()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -207,23 +272,29 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     image_paths = get_image_paths(args.dir)
-    img = pyglet.image.load(image_paths[0])
-    sprite = pyglet.sprite.Sprite(img)
-    sprite.scale = get_initial_scale(window, img)
-    sprite.x = (window.width - sprite.width) / 2
-    sprite.y = (window.height - sprite.height) / 2
+    if len(image_paths) < 1:
+      print(f"No images found in {args.dir}", file=sys.stderr)
+      exit(1)
+    else:
+      image_filename = image_paths[image_index]
+      img = load_image(image_filename)
+      sprite = pyglet.sprite.Sprite(img)
 
-    status_label = pyglet.text.Label(
-        '',
-        font_name='Arial',
-        font_size=18,
-        x=10,
-        y=10,
-        color=(255, 255, 255, 255)
-    )
+      setup_sprite()
 
-    pyglet.clock.schedule_interval(update_image, update_interval_seconds)
-    pyglet.clock.schedule_interval(update_pan, 1/60.0)
-    pyglet.clock.schedule_interval(update_zoom, 1/60.0)
+      status_label = pyglet.text.Label(
+          '',
+          font_name='Arial',
+          font_size=18,
+          x=10,
+          y=10,
+          color=(255, 255, 255, 255)
+      )
 
-    pyglet.app.run()
+      pyglet.clock.schedule_interval(update_image, update_interval_seconds)
+      pyglet.clock.schedule_interval(update_pan, 1/60.0)
+      pyglet.clock.schedule_interval(update_zoom, 1/60.0)
+
+      window.set_caption(f"Slideshow {args.dir}")
+
+      pyglet.app.run()
