@@ -133,6 +133,15 @@ def get_image_paths(input_dir='.'):
 
     return paths
 
+def get_image_paths_from_stdin():
+    paths = []
+    for f in sys.stdin:
+        f = f.rstrip()
+        if f.endswith(('jpg', 'jpeg', 'png', 'gif')):
+            paths.append(f)
+
+    return paths
+
 def is_landscape(image):
     return image.width > image.height
 
@@ -288,13 +297,51 @@ def on_resize(width,height):
     setup_sprite()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('dir', help='directory of images', nargs='?', default=os.getcwd())
-    args = parser.parse_args()
+    args_dir = None
+    if len(sys.argv) > 1:
+        args_dir = sys.argv[1]
 
-    image_paths = get_image_paths(args.dir)
+    if args_dir and args_dir == '-h' or args_dir == '--help;':
+        print("""
+        Usage:
+
+        slideshow [dir]
+
+        slideshow < filename_list
+
+        filenames | slideshow
+
+        ---
+
+        Slideshow will look for jpg, jpeg, png & gif images in the
+        file list and display them.
+
+        Control the slideshow:
+
+        Esc,q - quit
+        [, ] - change image delay time
+        1-9 - change image delay time (number to seconds)
+        f - maximize window (fullscreen)
+        r - random toggle
+        k - Ken Burns effect toggle
+        SPACE - pause/resume
+        left, right - move between images
+        mouse left click - move between images (click on left or right side)
+
+        mouse right click, on screen 3rds
+          left side - random/ordered
+          middle - pause/resume
+          right side - Ken Burns effect toggle
+
+        """)
+
+    if args_dir:
+        image_paths = get_image_paths(args_dir)
+    else:
+        image_paths = get_image_paths_from_stdin()
+
     if len(image_paths) < 1:
-      print(f"No images found in {args.dir}", file=sys.stderr)
+      print(f"No images found in source", file=sys.stderr)
       exit(1)
     else:
       image_filename = image_paths[image_index]
@@ -316,7 +363,5 @@ if __name__ == '__main__':
       pyglet.clock.schedule_interval(update_pan, 1/60.0)
       pyglet.clock.schedule_interval(update_zoom, 1/60.0)
       pyglet.clock.schedule_once(hide_mouse, mouse_hide_delay)
-
-      window.set_caption(f"Slideshow {args.dir}")
 
       pyglet.app.run()
