@@ -17,6 +17,8 @@ pan_speed_x = 0
 pan_speed_y = 0
 zoom_speed = 0
 image_paths = []
+saved_image_paths = []
+image_random_viewed = []
 image_index = 0
 image_filename = ""
 img = None
@@ -33,6 +35,16 @@ def osd(message):
     status_label.text = message
     status_label.opacity = 255
     pyglet.clock.schedule_once(hide_status_message, status_label_hide_delay)
+
+def osd_small(message):
+    pyglet.clock.unschedule(hide_small_status_message)
+    status_label_small.text = message
+    status_label_small.x = window.width - 10
+    status_label_small.opacity = 255
+    pyglet.clock.schedule_once(hide_small_status_message, status_label_hide_delay)
+
+def hide_small_status_message(dt):
+    status_label_small.opacity = 0
 
 def hide_status_message(dt):
     status_label.opacity = 0
@@ -65,12 +77,25 @@ def setup_sprite():
     sprite.x = (window.width - sprite.width) / 2
     sprite.y = (window.height - sprite.height) / 2
 
+def get_random_image():
+    global image_filename, image_index, random_image, img, image_random_viewed, image_paths
+
+    if len(image_paths) > 0:
+        image_filename = random.choice(image_paths)
+        image_index = image_paths.index(image_filename)
+        image_paths.pop(image_index)
+        image_random_viewed.append(image_filename)
+        img = load_image(image_filename)
+        return img
+    else:
+        image_paths = saved_image_paths.copy()
+        image_random_viewed = []
+        return get_random_image()
+
 def previous_image():
     global random_image, image_index, image_filename, img
     if random_image:
-        image_filename = random.choice(image_paths)
-        image_index = image_paths.index(image_filename)
-        return load_image(image_filename)
+        return
     else:
         if image_index > 0:
             image_index -= 1
@@ -89,12 +114,9 @@ def previous_image():
     window.clear()
 
 def next_image():
-    global random_image, image_index, image_filename, img
+    global image_index, image_filename, img
     if random_image:
-        image_filename = random.choice(image_paths)
-        image_index = image_paths.index(image_filename)
-        img = load_image(image_filename)
-        return img
+        return get_random_image()
     else:
         if image_index < len(image_paths) - 1:
             image_index += 1
@@ -193,8 +215,10 @@ def toggle_pause():
         resume()
 
 def toggle_random_image():
-    global random_image
+    global random_image, image_paths, image_random_viewed
     random_image = not random_image
+    image_paths = saved_image_paths.copy()
+    image_random_viewed = []
     if random_image:
         osd(f"Random")
     else:
@@ -214,6 +238,7 @@ def on_draw():
     window.clear()
     sprite.draw()
     status_label.draw()
+    status_label_small.draw()
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -336,6 +361,7 @@ if __name__ == '__main__':
       print(f"No images found in source", file=sys.stderr)
       exit(1)
     else:
+      saved_image_paths = image_paths.copy()
       image_filename = image_paths[image_index]
       img = load_image(image_filename)
       sprite = pyglet.sprite.Sprite(img)
@@ -345,9 +371,20 @@ if __name__ == '__main__':
       status_label = pyglet.text.Label(
           '',
           font_name='Arial',
-          font_size=18,
+          font_size=14,
           x=10,
           y=10,
+          color=(255, 255, 255, 255)
+      )
+
+      status_label_small = pyglet.text.Label(
+          '',
+          font_name='Courier New',
+          font_size=14,
+          x=10,
+          y=10,
+          anchor_x='right',
+          anchor_y='bottom',
           color=(255, 255, 255, 255)
       )
 
