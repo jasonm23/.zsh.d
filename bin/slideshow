@@ -50,11 +50,7 @@ def update_pan(dt):
 
 def update_zoom(dt):
     if ken_burns:
-        if zoom_speed < 0:
-            sprite.scale += dt * (zoom_speed * 3)
-        else:
-            sprite.scale += dt * zoom_speed
-        sprite.scale = max(sprite.scale, 1)
+        sprite.scale -= dt * zoom_speed
 
 def load_image(image):
     image = pyglet.image.load(image)
@@ -149,12 +145,9 @@ def is_larger(image, window):
     return image.width > window.width and image.height > window.height
 
 def get_oversize_scale(window, image):
-    if is_landscape(image):
-        scale = window.width * 1.3 / image.width
-    else:
-        scale = window.height * 1.3 / image.height
+    scale = get_fit_scale(window, image)
 
-    return scale
+    return scale * 1.3
 
 def get_fit_scale(window, image):
     if is_landscape(image):
@@ -166,6 +159,9 @@ def get_fit_scale(window, image):
         scale = window.height / image.height
 
     return scale
+
+def get_fill_scale():
+    pass
 
 def reset_clock():
     osd(f"Interval: {update_interval_seconds:.2f}")
@@ -303,37 +299,33 @@ if __name__ == '__main__':
 
     if args_dir and args_dir == '-h' or args_dir == '--help;':
         print("""
+        Slideshow will look for valid jpg, jpeg, png & gif image filenames in stdin,
+        or from a directory and display them.
+
         Usage:
+        slideshow [directory]
+        slideshow < list_of_image_filenames
 
-        slideshow [dir]
-
-        slideshow < filename_list
-
-        filenames | slideshow
-
-        ---
-
-        Slideshow will look for jpg, jpeg, png & gif images in the
-        file list and display them.
-
-        Control the slideshow:
-
+        Keyboard Controls:
         Esc,q - quit
         [, ] - change image delay time
         1-9 - change image delay time (number to seconds)
         f - maximize window (fullscreen)
         r - random toggle
         k - Ken Burns effect toggle
+        i - Copy image filename to clipboard
         SPACE - pause/resume
         left, right - move between images
-        mouse left click - move between images (click on left or right side)
 
-        mouse right click, on screen 3rds
-          left side - random/ordered
-          middle - pause/resume
-          right side - Ken Burns effect toggle
+        Mouse Controls:
+        Left click - move between images (click on left or right side)
+        Right click
+          left side (1/3) - random/ordered
+          middle (1/3) - pause/resume
+          right side (1/3) - Ken Burns effect toggle
 
-        """)
+        """, file=sys.stderr)
+        exit(0)
 
     if args_dir:
         image_paths = get_image_paths(args_dir)
