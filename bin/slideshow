@@ -12,7 +12,8 @@ import pyglet
 import pyperclip
 
 update_interval_seconds = 6.0
-mouse_hide_delay = 3.0
+progress_bar_height = 2
+mouse_hide_delay = 4.0
 pan_speed_x = 0
 pan_speed_y = 0
 zoom_speed = 0
@@ -29,6 +30,7 @@ staus_label = None
 status_label_hide_delay = 2
 paused = False
 window = pyglet.window.Window(resizable=True,style='borderless')
+progress = 0
 
 def osd(message):
     pyglet.clock.unschedule(hide_status_message)
@@ -141,6 +143,16 @@ def update_image(dt):
 
 def hide_mouse(dt):
     window.set_mouse_visible(visible=False)
+    hide_progress_bar()
+
+def hide_progress_bar():
+    progress_bar.opacity = 0
+    background_bar.opacity = 0
+
+def show_progress_bar():
+    progress_bar.opacity = 255
+    background_bar.width = window.width
+    background_bar.opacity = 255
 
 def get_image_paths(input_dir='.'):
     paths = []
@@ -190,12 +202,14 @@ def reset_clock():
     pyglet.clock.unschedule(update_image)
     pyglet.clock.schedule_interval(update_image, update_interval_seconds)
 
-def pause():
-    osd("Paused")
+def pause(osd_message=False):
+    if osd_message:
+        osd("Paused")
     pyglet.clock.unschedule(update_image)
 
-def resume():
-    osd("Resume")
+def resume(osd_message=False):
+    if osd_message:
+        osd("Resume")
     pyglet.clock.schedule_interval(update_image, update_interval_seconds)
 
 def toggle_ken_burns():
@@ -210,9 +224,9 @@ def toggle_pause():
     global paused
     paused = not paused
     if paused:
-        pause()
+        pause(True)
     else:
-        resume()
+        resume(True)
 
 def toggle_random_image():
     global random_image, image_paths, image_random_viewed
@@ -239,6 +253,16 @@ def on_draw():
     sprite.draw()
     status_label.draw()
     status_label_small.draw()
+    if random_image:
+        if len(image_random_viewed) > 0:
+            progress_bar.width = window.width * (len(image_random_viewed) / len(saved_image_paths))
+        else:
+            progress_bar.width = 0
+    else:
+        progress_bar.width = window.width * ((image_index + 1) / len(image_paths))
+
+    background_bar.draw()
+    progress_bar.draw()
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -265,10 +289,14 @@ def on_key_release(symbol, modifiers):
         pyperclip.copy(image_filename)
 
     elif key.LEFT == symbol:
+        pause()
         previous_image()
+        resume()
 
     elif key.RIGHT == symbol:
+        pause()
         update_image(0)
+        resume()
 
     elif key.BRACKETLEFT == symbol:
         update_interval_seconds = max(update_interval_seconds - 0.5, 0.5)
@@ -287,9 +315,13 @@ def on_mouse_release(x, y, button, modifiers):
     width = window.width
     if button == pyglet.window.mouse.LEFT:
         if x < width * 0.5:
+            pause()
             previous_image()
+            resume()
         elif x > width * 0.5:
+            pause()
             update_image(0)
+            resume()
     elif button == pyglet.window.mouse.RIGHT:
         if x < width * 0.3:
             toggle_random_image()
@@ -311,6 +343,7 @@ def on_mouse_scroll(x, y, scroll_x, scroll_y):
 @window.event
 def on_mouse_motion(x, y, dx, dy):
     window.set_mouse_visible(visible=True)
+    show_progress_bar()
     pyglet.clock.schedule_once(hide_mouse, mouse_hide_delay)
 
 @window.event
@@ -367,6 +400,10 @@ if __name__ == '__main__':
       sprite = pyglet.sprite.Sprite(img)
 
       setup_sprite()
+
+      background_bar = pyglet.shapes.Rectangle(0, 0, window.width, progress_bar_height, color=(50,50,50))
+      progress_bar = pyglet.shapes.Rectangle(0, 0, 0, progress_bar_height, color=(255, 255, 255))
+      hide_progress_bar()
 
       status_label = pyglet.text.Label(
           '',
