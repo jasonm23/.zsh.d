@@ -45,6 +45,9 @@ def osd_small(message):
     status_label_small.opacity = 255
     pyglet.clock.schedule_once(hide_small_status_message, status_label_hide_delay)
 
+def is_gif_animation(image):
+    return isinstance(image, pyglet.image.Animation)
+
 def hide_small_status_message(dt):
     status_label_small.opacity = 0
 
@@ -67,7 +70,10 @@ def update_zoom(dt):
         sprite.scale -= dt * zoom_speed
 
 def load_image(image):
-    image = pyglet.image.load(image)
+    if image.endswith('gif'):
+        image = pyglet.image.load_animation(image)
+    else:
+        image = pyglet.image.load(image)
     return image
 
 def setup_sprite():
@@ -93,6 +99,22 @@ def get_random_image():
         image_paths = saved_image_paths.copy()
         image_random_viewed = []
         return get_random_image()
+
+def nav_next():
+    if not paused:
+        pause()
+        update_image(0)
+        resume()
+    else:
+        update_image(0)
+
+def nav_prevous():
+    if not paused:
+        pause()
+        previous_image()
+        resume()
+    else:
+        previous_image()
 
 def previous_image():
     global random_image, image_index, image_filename, img
@@ -173,25 +195,31 @@ def get_image_paths_from_stdin():
 
     return paths
 
-def is_landscape(image):
-    return image.width > image.height
+def is_landscape(width, height):
+    return width > height
 
-def is_larger(image, window):
-    return image.width > window.width and image.height > window.height
+def is_larger(width, height, window):
+    return width > window.width and height > window.height
 
 def get_oversize_scale(window, image):
     scale = get_fit_scale(window, image)
-
     return scale * 1.3
 
 def get_fit_scale(window, image):
-    if is_landscape(image):
-        if is_larger(image, window):
-            scale = window.height / image.height
-        else:
-            scale = window.width / image.width
+    if is_gif_animation(image):
+        image_width = image.get_max_width()
+        image_height = image.get_max_height()
     else:
-        scale = window.height / image.height
+        image_width = image.width
+        image_height = image.height
+
+    if is_landscape(image_width, image_height):
+        if is_larger(image_width, image_height, window):
+            scale = window.height / image_height
+        else:
+            scale = window.width / image_width
+    else:
+        scale = window.height / image_height
 
     return scale
 
@@ -248,12 +276,7 @@ def window_max_size():
     window.width = width
     window.height = height
 
-@window.event
-def on_draw():
-    window.clear()
-    sprite.draw()
-    status_label.draw()
-    status_label_small.draw()
+def progress_bar_draw():
     if random_image:
         if len(image_random_viewed) > 0:
             progress_bar.width = window.width * (len(image_random_viewed) / len(saved_image_paths))
@@ -264,6 +287,14 @@ def on_draw():
 
     background_bar.draw()
     progress_bar.draw()
+
+@window.event
+def on_draw():
+    window.clear()
+    sprite.draw()
+    status_label.draw()
+    status_label_small.draw()
+    progress_bar_draw()
 
 @window.event
 def on_key_release(symbol, modifiers):
@@ -290,14 +321,10 @@ def on_key_release(symbol, modifiers):
         pyperclip.copy(image_filename)
 
     elif key.LEFT == symbol:
-        pause()
-        previous_image()
-        resume()
+        nav_prevous()
 
     elif key.RIGHT == symbol:
-        pause()
-        update_image(0)
-        resume()
+        nav_next()
 
     elif key.BRACKETLEFT == symbol:
         update_interval_seconds = max(update_interval_seconds - 0.5, 0.5)
@@ -316,13 +343,10 @@ def on_mouse_release(x, y, button, modifiers):
     width = window.width
     if button == pyglet.window.mouse.LEFT:
         if x < width * 0.5:
-            pause()
-            previous_image()
-            resume()
+            nav_prevous()
         elif x > width * 0.5:
-            pause()
-            update_image(0)
-            resume()
+            nav_next()
+
     elif button == pyglet.window.mouse.RIGHT:
         if x < width * 0.3:
             toggle_random_image()
