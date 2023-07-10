@@ -161,13 +161,14 @@ def get_image_paths(input_dir='.'):
             path = os.path.abspath(os.path.join(input_dir, f))
             paths.append(path)
 
+    paths.sort(key=str.lower)
     return paths
 
 def get_image_paths_from_stdin():
     paths = []
     for f in sys.stdin:
         f = f.rstrip()
-        if f.endswith(('jpg', 'jpeg', 'png', 'gif')):
+        if f.endswith(('bmp', 'dds', 'exif', 'gif', 'jpg', 'jpeg', 'jp2', 'jpx', 'pcx', 'png', 'pnm', 'ras', 'tga', 'tif', 'tiff', 'xbm', 'xpm')):
             paths.append(f)
 
     return paths
