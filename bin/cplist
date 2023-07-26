@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 notify() {
+    echo "$1 $2"
     osascript -e "display notification \"$2\" with title \"$1\""
 }
+
 script_name=$(basename $0)
 list_file="$1"
 destination="$2"
@@ -16,21 +18,19 @@ if [[ ! -e  "$list_file" || ! -d "$prefix" || ! -d "$destination" ]];then
    exit 1
 fi
 
-total=$(wc -l "$list_file" | tr -d ' 	')
+total=$(wc -l "$list_file" | grep -E -o "^\s+[0-9]+" | tr -d ' ')
 
 while read -r f
 do
+    line=$(grep -n "$f" "$list_file" | grep -E -o "^[0-9]+")
     file_pathname="${prefix}/${f}"
-    line=$(grep -n "$file_pathname" "$list_file" | grep -E -o "^[0-9]+")
     if [[ -d "$file_pathname" ]]; then
-        filename="$file_pathname"
-        notify "Copying $line of $total " " $file_pathname"
-        cp -rv "$file_pathname" "$destination"
+        notify "Copying ${line} of ${total} ${f}"
+        cp -rv "${file_pathname}" "${destination}"
     else
-        filename="$(basename "$file_pathname")"
-        notify "Copying $line of $total " " $filename"
-        cp -v "$file_pathname" "$destination"
+        notify "Copying ${line} of ${total} ${f}"
+        cp -v "${file_pathname}" "${destination}"
     fi
-    notify "Copied $line of $total " " $filename"
+    notify "Copied ${line} of ${total} ${f}"
     sleep 1
-done < "$list_file"
+done < "${list_file}"
