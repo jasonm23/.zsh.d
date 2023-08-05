@@ -4,6 +4,22 @@
 # Licenced under GPL v3 see LICENSE
 # See README.md for more info
 
+help_osd = """
+Slideshow
+Keyboard Controls:
+Esc or Q   - Quit                           k     - Ken Burns effect toggle
+[,]        - Change image delay time        i     - Copy filename to clipboard
+1-9        - Change image delay time        o,n   - Oldest/newest order
+f          - Maximize window                a,z   - alphabetical/reverse order
+r          - Random/selection order toggle  SPACE - Pause/resume
+left,right - Move between images
+
+Mouse Controls:
+Left Click on left or right side - move between images
+Right click on window 3rds: random, pause, ken burns
+Scroll - Zoom
+"""
+
 help_usage = """
 Slideshow will look for valid jpg, jpeg, png & gif image filenames in stdin,
 or from a directory and display them.
@@ -45,7 +61,8 @@ class ShadowLabel:
     def __init__(self, text, x, y, font_name='Arial', font_size=14,
                  opacity=255, color=(255,255,255,255), shadow_color=(0,0,0,127),
                  offset_x=2, offset_y=-2,
-                 anchor_x='center', anchor_y='center'):
+                 anchor_x='center', anchor_y='center',
+                 multiline=False, width=None):
         self._x = x
         self._offset_x = offset_x
         self._y = y
@@ -60,7 +77,9 @@ class ShadowLabel:
             y=self._y,
             anchor_x = anchor_x,
             anchor_y = anchor_y,
-            color = color
+            color = color,
+            multiline = multiline,
+            width = width
         )
         self.shadow_label = pyglet.text.Label(
             self._text,
@@ -70,7 +89,9 @@ class ShadowLabel:
             y = self._x + self._offset_y,
             anchor_x = anchor_x,
             anchor_y = anchor_y,
-            color=shadow_color
+            color=shadow_color,
+            multiline = multiline,
+            width = width
         )
 
     def show(self, message):
@@ -131,10 +152,11 @@ image_random_viewed = []
 image_filename = ""
 image_index = 0
 img = None
-sprite = None
+slide = None
 status_label = None
 status_label_small = None
 
+osd_banner_delay = 4
 status_label_hide_delay = 2
 update_interval_seconds = 6.0
 mouse_hide_delay = 4.0
@@ -156,6 +178,16 @@ random_image = False
 
 window = pyglet.window.Window(resizable=True,style='borderless')
 
+def osd_banner(message, delay=osd_banner_delay):
+    pyglet.clock.unschedule(hide_osd_banner)
+
+    banner_label.width = window.width * 0.666666
+    banner_label.x = window.width // 2
+    banner_label.y = window.height // 2
+    banner_label.show(message)
+
+    pyglet.clock.schedule_once(hide_osd_banner, delay)
+
 def osd(message, delay=status_label_hide_delay):
     pyglet.clock.unschedule(hide_status_message)
     status_label.show(message)
@@ -175,6 +207,9 @@ def hide_small_status_message(dt):
 
 def hide_status_message(dt):
     status_label.hide()
+
+def hide_osd_banner(dt):
+    banner_label.hide()
 
 def coin_toss():
     return random.randint(0,100) > 50
@@ -197,15 +232,15 @@ def randomize_pan_zoom_speeds(image):
 
 def update_pan(dt):
     if ken_burns:
-        sprite.x += dt * pan_speed_x
-        sprite.y += dt * pan_speed_y
+        slide.x += dt * pan_speed_x
+        slide.y += dt * pan_speed_y
 
         # debug panning
         # osd(f"Pan {pan_speed_y > 0 and 'up' or 'down'}:{pan_speed_y:.2f} {pan_speed_x > 0 and 'right' or 'left'}:{pan_speed_x:.2f} [x:{sprite.x:.2f} y:{sprite.y:.2f}]")
 
 def update_zoom(dt):
     if ken_burns:
-        sprite.scale -= dt * zoom_speed
+        slide.scale -= dt * zoom_speed
 
 def load_image(filename):
     if filename.endswith('gif'):
@@ -213,28 +248,32 @@ def load_image(filename):
     else:
         return pyglet.image.load(filename)
 
-def setup_sprite():
+def center_slide():
+    slide.x = (window.width - slide.width) / 2
+    slide.y = (window.height - slide.height) / 2
+
+def setup_slide():
     width, height = get_width_height(img)
     if ken_burns:
         randomize_pan_zoom_speeds(img)
-        sprite.scale = get_oversize_scale(window, img)
+        slide.scale = get_oversize_scale(window, img)
         if is_landscape(width, height):
-            sprite.y = (window.height - sprite.height) / 2
+            slide.y = (window.height - slide.height) / 2
             if pan_speed_x > 0:
-                sprite.x = window.width - sprite.width
+                slide.x = window.width - slide.width
             else:
-                sprite.x = 0
+                slide.x = 0
         else:
-            sprite.x = (window.width - sprite.width) / 2
+            slide.x = (window.width - slide.width) / 2
             if pan_speed_y > 0:
-                sprite.y = window.height - sprite.height
+                slide.y = window.height - slide.height
             else:
-                sprite.y = 0
+                slide.y = 0
 
     else:
-        sprite.scale = get_fit_scale(window, img)
-        sprite.x = (window.width - sprite.width) / 2
-        sprite.y = (window.height - sprite.height) / 2
+        slide.scale = get_fit_scale(window, img)
+        slide.x = (window.width - slide.width) / 2
+        slide.y = (window.height - slide.height) / 2
 
 def get_random_image():
     global image_filename, image_index, random_image, img, image_random_viewed, image_paths
@@ -282,9 +321,9 @@ def previous_image():
     reset_clock(False)
     image_filename = image_paths[image_index]
     img = load_image(image_filename)
-    sprite.image = img
+    slide.image = img
 
-    setup_sprite()
+    setup_slide()
 
     window.clear()
 
@@ -305,9 +344,9 @@ def next_image():
 def update_image(dt):
     global img
     img = next_image()
-    sprite.image = img
+    slide.image = img
     reset_clock(False)
-    setup_sprite()
+    setup_slide()
 
     window.clear()
 
@@ -462,11 +501,12 @@ def draw_rect(x, y, width, height, stroke_width=2, color=(0,0,0)):
 @window.event
 def on_draw():
     window.clear()
-    sprite.draw()
-    draw_rect(sprite.x, sprite.y, sprite.width, sprite.height)
+    slide.draw()
+    draw_rect(slide.x, slide.y, slide.width, slide.height)
 
     status_label.draw()
     status_label_small.draw()
+    banner_label.draw()
 
     if len(image_paths) > 0:
         progress_bar_draw()
@@ -546,6 +586,9 @@ def on_key_release(symbol, modifiers):
     elif key.BACKSPACE == symbol:
         image_delete()
 
+    elif key.SLASH == symbol:
+        osd_banner(help_osd)
+
     elif key.BRACKETLEFT == symbol:
         update_interval_seconds = max(update_interval_seconds - 0.5, 0.5)
         reset_clock()
@@ -577,13 +620,12 @@ def on_mouse_release(x, y, button, modifiers):
 
 @window.event
 def on_mouse_scroll(x, y, scroll_x, scroll_y):
-    global update_interval_seconds
     if scroll_y < 0:
-        update_interval_seconds = max(update_interval_seconds + 0.5, 0.5)
+        slide.scale -= 0.01
     else:
-        update_interval_seconds = max(update_interval_seconds - 0.5, 0.5)
+        slide.scale += 0.01
 
-    reset_clock()
+    center_slide()
 
 @window.event
 def on_mouse_motion(x, y, dx, dy):
@@ -594,7 +636,7 @@ def on_mouse_motion(x, y, dx, dy):
 
 @window.event
 def on_resize(width,height):
-    setup_sprite()
+    setup_slide()
 
 if __name__ == '__main__':
     args_dir = None
@@ -618,7 +660,7 @@ if __name__ == '__main__':
       image_filename = image_paths[image_index]
       img = load_image(image_filename)
 
-      sprite = pyglet.sprite.Sprite(img)
+      slide = pyglet.sprite.Sprite(img)
 
       background_bar = pyglet.shapes.Rectangle(0, 0, window.width, progress_bar_height, color=(50,50,50))
       progress_bar = pyglet.shapes.Rectangle(0, 0, 0, progress_bar_height, color=(255, 255, 255))
@@ -641,7 +683,19 @@ if __name__ == '__main__':
           font_size=12
       )
 
-      setup_sprite()
+      banner_label = ShadowLabel(
+          "",
+          10,
+          10,
+          anchor_x='center',
+          anchor_y='center',
+          font_size=15,
+          font_name="Monaco",
+          width=window.width,
+          multiline=True
+      )
+
+      setup_slide()
 
       pyglet.clock.schedule_interval(update_image, update_interval_seconds)
       pyglet.clock.schedule_interval(update_pan, 1/60.0)
