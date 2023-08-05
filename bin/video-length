@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+while read a
+do
+    tot=${tot:-0}
+    len=$(video-len "$a")
+    tot=$((tot + len))
+done
+echo $tot
