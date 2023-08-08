@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+import os
+import argparse
+
+def delete_history_entries(file_path, substrings, case_insensitive=False, match_all=False, dry_run=False):
+    with open(file_path, 'r', encoding='utf-8', errors='replace') as history_file:
+        lines = history_file.readlines()
+
+    matching_lines = []
+
+    for line in lines:
+        if match_all:
+            if all((substring.lower() in line.lower() if case_insensitive else substring in line) for substring in substrings):
+                matching_lines.append(line)
+        else:
+            if any((substring.lower() in line.lower() if case_insensitive else substring in line) for substring in substrings):
+                matching_lines.append(line)
+
+    if dry_run:
+        print(f"Matching history items containing '{', '.join(substrings)}':")
+        for line in matching_lines:
+            decoded_line = line.encode('utf-8', 'ignore').decode('utf-8', 'replace')
+            print(decoded_line.strip())
+    else:
+        new_lines = [line for line in lines if line not in matching_lines]
+
+        with open(file_path, 'w', encoding='utf-8') as history_file:
+            history_file.writelines(new_lines)
+
+        print(f"History items containing '{', '.join(substrings)}' have been deleted.")
+
+def main():
+    parser = argparse.ArgumentParser(description='Delete Zsh history items matching given substrings')
+    parser.add_argument('substrings', nargs='+', type=str, help='Substrings to search for in history items')
+    parser.add_argument('-i', '--case-insensitive', action='store_true', help='Perform case-insensitive matching')
+    parser.add_argument('-a', '--match-all', action='store_true', help='Match all substrings (default: match any)')
+    parser.add_argument('-c', '--check', action='store_true', help='Show matching history items without deleting')
+    args = parser.parse_args()
+
+    home_directory = os.path.expanduser("~")
+    history_file_path = os.path.join(home_directory, '.zsh_history')
+
+    if os.path.exists(history_file_path):
+        delete_history_entries(history_file_path, args.substrings, args.case_insensitive, args.match_all, args.check)
+    else:
+        print("Zsh history file not found.")
+
+if __name__ == "__main__":
+    main()
