@@ -1,0 +1,3 @@
+#!/bin/bash
+
+osascript < ~/.zsh.d/bin/selected-files.scpt | slideshow&
