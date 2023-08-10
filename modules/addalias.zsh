@@ -13,7 +13,7 @@ addalias() {
       echo "$abbrev  => $command"
       echo "alias $abbrev='$command'" > $tmp
       source $tmp
-      cat $tmp >> $HOME/.zsh_aliases
+      cat $tmp >> $HOME/.zsh.d/modules/aliases.zsh
       rm $tmp
     else
       echo "Alias: $abbrev is already defined"
@@ -33,8 +33,8 @@ rmalias() {
     else
       echo "Removing: $abbrev"
       tmp=$(mktemp /tmp/add-alias.XXXXXXXXXX)
-      grep "$abbrev=" -v $HOME/.zsh_aliases > $tmp
-      cat $tmp > $HOME/.zsh_aliases
+      grep "$abbrev=" -v $HOME/.zsh.d/modules/aliases.zsh > $tmp
+      cat $tmp > $HOME/.zsh.d/modules/aliases.zsh
       rm $tmp
       unalias $abbrev
     fi
