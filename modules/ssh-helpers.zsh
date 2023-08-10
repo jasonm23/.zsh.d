@@ -3,7 +3,7 @@
 ssh-fix-env() {
   SSH_AGENT_COUNT=$(pgrep ssh-agent | wc -l | tr -d " \n")
   if (( $SSH_AGENT_COUNT == 0 )); then
-    ssh-agent -l # Mac specific.
+    launchctl start com.openssh.ssh-agent
   fi
 
   export SSH_AUTH_SOCK=$(launchctl getenv SSH_AUTH_SOCK)
