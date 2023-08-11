@@ -4,22 +4,27 @@ import math
 import sys
 
 def calculate_distance(x1, y1, x2, y2):
-    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+    angle = calculate_angle(x1, y1, x2, y2)
+    return abs(y2 - y1) / math.sin(math.radians(angle))
 
 def calculate_angle(x1, y1, x2, y2):
     dx = x2 - x1
     dy = y2 - y1
     return math.degrees(math.atan2(dy, dx))
 
+def print_point_info(x1, y1, x2, y2, label):
+    distance = calculate_distance(x1, y1, x2, y2)
+    angle = calculate_angle(x1, y1, x2, y2)
+    print(label)
+    print(f"  Distance: {distance:.2f} units")
+    print(f"  Angle   : {angle:.2f} degrees")
+    print(f"          : {math.radians(angle):.8f} radians")
+
 if len(sys.argv) != 5:
-    print("Usage: ./script.py x1 y1 x2 y2")
+    print("Usage: pointdist x1 y1 x2 y2")
     sys.exit(1)
 
 x1, y1, x2, y2 = map(float, sys.argv[1:])
 
-distance = calculate_distance(x1, y1, x2, y2)
-angle = calculate_angle(x1, y1, x2, y2)
-
-print(f"Distance between the two points: {distance:.2f} units")
-print(f"Angle between the line and x-axis: {angle:.2f} degrees")
-
+print_point_info(x1, y1, x2, y2, "Point A-B")
+print_point_info(x2, y2, x1, y1, "Point B-A")
