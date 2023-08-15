@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp -i ~/info.ocodo.CutBox.plist ~/Library/Preferences/info.ocodo.CutBox.plist && echo "CutBox preferences / history restored from ~/"

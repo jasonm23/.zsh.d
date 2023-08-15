@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cp -i ~/Library/Preferences/info.ocodo.CutBox.plist ~/ && echo "CutBox preferences / history copied to ~/"
