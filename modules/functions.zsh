@@ -265,3 +265,7 @@ extract_frames() {
     fi
     ffmpeg -i "$1" -ss "$2" -to "$3" -vf fps="$4",scale=1920:1080 "$5".%03d.png
 }
+
+gmm () {
+	git commit -m "$*"
+}
