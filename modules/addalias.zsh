@@ -2,11 +2,12 @@ addalias() {
   # addalias will add a persistent alias in ~/.zsh_aliases
   # It will also ensure you're not overwriting an existing alias unintentionally.
 
-  if (( $# != 2 )); then
-    echo "Usage: $0 <alias> <command>"
+  if (( $# < 2 )); then
+    echo "Usage: $0 <alias> <command> [args...]"
   else
     abbrev=$1
-    command="$2"
+    shift 1
+    command="$*"
     matching_alias=$(alias $abbrev)
     if [[ $matching_alias == "" ]]; then
       tmp=$(mktemp /tmp/add-alias.XXXXXXXXXX)
@@ -43,6 +44,10 @@ rmalias() {
 
 add-alias() {
   addalias "$@"
+}
+
+rm-alias() {
+  rmalias "$@"
 }
 
 remove-alias() {
