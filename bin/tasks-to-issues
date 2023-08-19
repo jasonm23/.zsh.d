@@ -17,14 +17,16 @@ def parse_tasks(text):
 
     return groups
 
-def format_group(group):
+def format_group(group, reponame=None):
     bodytext = ""
     if group['body']:
         initial_indent = min(len(line) - len(line.lstrip()) for line in group['body'])
         for subitem in group['body']:
             bodytext += subitem[initial_indent:] + "\n"
 
-    return f"""gh issue create --title "{group['title']}" --body "{bodytext}"
+    repo_arg = f'-R "{reponame}"' if reponame else ''
+
+    return f"""gh issue create {repo_arg}  --title "{group['title']}" --body "{bodytext}"
             """
 
 if __name__ == "__main__":
@@ -34,9 +36,15 @@ if __name__ == "__main__":
         print("Quitting")
         sys.exit(0)
 
+    if len(sys.argv) > 2:
+        print("Usage: tasks-to-issues [reponame]")
+        sys.exit(1)
+
+    reponame = sys.argv[1] if len(sys.argv) == 2 else None
+
     parsed_groups = parse_tasks(tasks_string)
     for group in parsed_groups:
-        result = subprocess.run(format_group(group), shell=True, text=True, capture_output=True)
+        result = subprocess.run(format_group(group, reponame), shell=True, text=True, capture_output=True)
         if result.stderr:
             print(result.stderr)
 
