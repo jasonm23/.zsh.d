@@ -266,6 +266,16 @@ extract_frames() {
     ffmpeg -i "$1" -ss "$2" -to "$3" -vf fps="$4",scale=1920:1080 "$5".%03d.png
 }
 
+
 gmm () {
 	git commit -m "$*"
+
+resize_to_720p() {
+    input_file="$1"
+    output_file="$2"
+    ffmpeg -i "$input_file" -vf "scale=1280:720" "$output_file"
+}
+
+detect_crop() {
+    ffmpeg -i "$1" -vf "cropdetect=24:2:0" -f null -
 }

@@ -98,3 +98,4 @@ alias xclean-whitespace="find . | grep '[.]swift' | xargs sed -i '' -E 's/[[:bla
 alias lg='lazygit'
 alias passgen='openssl rand -base64 18'
 alias yt-mp3='yt-dlp -x --audio-format mp3'
+alias mpv='/Applications/mpv.app/Contents/MacOS/mpv'
