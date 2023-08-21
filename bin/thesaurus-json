@@ -1,0 +1,16 @@
+#!/bin/bash
+
+key=$(< ~/.altervista-thesaurus)
+
+if [ "$key" == "" ]; then
+    echo "$HOME/.altervista-thesaurus did not contain the api key" >&2
+    exit 1
+else
+    if [ "$1" != "" ]; then
+        curl -s "http://thesaurus.altervista.org/thesaurus/v1?language=en_US&key=${key}&output=json&word=${1}" | jq
+    else
+        cat <<-EOF >&2
+Usage: thesaurus-json <word>
+EOF
+    fi
+fi

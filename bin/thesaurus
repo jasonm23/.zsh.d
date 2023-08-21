@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$1" == "" ]; then
+   echo "Usage: thesaurus <word>" >&2
+   exit 1
+fi
+
+thesaurus-json $1 | jq -r '.response[] | .list.category, .list.synonyms' | tr '|' '\n' | sort -u

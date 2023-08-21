@@ -95,10 +95,10 @@ fi
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
+export PATH=/usr/local/lib/ruby/gems/3.2.0/bin:$PATH
 export COLORTERM=truecolor
 export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 export PATH="/Users/jason/.cask/bin:$PATH"
-export PATH="/usr/local/lib/ruby/gems/3.1.0/bin:$PATH"
 
 export LC_CTYPE="en_US.UTF-8"
 export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
