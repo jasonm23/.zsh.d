@@ -267,6 +267,6 @@ extract_frames() {
 }
 
 
-gmm () {
+gmm() {
 	git commit -m "$*"
-
+}
