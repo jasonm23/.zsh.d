@@ -42,9 +42,23 @@ if __name__ == "__main__":
 
     reponame = sys.argv[1] if len(sys.argv) == 2 else None
 
-    parsed_groups = parse_tasks(tasks_string)
-    for group in parsed_groups:
-        result = subprocess.run(format_group(group, reponame), shell=True, text=True, capture_output=True)
+    if "- [ ]" in tasks_string:
+        parsed_groups = parse_tasks(tasks_string)
+        for group in parsed_groups:
+            result = subprocess.run(format_group(group, reponame), shell=True, text=True, capture_output=True)
+            if result.stderr:
+                print(result.stderr)
+
+            if result.stdout:
+                print(f"Issue created (URL): {result.stdout}")
+    else:
+        lines = tasks_string.strip().split('\n')
+        title = lines[0]
+        body = '\n'.join(lines[1:])
+
+        repo_arg = f'-R "{reponame}"' if reponame else ''
+
+        result = subprocess.run(f'gh issue create {repo_arg} --title "{title}" --body "{body}"', shell=True, text=True, capture_output=True)
         if result.stderr:
             print(result.stderr)
 
