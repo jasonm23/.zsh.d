@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+
+from bs4 import BeautifulSoup
+import sys
+import subprocess
+
+# Read HTML from standard input
+html = sys.stdin.read()
+
+input_index = None
+if len(sys.argv) > 1:
+    try:
+        input_index = int(sys.argv[1])
+    except ValueError:
+        input_index = None
+
+# Initialize the BeautifulSoup object
+soup = BeautifulSoup(html, 'html.parser')
+
+# Find all rows containing torrent information
+torrent_rows = soup.select('#searchResult tr')
+
+# Initialize a list to store extracted data
+torrents_data = []
+
+# Loop through each row and extract required information
+for row in torrent_rows:
+    torrent = {}
+    cells = row.find_all('td')
+    title = row.select_one('.detLink')
+    magnet = row.select_one('a[href^="magnet:"]')
+    seeds = cells[3].text if len(cells) >= 3 else None
+    if title and magnet and seeds is not None:
+        torrent["name"] = title.text
+        torrent["magnet"] = magnet['href']
+        torrent["seeds"] = seeds
+        torrents_data.append(torrent)
+
+if input_index:
+    print(torrents_data[input_index]["magnet"])
+else:
+    for index, torrent in enumerate(torrents_data):
+        print(index, torrent.get("seeds"), torrent.get("name"))
