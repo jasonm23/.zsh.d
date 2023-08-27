@@ -7,7 +7,7 @@ import subprocess
 # Read HTML from standard input
 html = sys.stdin.read()
 
-input_index = None
+input_index = -1
 if len(sys.argv) > 1:
     try:
         input_index = int(sys.argv[1])
@@ -36,8 +36,10 @@ for row in torrent_rows:
         torrent["seeds"] = seeds
         torrents_data.append(torrent)
 
-if input_index:
-    print(torrents_data[input_index]["magnet"])
+if input_index > -1:
+    torrent = torrents_data[input_index]
+    print(torrent.get("magnet"))
+
 else:
     for index, torrent in enumerate(torrents_data):
         print(index, torrent.get("seeds"), torrent.get("name"))
