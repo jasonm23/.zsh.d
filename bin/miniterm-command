@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Specify the command to run
+commandToRun="$*"
+
+# Specify font size (change as needed)
+fontSize=8
+
+# Specify window size (change as needed)
+windowSize="{450,290}"
+
+# Calculate x-coordinate for positioning
+xPosition=$(( 1920 - 30 - 450 ))
+
+# Specify y-coordinate for positioning
+yPosition=30
+
+# Build the AppleScript command
+applescriptCmd="tell application \"Terminal\"
+    do script \"$commandToRun\"
+    set current settings of window 1 to (first settings set whose name is \"Pro\")
+    set font size of window 1 to $fontSize
+    set size of window 1 to $windowSize
+    set position of window 1 to {$xPosition, $yPosition}
+    activate
+end tell"
+
+# Run the AppleScript command using osascript
+osascript -e "$applescriptCmd"
