@@ -1,7 +1,8 @@
 # Customize to your needs...
 alias gap='git add -N . && git add -p'
 alias gpb='git push -u origin head'
-alias gup='git pull --rebase --autostash --recurse-submodules'
+alias gup='git pull --rebase --autostash'
+alias gupr='git pull --rebase --autostash --recurse-submodules'
 
 alias grbrm='git-branch-remote-delete' # from functions.zsh
 alias gbrrm='git-branch-remote-delete' # from functions.zsh

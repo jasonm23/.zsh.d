@@ -146,3 +146,7 @@ ctrl-r:execute(git-mass-status-preview "reset --hard" {2})' | tr -d '\n')"
 git-commits-this-week () {
 	git log --oneline --since last-week | wc -l | tr -d '\n '
 }
+
+gmm() {
+	git commit -m "$*"
+}
