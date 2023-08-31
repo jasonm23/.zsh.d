@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import sys
+from fontTools.ttLib import TTFont
+
+def is_monospaced(font_path):
+    try:
+        font = TTFont(font_path)
+        traits = font['OS/2'].fsSelection
+
+        return bool(traits & (1 << 9))  # Bit 9 represents the Monospaced trait
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return False
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: monospaced_check.py <font_file>")
+        sys.exit(1)
+
+    font_path = sys.argv[1]
+    if is_monospaced(font_path):
+        print("The font is monospaced.")
+    else:
+        print("The font is not monospaced.")

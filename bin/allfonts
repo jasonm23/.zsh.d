@@ -1,0 +1,43 @@
+#!/usr/bin/env swift
+
+import Foundation
+import CoreText
+
+func listAllFontsWithTraits() {
+    let fontArray = CTFontManagerCopyAvailableFontFamilyNames()
+
+    if CFGetTypeID(fontArray) == CFArrayGetTypeID() {
+        let fonts = fontArray as! [String]
+
+        for fontName in fonts {
+            let font = CTFontCreateWithName(fontName as CFString, 0, nil)
+            
+            print("Font:", fontName)
+            
+            let traits = CTFontDescriptorCopyAttribute(CTFontCopyFontDescriptor(font), kCTFontTraitsAttribute) as? [CFString: Any]
+            if let symbolicTraits = traits?[kCTFontSymbolicTrait] as? UInt32 {
+                let traitStrings: [(CTFontSymbolicTraits, String)] = [
+                    (.traitItalic, "Italic"),
+                    (.traitBold, "Bold"),
+                    (.traitExpanded, "Expanded"),
+                    (.traitCondensed, "Condensed"),
+                    (.traitMonoSpace, "Monospace"),
+                    (.traitVertical, "Vertical"),
+                    (.traitUIOptimized, "UI Optimized"),
+                    (.traitColorGlyphs, "Color Glyphs"),
+                    (.traitComposite, "Composite")
+                ]
+                
+                for (trait, traitString) in traitStrings {
+                    if trait != .traitClassMask && symbolicTraits & trait.rawValue != 0 {
+                        print("Trait:", traitString)
+                    }
+                }
+            }
+            
+            print("---")
+        }
+    }
+}
+
+listAllFontsWithTraits()

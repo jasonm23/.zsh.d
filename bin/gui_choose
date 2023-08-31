@@ -39,13 +39,14 @@ def focus_text(*args):
 
 # --- Command line parser
 parser = argparse.ArgumentParser(
-    prog="choose.py",
+    prog="gui_choose",
     description="Provide a autocomplete selection GUI usable from a script.",
     epilog="By default autocomplete suggestions are read as lines from stdin."
 )
 
 parser.add_argument('-i', '--input', help="Suggestions file", type=str)
 parser.add_argument('-t', '--title', help="Window title", type=str, default="Select")
+parser.add_argument('-g', '--geometry', help="Window geometry", type=str, default="700x450+50+50")
 
 args = parser.parse_args()
 
@@ -80,7 +81,7 @@ suggestion_rows = 48
 
 # --- Assemble GUI
 root = tk.Tk()
-root.geometry("595x370")
+root.geometry(args.geometry)
 root.title(title)
 root.grid_columnconfigure(0, weight=1)
 
