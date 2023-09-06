@@ -97,6 +97,5 @@ alias tidy='/usr/local/bin/tidy'
 alias guard='/usr/local/lib/ruby/gems/3.2.0/bin/guard'
 alias xclean-whitespace="find . | grep '[.]swift' | xargs sed -i '' -E 's/[[:blank:]]+$//'"
 alias lg='lazygit'
-alias passgen='openssl rand -base64 18'
 alias yt-mp3='yt-dlp -x --audio-format mp3'
 alias mpv='/Applications/mpv.app/Contents/MacOS/mpv'
