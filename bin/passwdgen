@@ -17,7 +17,6 @@ def clear_clipboard():
     time.sleep(45)
     # Copy a blank string to clear the clipboard
     pyperclip.copy("")
-    print("Clipboard cleared after 45 seconds.")
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a random password.")
@@ -54,7 +53,7 @@ def main():
         timer_thread.start()
         
         pyperclip.copy(password)
-        print("Password copied to clipboard.")
+        print("Password copied to clipboard (will clear in 45 seconds).")
 
     else:
         print(password)
