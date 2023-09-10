@@ -269,3 +269,7 @@ extract_frames() {
 fzfmake() {
   rg '^[^\t]*:' Makefile | fzf | cut -f1
 }
+
+findmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | gui_choose)" }
+
+fzfmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | fzf)" }
