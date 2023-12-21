@@ -273,3 +273,21 @@ fzfmake() {
 findmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | gui_choose)" }
 
 fzfmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | fzf)" }
+
+trim_zsh_history() {
+    fc -W  # Write recent history to disk
+
+    local n
+    n=$(fzf --header="Select the starting entry to trim from the most recent history:" --reverse --tac < ~/.zsh_history)
+
+    if [ -n "$n" ]; then
+        sed -i -e "$n,\$d" ~/.zsh_history
+        echo "Trimmed the Zsh history, starting from the selected entry to the end."
+
+        fc -R  # Reload the Zsh history from disk
+        echo "Reloaded Zsh history from disk."
+    else
+        echo "No selection made. Zsh history remains unchanged."
+    fi
+}
+>>>>>>> Stashed changes
