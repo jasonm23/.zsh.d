@@ -290,4 +290,3 @@ trim_zsh_history() {
         echo "No selection made. Zsh history remains unchanged."
     fi
 }
->>>>>>> Stashed changes
