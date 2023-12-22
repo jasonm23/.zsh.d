@@ -99,3 +99,5 @@ alias xclean-whitespace="find . | grep '[.]swift' | xargs sed -i '' -E 's/[[:bla
 alias lg='lazygit'
 alias yt-mp3='yt-dlp -x --audio-format mp3'
 alias mpv='/Applications/mpv.app/Contents/MacOS/mpv'
+alias ytx='yt-dlp --trim-filenames 40  --restrict-filenames  --cookies-from-browser Firefox'
+alias add-magnet='transmission-remote http://192.168.1.100:9091/transmission --add'

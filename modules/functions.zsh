@@ -290,3 +290,9 @@ trim_zsh_history() {
         echo "No selection made. Zsh history remains unchanged."
     fi
 }
+
+mkvtitle () {
+  title=$2
+  filename=$1
+  mkvpropedit "$filename" -s title="$title"
+}
