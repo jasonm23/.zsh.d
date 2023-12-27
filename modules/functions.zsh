@@ -274,25 +274,32 @@ findmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | gui_c
 
 fzfmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | fzf)" }
 
-trim_zsh_history() {
-    fc -W  # Write recent history to disk
-
-    local n
-    n=$(fzf --header="Select the starting entry to trim from the most recent history:" --reverse --tac < ~/.zsh_history)
-
-    if [ -n "$n" ]; then
-        sed -i -e "$n,\$d" ~/.zsh_history
-        echo "Trimmed the Zsh history, starting from the selected entry to the end."
-
-        fc -R  # Reload the Zsh history from disk
-        echo "Reloaded Zsh history from disk."
-    else
-        echo "No selection made. Zsh history remains unchanged."
-    fi
-}
-
 mkvtitle () {
   title=$2
   filename=$1
   mkvpropedit "$filename" -s title="$title"
+}
+
+trim_zsh_history () {
+  fc -W
+  local start
+  # Use nl to number the lines, then fzf to select the marker (line number to keep)
+  start=$(nl -b a ~/.zsh_history | tac | fzf --header="Select a row to keep (from oldest to latest):" --reverse | cut -f1)
+
+  if [ -n "$start" ]
+  then
+    # Print a message before trimming
+    echo "Trimming Zsh history, keeping entries from row: $start and older."
+
+    # Use sed to delete lines from the marker onwards
+    sed -i.bak -e "${start},$ d" ~/.zsh_history
+
+    # Print a message after trimming
+    echo "Trimming complete."
+
+    fc -R
+    echo "Reloaded Zsh history from disk."
+  else
+    echo "No valid marker selected. Zsh history remains unchanged."
+  fi
 }
