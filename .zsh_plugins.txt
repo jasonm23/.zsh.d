@@ -14,4 +14,4 @@ djui/alias-tips
 mollifier/cd-gitroot
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
-zdharma/fast-syntax-highlighting
+jasonm23/fast-syntax-highlighting
