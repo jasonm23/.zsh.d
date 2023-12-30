@@ -1,18 +1,20 @@
+
 tpb() {
-        search_string="$*"
-        search="$(perl -MURI::Escape -e "print uri_escape('${search_string}')")"
-        url="https://tpb.party/search/${search}/1/99/0"
-        html=$(curl -s "$url")
-        scrape="$(echo "${html}" | scrape_tpb)"
-        selected_line="$(fzf --header "Searching for ${search_string}"  <<<"${scrape}")"
+        local search_string="$*"
+        local search="$(perl -MURI::Escape -e "print uri_escape('${search_string}')")"
+        local url="https://tpb.party/search/${search}/1/99/0"
+        local html=$(curl -s "$url")
+        local scrape="$(echo "${html}" | scrape_tpb)"
+        local selected_line="$(fzf --header "Searching for ${search_string}"  <<<"${scrape}")"
         [[ "${selected_line}" == "" ]] && return
-        selected=$(cut -c1-2 <<<"${selected_line}" )
-        magnet="$(echo "${html}" | scrape_tpb ${selected})"
+        local selected=$(cut -c1-2 <<<"${selected_line}" )
+        local magnet="$(echo "${html}" | scrape_tpb ${selected})"
         echo "${magnet}"
 }
 
 findtorrent() {
-        magnet="$(tpb "$*")"
+        local transmission_host=192.168.1.27
+        local magnet="$(tpb "$*")"
         [[ "$magnet" == "" ]] && return
-        transmission-remote http://192.168.1.27:9091/transmission -a "$magnet"
+        transmission-remote http://${transmission_host}:9091/transmission -a "$magnet"
 }
