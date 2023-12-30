@@ -14,5 +14,5 @@ tpb() {
 findtorrent() {
         magnet="$(tpb "$*")"
         [[ "$magnet" == "" ]] && return
-        transmission-remote http://192.168.1.100:9091/transmission -a "$magnet"
+        transmission-remote http://192.168.1.27:9091/transmission -a "$magnet"
 }
