@@ -13,7 +13,7 @@ tpb() {
 }
 
 findtorrent() {
-        local transmission_host=192.168.1.27
+        local transmission_host=192.168.1.26
         local magnet="$(tpb "$*")"
         [[ "$magnet" == "" ]] && return
         transmission-remote http://${transmission_host}:9091/transmission -a "$magnet"
