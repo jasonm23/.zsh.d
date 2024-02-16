@@ -96,6 +96,7 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 export PATH=/usr/local/lib/ruby/gems/3.2.0/bin:$PATH
+export PATH=$PATH:$HOME/flutter/bin
 export COLORTERM=truecolor
 export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 export PATH="$HOME/.cask/bin:$PATH"
