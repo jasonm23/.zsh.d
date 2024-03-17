@@ -90,3 +90,4 @@ export PATH="/usr/local/opt/ruby/bin:$PATH"
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 source ~/.autoenv/activate.sh
+source ~/.autoenv/activate.sh

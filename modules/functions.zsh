@@ -25,20 +25,22 @@ sedrename() {
   fi
 }
 
-ec() {
-  if [[  "$(uname)" == "Linux" ]]; then
-    emacs_socket=$(lsof -c emacs | grep -E -o ' /.*/server ' | tr -d ' ')
-    emacsclient -s "$emacs_socket" -n "$@" 2> /dev/null
-    if [[ $? == 1 ]]; then
-      emacs "$@"
-    fi
-  elif [[ "$(uname)" == "Darwin" ]]; then
-    emacsclient -n "$@" 2> /dev/null
-    if [[ $? == 1 ]]; then
-      open /Applications/Emacs.app -- "$@"
-    fi
-  fi
-}
+if [[  "$(uname)" == "Linux" ]]; then
+    ec() {    
+	emacs_socket=$(lsof -c emacs | grep -E -o ' /.*/server ' | tr -d ' ')
+	emacsclient -s "$emacs_socket" -n "$@" 2> /dev/null
+	if [[ $? == 1 ]]; then
+	    emacs "$@"
+	fi
+    }    
+elif [[ "$(uname)" == "Darwin" ]]; then
+    ec() {
+	emacsclient -n "$@" 2> /dev/null
+	if [[ $? == 1 ]]; then
+	    open /Applications/Emacs.app -- "$@"
+	fi
+    }
+fi 
 
 get_gallery_jpgs () {
   gallery_url="$1"

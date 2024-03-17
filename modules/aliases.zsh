@@ -45,25 +45,7 @@ alias l='ls -a1'
 alias ll='ls -halF'
 alias la='ls -halF'
 
-# Rails / Spring / Rspec
-alias rp='rspec'
-alias rpf='rspec --fail-fast'
-alias rspecf='rspec --fail-fast'
-
-alias rs='rails server'
-alias rc='rails console'
-alias rd='rails db'
-
-alias ikr='interactively-kill-ruby' # from functions.zsh
-
-alias rdm='rake db:migrate'
-alias rdmr='rake db:migrate:redo'
-alias rdmt='rake db:migrate db:test:prepare'
-
-# Edit latest rails migration
-alias eldm='edit `find ./db/migrate | tail -1`'
-
-alias gitx='/Applications/GitX.app/Contents/Resources/gitx'
+[[ -e /Applications/GitX.app/Contents/Resources/gitx ]] && alias gitx='/Applications/GitX.app/Contents/Resources/gitx'
 
 # Jump to Postgres repl
 alias psq='psql -U postgres'
@@ -74,31 +56,34 @@ alias ifconfig_me='dig +short myip.opendns.com @resolver1.opendns.com'
 # unix timestamp
 alias timestamp='date -j -f "%a %b %d %T %Z %Y" "`date`" "+%s"'
 
-
 alias gcln='git clean -fd'
 
 alias gtypist='gtypist -b -S -s -i'
 
-alias yump3='youtube-dl --extract-audio --audio-format mp3'
-
 alias diff='/usr/local/bin/diff'
 
-alias bsr='brew services restart'
 alias ..='cd ..'
 alias ...='cd ../..'
-alias inkscape='/Applications/Inkscape.app/Contents/MacOS/inkscape'
-alias bss='brew services stop'
-alias ffpython='/Applications/FontForge.app/Contents/MacOS/FFPython'
-alias killdock='killall -KILL Dock'
-alias killfinder='killall -KILL Finder'
+alias ....='cd ../../..'
+
+[[ -e /Applications/Inkscape.app/Contents/MacOS/inkscape ]] && alias inkscape='/Applications/Inkscape.app/Contents/MacOS/inkscape'
+[[ -e /usr/local/Cellar ]] && alias bsr='brew services restart'
+[[ -e /usr/local/Cellar ]] && alias bss='brew services stop'
+[[ -e /Applications/FontForge.app/Contents/MacOS/FFPython ]] && alias ffpython='/Applications/FontForge.app/Contents/MacOS/FFPython'
+
+if [[ uname == "Darwin" ]]; then
+  alias killdock='killall -KILL Dock'
+  alias killfinder='killall -KILL Finder'
+fi
+
 alias cdz='cd ~/.zsh.d'
-alias doom='~/.config/emacs/bin/doom'
-alias tidy='/usr/local/bin/tidy'
-alias guard='/usr/local/lib/ruby/gems/3.2.0/bin/guard'
+
+[[ -e ~/.config/emacs/bin/doom ]] && alias doom='~/.config/emacs/bin/doom'
+
+[[ -e /usr/local/lib/ruby/gems/3.2.0/bin/guard ]] && alias guard='/usr/local/lib/ruby/gems/3.2.0/bin/guard'
+
+[[ -e /Applications/mpv.app/Contents/MacOS/mpv ]] && alias mpv='/Applications/mpv.app/Contents/MacOS/mpv'
+
 alias xclean-whitespace="find . | grep '[.]swift' | xargs sed -i '' -E 's/[[:blank:]]+$//'"
-alias lg='lazygit'
 alias yt-mp3='yt-dlp -x --audio-format mp3'
-alias mpv='/Applications/mpv.app/Contents/MacOS/mpv'
 alias ytx='yt-dlp --trim-filenames 40  --restrict-filenames  --cookies-from-browser Firefox'
-alias add-magnet='transmission-remote http://192.168.1.27:9091/transmission --add'
-alias dotgit='/usr/bin/git --git-dir=/home/jason/.dotfiles/ --work-tree=/home/jason'
