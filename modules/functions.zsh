@@ -109,20 +109,6 @@ google_translate_line () {
       "https://translate.google.com/translate_a/single?client=at&dt=t&dt=ld&dt=qca&dt=rm&dt=bd&dj=1&hl=$target_lang&ie=UTF-8&oe=UTF-8&inputm=2&otf=2&iid=1dd3b944-fa62-4b55-b330-74909a99969e")
 }
 
-id3() {
-if (( $# != 6 )); then
-  echo "Usage: $0 <title> <artist> <album> <year> <genre>"
-else
-  id3v2 -2 \
-    -t "$1" \
-    -a "$2" \
-    -A "$3" \
-    -y "$4" \
-    -g "$5" \
-    "$6"
-fi
-}
-
 invert-image () {
   convert "$1" -channel RGB -negate "$2"
 }
