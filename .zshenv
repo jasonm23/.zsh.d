@@ -112,3 +112,5 @@ export SAVEHIST=$HISTSIZE
 
 export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
 export APPLE_SSH_ADD_BEHAVIOR=macos
+
+export PIP_DEFAULT_TIMEOUT=100
