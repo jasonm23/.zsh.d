@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if which ytfzf > /dev/null; then
+    url=$(ytfzf -L)
+    if [[ "$url" != "" ]]; then
+        yt-dlp -x --audio-format mp3 $url &
+    fi
+else
+    echo "Install ytfzf"
+    exit 1
+fi
+
