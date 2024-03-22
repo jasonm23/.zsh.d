@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [[ $(which ytfzf)" == "" ]]; then
+   echo "Install ytfzf"
+   exit 1
+fi
+
+ytfzf -L | xargs yt-dlp -x --audio-format mp3
