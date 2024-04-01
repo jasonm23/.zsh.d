@@ -102,6 +102,7 @@ export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 
 export PATH="$HOME/.cask/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 export LC_CTYPE="en_US.UTF-8"
 export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
