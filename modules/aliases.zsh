@@ -60,8 +60,6 @@ alias gcln='git clean -fd'
 
 alias gtypist='gtypist -b -S -s -i'
 
-alias diff='/usr/local/bin/diff'
-
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
