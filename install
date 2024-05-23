@@ -6,7 +6,7 @@ dotfiles=('.zsh_plugins.txt' '.zshrc' '.zshenv' '.pairs' '.pryrc' '.irbrc')
 echo "!IMPORTANT! The following will be symlinked to $HOME"
 echo "Existing files/symlinks will be overwritten."
 
-for dotfile in $dotfiles; do
+for dotfile in ${dotfiles[@]}; do
   echo "${dotfile}"
 done
 
@@ -16,10 +16,12 @@ read -r
 
 echo "Linking..."
 
-for dotfile in $dotfiles; do
+for dotfile in ${dotfiles[@]}; do
   ln -sfv ~/.zsh.d/${dotfile} ~/${dotfile}
 done
 
 ln -sfv ~/.zsh.d/modules/iterm-shell-integration.zsh ~/.iterm2_shell_integration.zsh
 
 echo "Done."
+ls -ls ~/
+
