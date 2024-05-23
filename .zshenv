@@ -4,6 +4,9 @@
 
   export TERM=xterm-256color
 
+  export LANGUAGE="en_US"
+  export LC_CTYPE="en_US.UTF-8"
+  export LANG="C.UTF-8"
   #
   # Browser
   #
@@ -41,10 +44,6 @@
 
   typeset -gU cdpath fpath mailpath path
 
-  if [ -d "$HOME/bin" ]; then
-    PATH="$HOME/bin:$PATH"
-  fi
-
   # Set the the list of directories that cd searches.
   # cdpath=(
   #   $cdpath
@@ -78,8 +77,12 @@
     export LESSOPEN='| /usr/bin/env lesspipe.sh %s 2>&-'
   fi
 
-  export LESSPIPE=`which src-hilite-lesspipe.sh`
-  export LESSOPEN="| ${LESSPIPE} %s"
+  if [[ "$(which src-hilite-lesspipe.sh)" == "src-hilite-lesspipe.sh not found" ]]; then
+    # no src-hilite-lesspipe
+  else
+    export LESSPIPE=`which src-hilite-lesspipe.sh`
+    export LESSOPEN="| ${LESSPIPE} %s"
+  fi
 
   #
   # Temporary Files
@@ -92,29 +95,61 @@
     fi
   fi
 
-  export GOPATH=$HOME/go
-  export PATH=$PATH:$GOPATH/bin
-  export PATH=$PATH:/usr/local/opt/go/libexec/bin
-  export PATH=/usr/local/lib/ruby/gems/3.2.0/bin:$PATH
-  export PATH=$PATH:$HOME/flutter/bin
+  if [[ -e "$HOME/go" ]]; then
+    export GOPATH=$HOME/go
+    export PATH=$PATH:$GOPATH/bin
+    export PATH=$PATH:/usr/local/opt/go/libexec/bin
+  fi
+  
+  if [[ -e "/usr/local/lib/ruby/gems/3.2.0/bin" ]]; then
+    export PATH=/usr/local/lib/ruby/gems/3.2.0/bin:$PATH
+  fi
+
+  if [[ -e "$HOME/flutter/bin" ]]; then
+    export PATH=$PATH:$HOME/flutter/bin
+  fi
+  
   export COLORTERM=truecolor
+  
   export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 
-  export PATH="$HOME/.cask/bin:$PATH"
-  export PATH="$HOME/.local/bin:$PATH"
-  export PATH="$HOME/.cargo/bin:$PATH"
-  export PATH="$HOME/.npm-global/bin:$PATH"
-  export PATH="$HOME/bin:$PATH"
+  if [[ -e "$HOME/.cask/bin" ]]; then
+    export PATH="$HOME/.cask/bin:$PATH"
+  fi
+
+  if [[ -e "$HOME/.local/bin" ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
+  fi
+
+  if [[ -e "$HOME/.cargo/bin" ]]; then
+    export PATH="$HOME/.cargo/bin:$PATH"
+  fi
+
+  if [[ -e "$HOME/.npm-global/bin" ]]; then
+    export PATH="$HOME/.npm-global/bin:$PATH"
+  fi
+
+  if [[ -e "$HOME/bin" ]]; then
+    export PATH="$HOME/bin:$PATH"
+  fi
   
   export LC_CTYPE="en_US.UTF-8"
-  export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
+
+  if [[ -e '/Applications/Android Studio.app/Contents/jre/Contents/Home' ]]; then
+    export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
+  fi
 
   export HISTSIZE=99999
   export HISTFILESIZE=99999
   export SAVEHIST=$HISTSIZE
 
-  export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
-  export APPLE_SSH_ADD_BEHAVIOR=macos
+  if [[ -e "/usr/local/bin/src-hilite-lesspipe.sh" ]]; then
+    export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+  fi
+
+  if [[ "$(uname -o)" == "Darwin" ]]; then
+    export APPLE_SSH_ADD_BEHAVIOR=macos
+  fi
 
   export PIP_DEFAULT_TIMEOUT=100
-  . "$HOME/.cargo/env"
+  [[ -e "$HOME/.cargo" ]] && . "$HOME/.cargo/env"

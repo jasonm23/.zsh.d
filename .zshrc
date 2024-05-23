@@ -28,8 +28,6 @@ autoload zmv
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
 [[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
 
-export FZF_DEFAULT_OPTS='--height 40% --border --info hidden'
-
 # Load modules after loading config (in case environment is adjusted)
 # Source handmade modules
 
@@ -83,11 +81,10 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
-export PATH="/usr/local/opt/ruby/bin:$PATH"
-
-
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-source ~/.autoenv/activate.sh
-source ~/.autoenv/activate.sh
+if [[ -e "$HOME/.autoenv/activate.sh" ]]; then
+    source ~/.autoenv/activate.sh
+fi
+
