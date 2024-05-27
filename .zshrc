@@ -1,5 +1,3 @@
-export PATH=$PATH:/usr/libexec
-
 if ! [[ -e ${ZDOTDIR:-~}/.antidote ]]; then
   git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
 fi

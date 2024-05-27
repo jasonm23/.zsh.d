@@ -4,6 +4,10 @@
 
 export TERM=xterm-256color
 
+if [[ -e /usr/libexec  ]]; then
+  export PATH=$PATH:/usr/libexec
+fi
+
 export LANGUAGE="en_US"
 export LC_CTYPE="en_US.UTF-8"
 export LANG="C.UTF-8"
