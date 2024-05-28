@@ -12,7 +12,7 @@ ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[red]($fg_bold[white]"
 ZSH_THEME_GIT_PROMPT_SUFFIX="$fg_bold[red])"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_GIT_PROMPT_DIRTY=" ✨ "
-ZSH_THEME_IS_SSH_SYMBOL="🌐"
+ZSH_THEME_IS_SSH_SYMBOL=" 󱫋 "
 ZSH_THEME_GIT_PROMPT_BEHIND=""
 
 setopt prompt_subst
@@ -84,5 +84,5 @@ git_info() {
 obreak="
 "
 # The final % (or #) prompt is always on a new line.
-PROMPT='%F{$Bc}[%# %F{$Nc}%n%F{$Bc}@$(is_ssh)%F{$Mc}%M%F{$Bc}|%F{$Tc}%D{%I:%M%p}%F{$Bc}]$(git_info)$obreak%F{$Bc}[%F{$Pc}%~%F{$Bc}]$reset_color
+PROMPT='%F{$Bc}[%# %F{$Nc}%n%F{$Bc}@%F{$Mc}%M$(is_ssh)%F{$Bc}|%F{$Tc}%D{%I:%M%p}%F{$Bc}]$(git_info)$obreak%F{$Bc}[%F{$Pc}%~%F{$Bc}]$reset_color
 '
