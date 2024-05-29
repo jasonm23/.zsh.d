@@ -93,18 +93,19 @@ if [[ "$(pwd)" != "$HOME" ]]; then
     cd "$HOME"
 fi
 
-# TODO - ssh-agent check and set
-# if [[ -v $SSH_AGENT_PID && -v $SSH_AUTH_SOCK ]]; then
-#     if [[ "${SSH_AUTH_SOCK}" != "$HOME/.ssh/sock" ]]; then
-#         # If the SSH_AUTH_SOCK isn't ~/.ssh/sock we kill it and start a new one
-
-#     fi
-
-#     ssh-add -l
-# else
-#     if pidof ssh-agent; then
-#         export SSH_AGENT_PID=$(pidof ssh-agent)
-#     else
-
-#     fi
-# fi
+if [[ $USER == root ]]; then
+    echo "Root user, skipping ssh-agent setup."
+else
+    if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock && $SSH_AGENT_PID == $(pidof ssh-agent) ]]; then
+	echo "ssh-agent connected"
+	ssh-add -l
+    else
+	echo "ssh-agent re-connected"
+	pidof ssh_agent || ssh-agent -a ~/.ssh/sock
+	export SSH_AUTH_SOCK=~/.ssh/sock
+	export SSH_AGENT_PID=$(pidof ssh-agent)
+	ssh-add
+	ssh-add $HOME/.ssh/id_bitchu
+	ssh-add -l
+    fi
+fi
