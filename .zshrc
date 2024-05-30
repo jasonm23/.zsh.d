@@ -100,12 +100,15 @@ else
 	echo "ssh-agent connected"
 	ssh-add -l
     else
-	echo "ssh-agent re-connected"
-	pidof ssh_agent || ssh-agent -a ~/.ssh/sock
+	if pidof ssh-agent > /dev/null; then
+	    echo "re-connecting to ssh-agent $(pidof ssh-agent)"
+	else
+            echo "ssh-agent setup"
+	    rm -rf ~/.ssh/sock
+	    ssh-agent -a ~/.ssh/sock
+        fi
 	export SSH_AUTH_SOCK=~/.ssh/sock
 	export SSH_AGENT_PID=$(pidof ssh-agent)
-	ssh-add
-	ssh-add $HOME/.ssh/id_bitchu
 	ssh-add -l
     fi
 fi
