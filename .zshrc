@@ -1,5 +1,5 @@
 if ! [[ -e ${ZDOTDIR:-~}/.antidote ]]; then
-  git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
+    git clone https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
 fi
 
 source ${ZDOTDIR:-~}/.antidote/antidote.zsh
@@ -13,7 +13,7 @@ antidote load
 host_theme=$HOME/.zsh.d/themes/$(hostname).zsh-theme
 
 if [ -r $host_theme ]; then
-  source $host_theme
+    source $host_theme
 else
   # apply default theme
   source $HOME/.zsh.d/themes/ocodo.zsh-theme
@@ -43,7 +43,7 @@ done
 
 # Export SSH_AUTH_SOCK and SSH_AGENT_PID
 if [[ $(uname) == "Darwin" ]];then
-   ssh-fix-env quiet
+    ssh-fix-env quiet
 fi
 
 export EMACS=emacs
@@ -93,22 +93,21 @@ if [[ "$(pwd)" != "$HOME" ]]; then
     cd "$HOME"
 fi
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 if [[ $USER == root ]]; then
     echo "Root user, skipping ssh-agent setup."
 else
-    if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock && $SSH_AGENT_PID == $(pidof ssh-agent) ]]; then
-	echo "ssh-agent connected"
-	ssh-add -l
-    else
-	if pidof ssh-agent > /dev/null; then
-	    echo "re-connecting to ssh-agent $(pidof ssh-agent)"
-	else
-            echo "ssh-agent setup"
-	    rm -rf ~/.ssh/sock
-	    ssh-agent -a ~/.ssh/sock
-        fi
-	export SSH_AUTH_SOCK=~/.ssh/sock
-	export SSH_AGENT_PID=$(pidof ssh-agent)
-	ssh-add -l
-    fi
+  if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock && $SSH_AGENT_PID == $(pidof ssh-agent) ]]; then
+      echo "ssh-agent connected"
+      ssh-add -l
+  elif [[ -e ~/.ssh/sock ]]; then
+    echo "ssh-agent re-connect to PID $(pidof ssh-agent)"
+  else
+    echo "ssh-agent start"
+    ssh-agent -a ~/.ssh/sock
+  fi
+    export SSH_AUTH_SOCK=~/.ssh/sock
+    export SSH_AGENT_PID=$(pidof ssh-agent)
+    ssh-add -l
 fi
