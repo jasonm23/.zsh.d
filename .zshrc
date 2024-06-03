@@ -41,11 +41,6 @@ for z in $HOME/.zsh.d/literate/*.md; do
   rm $tempfile
 done
 
-# Export SSH_AUTH_SOCK and SSH_AGENT_PID
-if [[ $(uname) == "Darwin" ]];then
-    ssh-fix-env quiet
-fi
-
 export EMACS=emacs
 
 # Allow completion to expand around [._-], for example:
@@ -102,7 +97,7 @@ else
       echo "ssh-agent connected"
       ssh-add -l
   elif [[ -e ~/.ssh/sock ]]; then
-    echo "ssh-agent re-connect to PID $(pidof ssh-agent)"
+      echo "ssh-agent re-connect to PID $(pidof ssh-agent)"
   else
     echo "ssh-agent start"
     ssh-agent -a ~/.ssh/sock
