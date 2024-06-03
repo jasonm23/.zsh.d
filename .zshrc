@@ -108,7 +108,8 @@ else
     ssh-add -l
 fi
 
-git -C $HOME/.zsh.d remote update
+echo ".zsh.d checking for updates..."
+git -C $HOME/.zsh.d remote update 2>&1 /dev/null
 
 zsh_d_git_status=$(git -C $HOME/.zsh.d status --ahead-behind | grep -F 'Your branch')
 
