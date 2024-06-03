@@ -96,10 +96,11 @@ else
   if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock && $SSH_AGENT_PID == $(pidof ssh-agent) ]]; then
       echo "ssh-agent connected"
       ssh-add -l
-  elif [[ -e ~/.ssh/sock ]]; then
+  elif pidof ssh-agent && [[ -e ~/.ssh/sock ]]; then
       echo "ssh-agent re-connect to PID $(pidof ssh-agent)"
   else
     echo "ssh-agent start"
+    rm -rf ~/.ssh/sock
     ssh-agent -a ~/.ssh/sock
   fi
     export SSH_AUTH_SOCK=~/.ssh/sock
