@@ -106,3 +106,5 @@ else
     export SSH_AGENT_PID=$(pidof ssh-agent)
     ssh-add -l
 fi
+
+git -C $HOME/.zsh.d remote update
