@@ -109,7 +109,7 @@ else
 fi
 
 echo ".zsh.d checking for updates..."
-git -C $HOME/.zsh.d remote update 2>&1 /dev/null
+git -C $HOME/.zsh.d remote update > /dev/null
 
 zsh_d_git_status=$(git -C $HOME/.zsh.d status --ahead-behind | grep -F 'Your branch')
 
