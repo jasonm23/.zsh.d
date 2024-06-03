@@ -109,8 +109,8 @@ fi
 
 git -C $HOME/.zsh.d remote update
 
-GIT_STATUS=$(git -C $HOME/.zsh.d status --ahead-behind | grep -F 'Your branch')
+zsh_d_git_status=$(git -C $HOME/.zsh.d status --ahead-behind | grep -F 'Your branch')
 
-if [[ "${GIT_STATUS}" =~ 'ahead|behind' ]]; then
-    echo ".zsh.d - $GIT_STATUS"
+if [[ "${zsh_d_git_status}" =~ 'ahead|behind' ]]; then
+    echo ".zsh.d - ${zsh_d_git_status}"
 fi

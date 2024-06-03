@@ -27,7 +27,7 @@ ssh_info() {
 git_info() {
 
   # Exit if not inside a Git repository
-  ! git rev-parse --is-inside-work-tree > /dev/null 2>&1 && return
+  git rev-parse --is-inside-work-tree > /dev/null 2>&1 || return
 
   # Git branch/tag, or name-rev if on detached head
   local GIT_LOCATION=${$(git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD)#(refs/heads/|tags/)}
@@ -76,9 +76,7 @@ git_info() {
   [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
   GIT_INFO+=( "\033[38;5;15m$GIT_LOCATION%{$reset_color%}" )
   echo "$FG[$Bc][${(j: :)GIT_INFO}$FG[$Bc]]"
-
 }
-
 
 # optional line-break
 obreak="
