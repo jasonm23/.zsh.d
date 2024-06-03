@@ -108,3 +108,4 @@ else
 fi
 
 git -C $HOME/.zsh.d remote update
+git -C $HOME/.zsh.d status --ahead-behind | grep -F 'Your branch'
