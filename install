@@ -23,5 +23,5 @@ done
 ln -sfv ~/.zsh.d/modules/iterm-shell-integration.zsh ~/.iterm2_shell_integration.zsh
 
 echo "Done."
-ls -ls ~/
+ls -lsa ~/
 
