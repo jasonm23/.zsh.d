@@ -153,7 +153,7 @@ if [[ -e "/usr/local/bin/src-hilite-lesspipe.sh" ]]; then
   export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
 fi
 
-if [[ "$(uname -o)" == "Darwin" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
   export APPLE_SSH_ADD_BEHAVIOR=macos
 fi
 
