@@ -25,7 +25,7 @@ fi
 
 export EDITOR=edit
 export PAGER="bat --style=grid"
-export BAT_THEME=gruvbox-dark
+export BAT_THEME=azure
 
 #
 # fzf
