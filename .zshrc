@@ -108,19 +108,22 @@ else
     ssh-add -l
 fi
 
-echo ".zsh.d checking for updates..."
-git -C $HOME/.zsh.d remote update > /dev/null
+if [[ -e $HOME/.zsh.d/.check ]]; then
 
-zsh_d_git_status=$(git -C $HOME/.zsh.d status --ahead-behind | grep -F 'Your branch')
+    echo ".zsh.d checking for updates..."
+    git -C $HOME/.zsh.d remote update > /dev/null
 
-if [[ "${zsh_d_git_status}" =~ 'ahead|behind' ]]; then
-    echo ".zsh.d - ${zsh_d_git_status}"
-else
-    echo ".zsh.d up to date"
+    zsh_d_git_status=$(git -C $HOME/.zsh.d status --ahead-behind | grep -F 'Your branch')
+
+    if [[ "${zsh_d_git_status}" =~ 'ahead|behind' ]]; then
+        echo ".zsh.d - ${zsh_d_git_status}"
+    else
+      echo ".zsh.d up to date"
+    fi
+
 fi
 
 # Set up fzf key bindings and fuzzy completion
-
 source <(fzf --zsh)
 
 # -- Use fd instead of fzf --
@@ -139,4 +142,6 @@ _fzf_compgen_path() {
 _fzf_compgen_dir() {
   fd --type=d --hidden --exclude .git . "$1"
 }
+
+# Nvm setup completion
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
