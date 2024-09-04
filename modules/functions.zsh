@@ -280,22 +280,29 @@ trim_zsh_history () {
   fc -W
   local start
   # Use nl to number the lines, then fzf to select the marker (line number to keep)
-  start=$(nl -b a ~/.zsh_history | tac | fzf --header="Select a row to keep (from oldest to latest):" --reverse | cut -f1)
+  start=$(nl -b a ~/.zsh_history |\
+      tac |\
+      fzf \
+      --header="Trim starting with (this and newer entries are removed):" \
+      --reverse |\
+      cut -f1)
 
   if [ -n "$start" ]
   then
     # Print a message before trimming
-    echo "Trimming Zsh history, keeping entries from row: $start and older."
+    echo "Trimming .zsh_history since row: $start."
 
     # Use sed to delete lines from the marker onwards
     sed -i.bak -e "${start},$ d" ~/.zsh_history
 
     # Print a message after trimming
-    echo "Trimming complete."
+    echo "Trimmed entries."
 
     fc -R
     echo "Reloaded Zsh history from disk."
+
   else
     echo "No valid marker selected. Zsh history remains unchanged."
+
   fi
 }
