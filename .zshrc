@@ -143,10 +143,8 @@ _fzf_compgen_dir() {
   fd --type=d --hidden --exclude .git . "$1"
 }
 
-# Nvm setup completion
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 # Fast Node Manager
+# use: cargo install fnm
 FNM_PATH="/home/jason/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="/home/jason/.local/share/fnm:$PATH"
