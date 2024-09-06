@@ -152,3 +152,6 @@ if [ -d "$FNM_PATH" ]; then
   eval "$(fnm completions --shell zsh)"
 fi
 
+# Install rustc / cargo with rustup (switch to this if used apt install etc.)
+# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
