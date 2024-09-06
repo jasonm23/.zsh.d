@@ -146,9 +146,11 @@ _fzf_compgen_dir() {
 # Nvm setup completion
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# fnm
+# Fast Node Manager
 FNM_PATH="/home/jason/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="/home/jason/.local/share/fnm:$PATH"
-  eval "`fnm env`"
+  eval "$(fnm env --use-on-cd --shell zsh)"
+  eval "$(fnm completions --shell zsh)"
 fi
+
