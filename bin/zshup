@@ -7,10 +7,7 @@ fi
 
 # Check for local uncommitted changes in git
 
-if [[ -z $(git -C ~/.zsh.d status --porcelain=1) ]]; then
-    # clear
-    test
-else
+if [[ ! -z $(git -C ~/.zsh.d status --porcelain=1) ]]; then
     # If there are changes, prompt the user to confirm and use interactive staging
     read -p "Local changes detected. Commit? (y/N) " -n 1 -r
     echo
