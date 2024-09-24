@@ -4,5 +4,5 @@ if [[ $(ssh-add -l) == "The agent has no identities." ]]; then
     ssh-add
 fi
 
-git -C ~/.zsh.d pull --rebase --autostash
-git -C ~/.zsh.d push
+pass git pull --rebase --autostash
+pass git push
