@@ -1,8 +1,29 @@
 #!/bin/bash
 
+# Add SSH key to agent if not already present
 if [[ $(ssh-add -l) == "The agent has no identities." ]]; then
     ssh-add
 fi
 
+# Check for local uncommitted changes in git
+
+if [[ -z $(git -C ~/.zsh.d status --porcelain=1) ]]; then
+    # clear
+    test
+else
+    # If there are changes, prompt the user to confirm and use interactive staging
+    read -p "Local changes detected. Commit? (y/N) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        git -C ~/.zsh.d add --patch
+        git -C ~/.zsh.d diff --staged
+        # Prompt for a commit message
+        reset
+        read -p "Enter commit message: " COMMIT_MESSAGE
+        git -C ~/.zsh.d commit -m "$COMMIT_MESSAGE"
+    fi
+fi
+
+# Pull and push changes from the remote repository
 git -C ~/.zsh.d pull --rebase --autostash
 git -C ~/.zsh.d push
