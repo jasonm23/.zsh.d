@@ -155,5 +155,7 @@ fi
 # Install rustc / cargo with rustup (switch to this if used apt install etc.)
 # curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-git -C ~/.zsh.d remote set-url origin git@helios:jason/.zsh.d.git 
+cd ~/.zsh.d
+git remote set-url origin git@helios:jason/.zsh.d.git 
+git remote add hub git@github.com:jasonm23/.zsh.d.git
 
