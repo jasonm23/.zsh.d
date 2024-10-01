@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $(ssh-add -l) == "The agent has no identities." ]]; then
-    ssh-add
+    ssh-add-fzf
 fi
 
 # Check for local uncommitted changes in git
