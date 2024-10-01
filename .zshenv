@@ -99,12 +99,20 @@ if [[ -d "$TMPDIR" ]]; then
   fi
 fi
 
+#
+# Path modifiers
+#
+
 if [[ -e "$HOME/go" ]]; then
   export GOPATH=$HOME/go
   export PATH=$PATH:$GOPATH/bin
   if [[ -e "/usr/local/opt/go/libexec/bin" ]]; then
     export PATH=$PATH:/usr/local/opt/go/libexec/bin
   fi
+fi
+
+if [[ -e "/usr/local/go" ]]; then
+  export PATH=$PATH:/usr/local/go/bin
 fi
 
 if [[ -e "/usr/local/lib/ruby/gems/3.2.0/bin" ]]; then
@@ -114,10 +122,6 @@ fi
 if [[ -e "$HOME/flutter/bin" ]]; then
   export PATH=$PATH:$HOME/flutter/bin
 fi
-
-export COLORTERM=truecolor
-
-export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 
 if [[ -e "$HOME/.cask/bin" ]]; then
   export PATH="$HOME/.cask/bin:$PATH"
@@ -145,6 +149,8 @@ if [[ -e '/Applications/Android Studio.app/Contents/jre/Contents/Home' ]]; then
   export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
 fi
 
+export COLORTERM=truecolor
+export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 export HISTSIZE=99999
 export HISTFILESIZE=99999
 export SAVEHIST=$HISTSIZE
