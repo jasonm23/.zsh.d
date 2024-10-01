@@ -2,7 +2,7 @@
 
 # Add SSH key to agent if not already present
 if [[ $(ssh-add -l) == "The agent has no identities." ]]; then
-    ssh-add
+    ssh-add-fzf
 fi
 
 # Check for local uncommitted changes in git
