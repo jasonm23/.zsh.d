@@ -1,9 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [[ -e ~/.config/doom || -e ~/.doom.d ]]; then
-    if [[ -e ~/.config/doom ]]; then
-        git -C ~/.config/doom pull --rebase --autostash
-    else
-        git -C ~/.doom.d pull --rebase --autostash
-    fi
-fi
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+REPO=~/.config/doom $SCRIPT_DIR/thingup

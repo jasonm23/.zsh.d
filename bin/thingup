@@ -1,24 +1,31 @@
 #!/bin/bash
 
+if [[ -z $REPO ]]; then
+   echo '$REPO was not defined before calling thingup'
+   exit 1
+fi
+
+# Add SSH key to agent if not already present
 if [[ $(ssh-add -l) == "The agent has no identities." ]]; then
     ssh-add-fzf
 fi
 
 # Check for local uncommitted changes in git
 
-if [[ ! -z $(pass git status --porcelain=1) ]]; then
+if [[ ! -z $(git -C $REPO status --porcelain=1) ]]; then
     # If there are changes, prompt the user to confirm and use interactive staging
     read -p "Local changes detected. Commit? (y/N) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        pass git add --patch --intent-to-add .
-        pass git diff --staged
+        git -C $REPO add --patch --intent-to-add $REPO
+        git -C $REPO diff --staged
         # Prompt for a commit message
         reset
         read -p "Enter commit message: " COMMIT_MESSAGE
-        pass git commit -m "$COMMIT_MESSAGE"
+        git -C $REPO commit -m "$COMMIT_MESSAGE"
     fi
 fi
 
-pass git pull --rebase --autostash
-pass git push
+# Pull and push changes from the remote repository
+git -C $REPO pull --rebase --autostash
+git -C $REPO push
