@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-REPO=~/.config/doom $SCRIPT_DIR/thingup
+if [[ -d ~/.config/doom ]]; then
+    REPO=~/.config/doom $SCRIPT_DIR/thingup
+    doom sync
+fi
+if [[ -d ~/.doom.d ]]; then
+    REPO=~/.doom.d $SCRIPT_DIR/thingup
+    doom sync
+fi
