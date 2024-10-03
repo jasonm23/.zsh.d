@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $HOME/.zsh.d/modules/ssh-helpers.zsh
+
 if [[ -z $REPO ]]; then
    echo '$REPO was not defined before calling thingup'
    exit 1
