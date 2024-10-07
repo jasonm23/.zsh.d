@@ -16,3 +16,4 @@ zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
 jasonm23/fast-syntax-highlighting
 marlonrichert/zsh-hist
+ocodo/ollama_zsh_completion

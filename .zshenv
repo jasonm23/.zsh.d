@@ -168,3 +168,8 @@ export PIP_DEFAULT_TIMEOUT=100
 if [[ -e "$HOME/.cargo/env" ]]; then
   source "$HOME/.cargo/env"
 fi
+
+# Nim
+if [[ -e $HOME/.nimble/bin ]]; then
+  export PATH=$HOME/.nimble/bin:$PATH
+fi
