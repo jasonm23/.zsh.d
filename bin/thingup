@@ -22,6 +22,7 @@ if [[ ! -z $(git -C $REPO status --porcelain=1) ]]; then
         git -C $REPO add --patch --intent-to-add $REPO
         git -C $REPO diff --staged
         # Prompt for a commit message
+        read -p "Contine..." CONTINUE
         reset
         read -p "Enter commit message: " COMMIT_MESSAGE
         git -C $REPO commit -m "$COMMIT_MESSAGE"
