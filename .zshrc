@@ -109,7 +109,6 @@ else
 fi
 
 if [[ -e $HOME/.zsh.d/.check ]]; then
-
     echo ".zsh.d checking for updates..."
     git -C $HOME/.zsh.d remote update > /dev/null
 
@@ -120,7 +119,6 @@ if [[ -e $HOME/.zsh.d/.check ]]; then
     else
       echo ".zsh.d up to date"
     fi
-
 fi
 
 # Set up fzf key bindings and fuzzy completion
@@ -145,19 +143,17 @@ _fzf_compgen_dir() {
 
 # Fast Node Manager
 # use: cargo install fnm
-FNM_PATH="/home/jason/.local/share/fnm"
+FNM_PATH="$HOME/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
-  export PATH="/home/jason/.local/share/fnm:$PATH"
+  export PATH="$HOME/.local/share/fnm:$PATH"
   eval "$(fnm env --use-on-cd --shell zsh)"
   eval "$(fnm completions --shell zsh)"
 fi
 
-# Install rustc / cargo with rustup (switch to this if used apt install etc.)
-# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
 if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@helios:jason/.zsh.d.git' ]]; then
   git -C ~/.zsh.d remote set-url origin git@helios:jason/.zsh.d.git 
 fi
+
 if [[ "$(git -C ~/.zsh.d remote get-url hub)" != "git@github.com:jasonm23/.zsh.d.git" ]]; then
   git -C ~/.zsh.d remote add hub git@github.com:jasonm23/.zsh.d.git
 fi
