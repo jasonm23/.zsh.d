@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ssh-add $(find ~/.ssh/ | grep -v -F ".pub" | grep -o '.*id.*' | fzf -m | tr '\n' ' ')
