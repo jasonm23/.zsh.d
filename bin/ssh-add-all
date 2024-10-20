@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ssh-add $(grep -l "BEGIN OPENSSH PRIVATE KEY" ~/.ssh/* 2>/dev/null)
