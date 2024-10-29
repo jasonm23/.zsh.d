@@ -83,6 +83,10 @@ if [[ -d "/usr/local/lib/ruby/gems/3.2.0/bin" ]]; then
   export PATH=/usr/local/lib/ruby/gems/3.2.0/bin:$PATH
 fi
 
+if [[ -d $HOME/.rbenv/bin ]]; then
+  export PATH=$HOME/.rbenv/bin:$PATH
+fi
+
 if [[ -d "$HOME/flutter/bin" ]]; then
   export PATH=$PATH:$HOME/flutter/bin
 fi
