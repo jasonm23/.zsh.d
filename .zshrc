@@ -154,7 +154,3 @@ if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@helios:jason/.zsh.d.git
   git -C ~/.zsh.d remote set-url origin git@helios:jason/.zsh.d.git 
 fi
 
-if [[ "$(git -C ~/.zsh.d remote get-url hub)" != "git@github.com:jasonm23/.zsh.d.git" ]]; then
-  git -C ~/.zsh.d remote add hub git@github.com:jasonm23/.zsh.d.git
-fi
-
