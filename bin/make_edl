@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "# mpv EDL v0
+$(ls -1 $1)
+" > $2
+
