@@ -1,6 +1,6 @@
 #!/bin/bash
 
 echo "# mpv EDL v0
-$(ls -1 $1)
+$(ls -1Sr $1)
 " > $2
 
