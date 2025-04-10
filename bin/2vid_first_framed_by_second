@@ -1,29 +1,102 @@
-#!/bin/bash
+#!/usr/bin/env python3
+import argparse
+import subprocess
+import sys
+import os
 
-CENTER_VID="$1"
-FRAME_VID="$2"
-OUTPUT_VID="$3"
+def get_video_properties(video_path):
+    """Get video height and frame rate"""
+    cmd = [
+        'ffprobe', '-v', 'error',
+        '-select_streams', 'v:0',
+        '-show_entries', 'stream=height,r_frame_rate',
+        '-of', 'csv=p=0',
+        video_path
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    height, frame_rate = result.stdout.strip().split(',')
+    return int(height), frame_rate
 
-if [[ -f "$CENTER_VID" && -f "$FRAME_VID" ]]; then
-    echo "Processing: ${CENTER_VID} framed by ${FRAME_VID}"
-else
-    exit
-fi
+def create_framed_video(center_vid, frame_vid, output_vid, flip_last=False):
+    try:
+        center_height, frame_rate = get_video_properties(center_vid)
 
-if [[ "" == "$OUTPUT_VID" ]]; then
-    echo "Required output video filename,"
-    exit
-fi
+        filter_complex = []
 
-ffmpeg \
-  -i "$FRAME_VID" -i "$CENTER_VID"  -i "$FRAME_VID" \
-  -filter_complex \
-    "[0:v]hflip[flipped]; \
-     [flipped][1:v][2:v]hstack=inputs=3[row]; \
-     [0:a][1:a][2:a]amix=inputs=3[a]" \
-  -map "[row]" -map "[a]" \
-  -shortest \
-  -c:v libx264 -preset fast -crf 23 \
-  -pix_fmt yuv420p \
-  -c:a aac -b:a 192k \
-  "$OUTPUT_VID"
+        if flip_last:
+            # Flip the last frame video (right side)
+            filter_complex.extend([
+                f"[0:v]scale=-1:{center_height}[left];",
+                f"[1:v]setsar=1[center];",  # Maintain sample aspect ratio
+                f"[2:v]hflip,scale=-1:{center_height}[right];",
+                f"[left][center][right]hstack=inputs=3[row];"
+            ])
+        else:
+            # Default: Flip the first frame video (left side)
+            filter_complex.extend([
+                f"[0:v]hflip,scale=-1:{center_height}[left];",
+                "[1:v]setsar=1[center];",
+                f"[2:v]scale=-1:{center_height}[right];",
+                "[left][center][right]hstack=inputs=3[row];"
+            ])
+
+        filter_complex.append("[0:a][1:a][2:a]amix=inputs=3[a]")
+
+        cmd = [
+            'ffmpeg',
+            '-i', frame_vid,
+            '-i', center_vid,
+            '-i', frame_vid,
+            '-filter_complex', ''.join(filter_complex),
+            '-map', '[row]',
+            '-map', '[a]',
+            '-shortest',
+            '-vsync', '2',  # Frame rate handling
+            '-r', frame_rate,  # Output frame rate
+            '-c:v', 'libx264',
+            '-preset', 'fast',
+            '-crf', '23',
+            '-pix_fmt', 'yuv420p',
+            '-c:a', 'aac',
+            '-b:a', '192k',
+            '-y',  # Overwrite output
+            '-x264-params', 'vbv-maxrate=5000:vbv-bufsize=10000',
+            output_vid
+        ]
+
+        subprocess.run(cmd, check=True)
+        print(f"Successfully created: {output_vid}")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error processing videos: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description='Create a framed video with center content and mirrored sides',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument('center_video', help='Center video file')
+    parser.add_argument('frame_video', help='Frame video file to use on sides')
+    parser.add_argument('output_video', help='Output video file')
+    parser.add_argument('--flip-last', action='store_true',
+                       help='Flip the last frame video instead of the first')
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.center_video):
+        print(f"Error: Center video not found: {args.center_video}")
+        sys.exit(1)
+    if not os.path.exists(args.frame_video):
+        print(f"Error: Frame video not found: {args.frame_video}")
+        sys.exit(1)
+
+    create_framed_video(
+        args.center_video,
+        args.frame_video,
+        args.output_video,
+        args.flip_last
+    )
