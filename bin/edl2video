@@ -28,13 +28,16 @@ class ClipInfo:
     start_time: Optional[float] = None
     length: Optional[float] = None
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class FFmpegClipCommand:
     """Represents components needed for an FFmpeg clip command"""
     input_file: str
     start_time: float
     duration: float
     output_file: str
+
+    def __hash__(self):
+        return hash((self.input_file, self.start_time, self.duration, self.output_file))
 
 def parse_line(line: str) -> tuple[str, Optional[float], Optional[float]]:
     """Parse a CSV line into video file, start time, and length"""
