@@ -1,92 +1,188 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env python3
 
-require 'optparse'
-require 'digest'
+import argparse
+import hashlib
+import logging
+import os
+import sys
+from dataclasses import dataclass
+from typing import List, Optional, Set
 
-def parse_line(line)
-  fields = line.split(',')
-  [
-    fields[0],
-    fields[1].to_f,
-    fields[2]&.to_f
-  ]
-end
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler('video_processor.log')
+    ]
+)
+logger = logging.getLogger(__name__)
 
-def assemble_clips(input_file, output_file)
-  input_lines = File.readlines(input_file)
+@dataclass
+class ClipInfo:
+    """Represents information about a video clip"""
+    original_index: int
+    output_filename: str
+    source_file: str
+    start_time: Optional[float] = None
+    length: Optional[float] = None
 
-  clips = []
+@dataclass
+class FFmpegClipCommand:
+    """Represents components needed for an FFmpeg clip command"""
+    input_file: str
+    start_time: float
+    duration: float
+    output_file: str
 
-  input_lines.map{|l| 
-    if l.include? "#" || l.blank?
-      nil 
-    else
-      l
-    end
-  }.compact.each_with_index do |line,idx|
-    # Use pattern matching to extract video file name and start/end times
-    video_file, start_time, length = parse_line(line)
+def parse_line(line: str) -> tuple[str, Optional[float], Optional[float]]:
+    """Parse a CSV line into video file, start time, and length"""
+    try:
+        fields = line.strip().split(',')
+        video_file = fields[0]
+        start_time = float(fields[1]) if len(fields) > 1 and fields[1] else None
+        length = float(fields[2]) if len(fields) > 2 and fields[2] else None
+        logger.debug(f"Parsed line: file={video_file}, start={start_time}, length={length}")
+        return (video_file, start_time, length)
+    except Exception as e:
+        logger.error(f"Failed to parse line '{line}': {str(e)}")
+        raise
 
-    ext = File.extname video_file
-    
-    if start_time
-      hash = Digest::MD5.hexdigest "#{video_file}#{start_time}#{length}"
-      clips << [idx, "#{hash}#{ext}", video_file, start_time, length]
-    else
-      hash = Digest::MD5.hexdigest "#{video_file}"
-      clips << [idx, "#{hash}#{ext}", video_file]
-    end
-  end
+def assemble_clips(input_file: str) -> List[ClipInfo]:
+    """Process input file and return a list of ClipInfo objects"""
+    clips = []
+    logger.info(f"Starting to process input file: {input_file}")
 
-  clips
+    try:
+        with open(input_file, 'r') as f:
+            for idx, line in enumerate(f):
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    logger.debug(f"Skipping line {idx}: {line}")
+                    continue
 
-end
+                video_file, start_time, length = parse_line(line)
+                ext = os.path.splitext(video_file)[1]
 
+                if start_time is not None:
+                    hash_str = f"{video_file}{start_time}{length}".encode('utf-8')
+                    hash_val = hashlib.md5(hash_str).hexdigest()
+                    clip = ClipInfo(
+                        original_index=idx,
+                        output_filename=f"{hash_val}{ext}",
+                        source_file=video_file,
+                        start_time=start_time,
+                        length=length
+                    )
+                    logger.debug(f"Created timed clip: {clip}")
+                else:
+                    hash_str = video_file.encode('utf-8')
+                    hash_val = hashlib.md5(hash_str).hexdigest()
+                    clip = ClipInfo(
+                        original_index=idx,
+                        output_filename=f"{hash_val}{ext}",
+                        source_file=video_file
+                    )
+                    logger.debug(f"Created full-file clip: {clip}")
 
-def ffmpeg_clip_cmd(inputs)
-  cmd = "ffmpeg"                      
-  cmd += " -i #{inputs[0]}"
-  cmd += " -ss #{inputs[1]}"         
-  cmd += " -t #{inputs[2]}"
-  cmd += " -c copy"                   
-  cmd += " #{inputs[-1]}"
+                clips.append(clip)
 
-  cmd
-end
+        logger.info(f"Successfully processed {len(clips)} clips from input file")
+        return clips
 
-input_file = ARGV[0]
-output_file = ARGV[1]
+    except Exception as e:
+        logger.error(f"Failed to assemble clips: {str(e)}")
+        raise
 
-all_clips = assemble_clips(input_file, output_file)
+def generate_ffmpeg_clip_command(cmd_info: FFmpegClipCommand) -> str:
+    """Generate FFmpeg command for clipping a video segment"""
+    try:
+        cmd = (
+            f"ffmpeg -i {cmd_info.input_file} "
+            f"-ss {cmd_info.start_time} "
+            f"-t {cmd_info.duration} "
+            f"-c copy {cmd_info.output_file}"
+        )
+        logger.debug(f"Generated FFmpeg clip command: {cmd}")
+        return cmd
+    except Exception as e:
+        logger.error(f"Failed to generate FFmpeg command: {str(e)}")
+        raise
 
-# puts "All clips:"
-# pp all_clips
+def generate_concat_command(clips: List[ClipInfo], output_file: str) -> str:
+    """Generate FFmpeg command for concatenating clips"""
+    try:
+        input_files = " ".join(f"-i {clip.output_filename}" for clip in clips)
+        cmd = (
+            f"ffmpeg {input_files} "
+            f"-filter_complex '[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] "
+            f"concat=n={len(clips)}:v=1:a=1 [v] [a]' "
+            f"-map '[v]' -map '[a]' {output_file}"
+        )
+        logger.info(f"Generated concatenation command for {len(clips)} clips")
+        logger.debug(f"Full concat command: {cmd}")
+        return cmd
+    except Exception as e:
+        logger.error(f"Failed to generate concatenation command: {str(e)}")
+        raise
 
-# puts "..."
+def main():
+    try:
+        logger.info("Starting video processing script")
 
-unique = all_clips.reduce(Set[]) {|a,b|
-  a.add([b[2],b[3],b[4],b[1]])
-}
+        parser = argparse.ArgumentParser(description='Generate FFmpeg commands for video editing.')
+        parser.add_argument('input_file', help='Input CSV file with clip information')
+        parser.add_argument('output_file', help='Output video file')
+        parser.add_argument('--verbose', action='store_true', help='Enable debug logging')
+        parser.add_argument('--retain-clips', action='store_true',
+                          help='Keep intermediate clip files after processing')
+        args = parser.parse_args()
 
-puts "# Create unique work clips for EDL
-"
+        if args.verbose:
+            logger.setLevel(logging.DEBUG)
+            logger.debug("Verbose debug logging enabled")
 
-puts unique.map {|u| ffmpeg_clip_cmd u }
+        all_clips = assemble_clips(args.input_file)
 
-puts "# Concat clips for EDL
-"
+        # Get unique clip commands
+        unique_commands: Set[FFmpegClipCommand] = set()
+        for clip in all_clips:
+            if clip.start_time is not None and clip.length is not None:
+                cmd = FFmpegClipCommand(
+                    input_file=clip.source_file,
+                    start_time=clip.start_time,
+                    duration=clip.length,
+                    output_file=clip.output_filename
+                )
+                unique_commands.add(cmd)
 
-print "ffmpeg "
+        logger.info(f"Generated {len(unique_commands)} unique clip commands")
+        if args.retain_clips:
+            logger.info("Intermediate clip files will be retained (--retain-clips specified)")
 
-print  all_clips.map{ |c| "-i #{c[1]}" }.join " "
+        # Output processing commands
+        print("# Create unique work clips for EDL\n")
+        for cmd in unique_commands:
+            print(generate_ffmpeg_clip_command(cmd))
 
-print " -filter_complex '[0:v] [0:a] [1:v] [1:a] [2:v] [2:a] concat=n=#{all_clips.size}:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' "
+        print("\n# Concat clips for EDL\n")
+        concat_cmd = generate_concat_command(all_clips, args.output_file)
+        print(concat_cmd)
 
-print output_file
+        # Only show removal command if --retain-clips is not specified
+        if not args.retain_clips:
+            print("\n# Remove unique work clips for EDL\n")
+            output_files = " ".join(cmd.output_file for cmd in unique_commands)
+            print(f"rm {output_files}")
+        else:
+            print("\n# Intermediate clip files are being retained (--retain-clips)\n")
 
-puts ""
+        logger.info("Script completed successfully")
 
-puts "# Remove unique work clips for EDL
-"
+    except Exception as e:
+        logger.critical(f"Script failed: {str(e)}")
+        sys.exit(1)
 
-puts "rm #{unique.map{ |u| u[-1] }.join ' '}"
+if __name__ == "__main__":
+    main()
