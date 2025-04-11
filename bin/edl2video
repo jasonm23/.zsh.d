@@ -17,10 +17,11 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler('video_processor.log')
+        logging.FileHandler('edl2video.log')
     ]
 )
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class ClipInfo:
@@ -31,6 +32,7 @@ class ClipInfo:
     start_time: Optional[float] = None
     length: Optional[float] = None
 
+
 @dataclass(frozen=True, order=True)
 class FFmpegClipCommand:
     """Represents components needed for an FFmpeg clip command"""
@@ -40,7 +42,13 @@ class FFmpegClipCommand:
     output_file: str
 
     def __hash__(self):
-        return hash((self.input_file, self.start_time, self.duration, self.output_file))
+        return hash((
+            self.input_file,
+            self.start_time,
+            self.duration,
+            self.output_file
+        ))
+
 
 @dataclass
 class Resolution:
@@ -48,24 +56,34 @@ class Resolution:
     width: int
     height: int
 
+
 def parse_line(line: str) -> Tuple[str, Optional[float], Optional[float]]:
     """Parse a CSV line into video file, start time, and length"""
     try:
         fields = line.strip().split(',')
         video_file = fields[0]
-        start_time = float(fields[1]) if len(fields) > 1 and fields[1] else None
-        length = float(fields[2]) if len(fields) > 2 and fields[2] else None
-        logger.debug(f"Parsed line: file={video_file}, start={start_time}, length={length}")
+
+        if len(fields) > 1 and fields[1]:
+            start_time = float(fields[1])
+
+        if len(fields) > 2 and fields[2]:
+            length = float(fields[2])
+
+        logger.debug(
+            f"Parsed: file={video_file}, start={start_time}, length={length}"
+        )
+
         return (video_file, start_time, length)
     except Exception as e:
-        logger.error(f"Failed to parse line '{line}': {str(e)}")
+        logger.error(f"Failed to parse '{line}': {str(e)}")
         raise
+
 
 def assemble_clips(input_file: str) -> List[ClipInfo]:
     """Process input file and return a list of ClipInfo objects"""
     clips = []
     logger.info(f"Starting to process input file: {input_file}")
-    
+
     try:
         with open(input_file, 'r') as f:
             for idx, line in enumerate(f):
@@ -73,39 +91,42 @@ def assemble_clips(input_file: str) -> List[ClipInfo]:
                 if not line or line.startswith('#'):
                     logger.debug(f"Skipping line {idx}: {line}")
                     continue
-                    
-                video_file, start_time, length = parse_line(line)
-                ext = os.path.splitext(video_file)[1]
-                
-                if start_time is not None:
-                    hash_str = f"{video_file}{start_time}{length}".encode('utf-8')
+
+                video, start, length = parse_line(line)
+                ext = os.path.splitext(video)[1]
+
+                if start is not None:
+                    hash_str = f"{video}{start}{length}".encode('utf-8')
                     hash_val = hashlib.md5(hash_str).hexdigest()
                     clip = ClipInfo(
                         original_index=idx,
                         output_filename=f"{hash_val}{ext}",
-                        source_file=video_file,
-                        start_time=start_time,
+                        source_file=video,
+                        start_time=start,
                         length=length
                     )
                     logger.debug(f"Created timed clip: {clip}")
                 else:
-                    hash_str = video_file.encode('utf-8')
+                    hash_str = video.encode('utf-8')
                     hash_val = hashlib.md5(hash_str).hexdigest()
                     clip = ClipInfo(
                         original_index=idx,
                         output_filename=f"{hash_val}{ext}",
-                        source_file=video_file
+                        source_file=video
                     )
                     logger.debug(f"Created full-file clip: {clip}")
-                
+
                 clips.append(clip)
-        
-        logger.info(f"Successfully processed {len(clips)} clips from input file")
+
+        logger.info(
+            f"Successfully processed {len(clips)} clips from input file"
+        )
         return clips
-    
+
     except Exception as e:
         logger.error(f"Failed to assemble clips: {str(e)}")
         raise
+
 
 def generate_ffmpeg_clip_command(cmd_info: FFmpegClipCommand) -> str:
     """Generate FFmpeg command for clipping a video segment"""
@@ -122,6 +143,7 @@ def generate_ffmpeg_clip_command(cmd_info: FFmpegClipCommand) -> str:
         logger.error(f"Failed to generate FFmpeg command: {str(e)}")
         raise
 
+
 def get_video_resolution(filename: str) -> Resolution:
     """Get video resolution using ffprobe"""
     cmd = [
@@ -136,6 +158,7 @@ def get_video_resolution(filename: str) -> Resolution:
         raise RuntimeError(f"Could not get resolution for {filename}")
     width, height = map(int, result.stdout.strip().split(','))
     return Resolution(width, height)
+
 
 def detect_black_bars(filename: str) -> Tuple[int, int, int, int]:
     """Detect black bars using ffmpeg's cropdetect filter"""
@@ -155,6 +178,7 @@ def detect_black_bars(filename: str) -> Tuple[int, int, int, int]:
     most_common = crop_counts.most_common(1)[0][0]
     return tuple(map(int, most_common.split(':')))
 
+
 def generate_concat_command(
     clips: List[ClipInfo],
     output_file: str,
@@ -166,7 +190,7 @@ def generate_concat_command(
     try:
         input_files = " ".join(f"-i {clip.output_filename}" for clip in clips)
         num_clips = len(clips)
-        
+
         # Get all resolutions and aspect ratios
         resolutions = []
         for clip in clips:
@@ -176,7 +200,7 @@ def generate_concat_command(
                 if crop_w > 0 and crop_h > 0:
                     res = Resolution(crop_w, crop_h)
             resolutions.append(res)
-        
+
         # Determine target resolution
         if target_resolution:
             target_w, target_h = map(int, target_resolution.split('x'))
@@ -188,15 +212,20 @@ def generate_concat_command(
             target_h = min(r.height for r in resolutions)
         else:
             raise ValueError(f"Unknown resolution mode: {resolution_mode}")
-        
-        logger.info(f"Target resolution: {target_w}x{target_h} (mode: {resolution_mode})")
-        
+
+        logger.info(
+            f"Target resolution: {target_w}x{target_h} ({resolution_mode})"
+        )
+
         # Generate processing commands for each clip
         processing_steps = []
         for i in range(num_clips):
             steps = []
             if crop_blackbars:
-                crop_w, crop_h, x, y = detect_black_bars(clips[i].output_filename)
+                crop_w, crop_h, x, y = detect_black_bars(
+                    clips[i].output_filename
+                )
+
                 if crop_w > 0 and crop_h > 0:
                     steps.append(f"crop={crop_w}:{crop_h}:{x}:{y}")
             steps.append(
@@ -206,7 +235,7 @@ def generate_concat_command(
                 "setsar=1"
             )
             processing_steps.append(f"[{i}:v]{','.join(steps)}[v{i}];")
-        
+
         # Generate final command
         concat_inputs = "".join(f"[v{i}]" for i in range(num_clips))
         cmd = (
@@ -222,24 +251,47 @@ def generate_concat_command(
         logger.error(f"Failed to generate concat command: {str(e)}")
         raise
 
+
 def main():
     try:
         logger.info("Starting video processing script")
-        
-        parser = argparse.ArgumentParser(description='Generate FFmpeg commands for video editing.')
-        parser.add_argument('input_file', help='Input CSV file with clip information')
-        parser.add_argument('output_file', help='Output video file')
-        parser.add_argument('--verbose', action='store_true', help='Enable debug logging')
-        parser.add_argument('--retain-clips', action='store_true', 
-                          help='Keep intermediate clip files after processing')
-        parser.add_argument('--resolution-mode', 
-                          choices=['fit-largest', 'fit-smallest'],
-                          default='fit-largest',
-                          help='How to handle differing resolutions')
-        parser.add_argument('--fit-resolution',
-                          help='Force specific output resolution (WxH)')
-        parser.add_argument('--crop-blackbars', action='store_true',
-                          help='Automatically crop black bars from inputs')
+
+        parser = argparse.ArgumentParser(
+            description='Generate FFmpeg commands for video editing.'
+        )
+        parser.add_argument(
+            'input_file',
+            help='Input CSV file with clip information'
+        )
+        parser.add_argument(
+            'output_file',
+            help='Output video file'
+        )
+        parser.add_argument(
+            '--verbose',
+            action='store_true',
+            help='Enable debug logging'
+        )
+        parser.add_argument(
+            '--retain-clips',
+            action='store_true',
+            help='Keep intermediate clip files after processing'
+        )
+        parser.add_argument(
+            '--resolution-mode',
+            choices=['fit-largest', 'fit-smallest'],
+            default='fit-largest',
+            help='How to handle differing resolutions'
+        )
+        parser.add_argument(
+            '--fit-resolution',
+            help='Force specific output resolution (WxH)'
+        )
+        parser.add_argument(
+            '--crop-blackbars',
+            action='store_true',
+            help='Automatically crop black bars from inputs'
+        )
         args = parser.parse_args()
 
         if args.verbose:
@@ -247,7 +299,7 @@ def main():
             logger.debug("Verbose debug logging enabled")
 
         all_clips = assemble_clips(args.input_file)
-        
+
         # Get unique clip commands
         unique_commands: Set[FFmpegClipCommand] = set()
         for clip in all_clips:
@@ -259,16 +311,18 @@ def main():
                     output_file=clip.output_filename
                 )
                 unique_commands.add(cmd)
-        
+
         logger.info(f"Generated {len(unique_commands)} unique clip commands")
         if args.retain_clips:
-            logger.info("Intermediate clip files will be retained (--retain-clips specified)")
+            logger.info(
+                "Intermediate clips will be retained (--retain-clips used)"
+            )
 
         # Output processing commands
         print("# Create unique work clips for EDL\n")
         for cmd in unique_commands:
             print(generate_ffmpeg_clip_command(cmd))
-        
+
         print("\n# Concat clips for EDL\n")
         concat_cmd = generate_concat_command(
             all_clips,
@@ -278,20 +332,23 @@ def main():
             crop_blackbars=args.crop_blackbars
         )
         print(concat_cmd)
-        
+
         # Only show removal command if --retain-clips is not specified
         if not args.retain_clips:
             print("\n# Remove unique work clips for EDL\n")
             output_files = " ".join(cmd.output_file for cmd in unique_commands)
             print(f"rm {output_files}")
         else:
-            print("\n# Intermediate clip files are being retained (--retain-clips)\n")
-        
+            print(
+                "\n# Intermediate clips are being retained (--retain-clips)\n"
+            )
+
         logger.info("Script completed successfully")
-    
+
     except Exception as e:
         logger.critical(f"Script failed: {str(e)}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
