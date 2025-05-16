@@ -10,7 +10,7 @@ antidote load
 [[ ! -z $ZSH_HIGHLIGHT_STYLES ]] && ZSH_HIGHLIGHT_STYLES[globbing]=fg=yellow
 
 # apply theme ${(L)$(command)} ... lowercase the output of command.
-host_theme=$HOME/.zsh.d/themes/${(L)$(hostname)}.zsh-theme
+host_theme=$HOME/.zsh.d/themes/${HOST:l}.zsh-theme
 
 if [ -r $host_theme ]; then
     source $host_theme
