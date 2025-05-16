@@ -75,6 +75,7 @@ git_info() {
   [[ ${#DIVERGENCES[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)DIVERGENCES}" )
   [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
   GIT_INFO+=( "\033[38;5;15m$GIT_LOCATION%{$reset_color%}" )
-  echo "%F{$Bc}[% ${(j: :)GIT_INFO}%F{$Bc}]%"
+  echo "%F{$Bc}[% ${(j: :)GIT_INFO}%F{$Bc}]%
+  "
 }
 
