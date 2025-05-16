@@ -7,15 +7,19 @@ export EDITOR=edit
 export LANGUAGE="en_US"
 export LANG='en_US.UTF-8'
 export LC_CTYPE="en_US.UTF-8"
-export PAGER="bat --style=grid"
-export BAT_THEME=azure
+
+if [[ -f $HOME/.cargo/bin/bat ]]; then
+  export PAGER="bat --style=grid"
+  export BAT_THEME=azure
+fi
+
 export COLORTERM=truecolor
 export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
+export ZSH_DISABLE_COMPFIX=true
 export HISTSIZE=99999
 export HISTFILESIZE=99999
 export SAVEHIST=$HISTSIZE
 export PIP_DEFAULT_TIMEOUT=100
-export ZSH_DISABLE_COMPFIX=true
 
 plugins=(redis-cli)
 
@@ -27,9 +31,6 @@ if [[ "$OSTYPE" == darwin* ]]; then
   export BROWSER='open'
 fi
 
-export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || bat {} || tree -C {}) 2> /dev/null | head -200'"
-export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
-
 typeset -gU cdpath fpath mailpath path
 
 # Add /usr/local to fpath - zsh completion path
@@ -38,8 +39,8 @@ fpath+=(/usr/local/share/zsh/site-functions/)
 # Set the list of directories that Zsh searches for programs.
 path=(
   ./bin
-  ~/bin
-  ~/.zsh.d/bin
+  $HOME/bin
+  $HOME/.zsh.d/bin
   ./script
   /usr/local/{bin,sbin}
   /usr/local/share/npm/bin
@@ -122,6 +123,7 @@ if [[ -d "$HOME/.emacs.d/bin" ]]; then
   export PATH="$HOME/.emacs.d/bin:$PATH"
 fi
 
+# Mac android studio
 if [[ -d '/Applications/Android Studio.app/Contents/jre/Contents/Home' ]]; then
   export JAVA_HOME='/Applications/Android Studio.app/Contents/jre/Contents/Home'
 fi
@@ -148,10 +150,15 @@ if [[ -z "$DISPLAY" && -n "$SSH_CONNECTION" ]]; then
     export DISPLAY=localhost:10.0
 fi
 
+# Linux Java
+if [[ -d /usr/lib/jvm/java-8-openjdk-amd64 ]]; then
+  export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+  export PATH=$PATH:$JAVA_HOME/bin
+fi
 
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-export PATH=$PATH:$JAVA_HOME/bin
-
-export ANDROID_HOME=/home/jason/Android
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+# Linux Android Dev
+if [[ -d $HOME/Android ]]; then
+  export ANDROID_HOME=$HOME/Android
+  export PATH=$PATH:$ANDROID_HOME/tools/bin
+  export PATH=$PATH:$ANDROID_HOME/platform-tools
+fi
