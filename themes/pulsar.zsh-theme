@@ -8,14 +8,6 @@ DateColor="#7f47ff"
 PathColor="#37acff"
 RVM_Color="#c777ff"
 
-Bc=$BracketColor
-Nc=$NameColor
-Mc=$MachineNameColor
-Tc=$TimeColor
-Dc=$DateColor
-Pc=$PathColor
-RMVc=$RVM_Color
-
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
 # Local Variables:

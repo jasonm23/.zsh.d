@@ -9,3 +9,7 @@ Pc="#0087af"
 RVMc="#00d7d7"
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
+
+# Local Variables:
+# eval: (when (fboundp 'rainbow-mode) (rainbow-mode +1))
+# End:

@@ -1,12 +1,12 @@
-# Theme name: Nebula
+# Theme name: Jupiter
 
-Bc="#766B70"
-Nc="#A3492E"
-Mc="#B45C3D"
-Tc="#A3492E"
-Dc="#B45C3D"
-Pc="#DDDCD2"
-RVMc="#B45C3D"
+BracketColor="#005f5f"
+NameColor="#ffffff"
+MachineNameColor="#5fd7ff"
+TimeColor="#ffffff"
+DateColor="#5fd7ff"
+PathColor="#5fd7ff"
+RVM_Color="#87d7d7"
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
