@@ -162,3 +162,7 @@ if [[ -d $HOME/Android ]]; then
   export PATH=$PATH:$ANDROID_HOME/tools/bin
   export PATH=$PATH:$ANDROID_HOME/platform-tools
 fi
+
+if [[ -e "/usr/local/cuda/bin" ]]; then
+  export PATH=/usr/local/cuda/bin:$PATH
+fi

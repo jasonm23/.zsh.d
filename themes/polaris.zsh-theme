@@ -1,12 +1,12 @@
 # Theme name: Polaris
 
-Bc="#626262"   # bracket color
-Mc="#ffffff"   # host color
-Nc="#87d7d7"   # user color
-Tc="#dadada"   # time color
+Bc="#5B4D52"   # bracket color
+Mc="#E5C798"   # host color
+Nc="#ffa777"   # user color
+Tc="#77AA99"   # time color
 Dc="#8a8a8a"   # date color
-Pc="#eeeeee"   # path color
-RVMc="#ff5f00" # rvm color
+Pc="#ffdfaa"   # path color
+RVMc="#dadada" # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
