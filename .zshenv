@@ -15,6 +15,9 @@ export HISTSIZE=99999
 export HISTFILESIZE=99999
 export SAVEHIST=$HISTSIZE
 export PIP_DEFAULT_TIMEOUT=100
+export ZSH_DISABLE_COMPFIX=true
+
+plugins=(redis-cli)
 
 if [[ -d /usr/libexec  ]]; then
   export PATH=$PATH:/usr/libexec
@@ -139,3 +142,16 @@ fi
 if [[ -d $HOME/.nimble/bin ]]; then
   export PATH=$HOME/.nimble/bin:$PATH
 fi
+
+# X11 forwarding...
+if [[ -z "$DISPLAY" && -n "$SSH_CONNECTION" ]]; then
+    export DISPLAY=localhost:10.0
+fi
+
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=$PATH:$JAVA_HOME/bin
+
+export ANDROID_HOME=/home/jason/Android
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
