@@ -1,14 +1,22 @@
-# Theme name: Squee
+# Theme name: Pulsar
 
-Bc=117   # bracket color    #87d7ff
-Nc=015   # name color       #ffffff
-Mc=045   # host color       #00d7ff
-Tc=015   # time color       #ffffff
-Dc=230   # date color       #ffffdf
-Pc=117   # path color       #87d7ff
-RVMc=254 # rvm color        #e4e4e4
+BracketColor="#6837ef"
+NameColor="#37acff"
+MachineNameColor="#37acff"
+TimeColor="#c777ff"
+DateColor="#7f47ff"
+PathColor="#37acff"
+RVM_Color="#c777ff"
 
-source ~/.zsh.d/lib/theme-engine.zsh
+Bc=$BracketColor
+Nc=$NameColor
+Mc=$MachineNameColor
+Tc=$TimeColor
+Dc=$DateColor
+Pc=$PathColor
+RMVc=$RVM_Color
+
+source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
 # Local Variables:
 # eval: (when (fboundp 'rainbow-mode) (rainbow-mode +1))

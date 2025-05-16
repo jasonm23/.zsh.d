@@ -96,7 +96,7 @@ else
   if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock && $SSH_AGENT_PID == $(pidof ssh-agent) ]]; then
       echo "ssh-agent connected"
       ssh-add -l
-  elif pidof ssh-agent && [[ -e ~/.ssh/sock ]]; then
+  elif pidof ssh-agent && [[ -S ~/.ssh/sock ]]; then
       echo "ssh-agent re-connect to PID $(pidof ssh-agent)"
   else
     echo "ssh-agent start"
@@ -108,7 +108,7 @@ else
     ssh-add -l
 fi
 
-if [[ -e $HOME/.zsh.d/.check ]]; then
+if [[ -f $HOME/.zsh.d/.check ]]; then
     echo ".zsh.d checking for updates..."
     git -C $HOME/.zsh.d remote update > /dev/null
 
@@ -120,14 +120,6 @@ if [[ -e $HOME/.zsh.d/.check ]]; then
       echo ".zsh.d up to date"
     fi
 fi
-
-# Set up fzf key bindings and fuzzy completion
-source <(fzf --zsh)
-
-# -- Use fd instead of fzf --
-export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
 # Use fd (https://github.com/sharkdp/fd) for listing path candidates.
 # - The first argument to the function ($1) is the base path to start traversal
@@ -150,7 +142,7 @@ if [ -d "$FNM_PATH" ]; then
   eval "$(fnm completions --shell zsh)"
 fi
 
-if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@helios:jason/.zsh.d.git' ]]; then
-  git -C ~/.zsh.d remote set-url origin git@helios:jason/.zsh.d.git 
+if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@gitcodo.hub:jason/.zsh.d.git' ]]; then
+  git -C ~/.zsh.d remote set-url origin git@gitcodo.hub:jason/.zsh.d.git
 fi
 
