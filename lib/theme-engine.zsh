@@ -78,4 +78,3 @@ git_info() {
   echo "%F{$Bc}[% ${(j: :)GIT_INFO}%F{$Bc}]%
   "
 }
-
