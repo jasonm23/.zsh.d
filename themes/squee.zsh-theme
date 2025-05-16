@@ -1,12 +1,12 @@
 # Theme name: Squee
 
-Bc="#87d7ff"   # bracket color
-Nc="#ffffff"   # name color
-Mc="#00d7ff"   # host color
-Tc="#ffffff"   # time color
-Dc="#ffffdf"   # date color
-Pc="#87d7ff"   # path color
-RVMc="#e4e4e4" # rvm color
+BracketColor="#87d7ff"   # bracket color
+NameColor="#ffffff"   # name color
+MachineColor="#00d7ff"   # host color
+TimeColor="#ffffff"   # time color
+DateColor="#ffffdf"   # date color
+PathColor="#87d7ff"   # path color
+RVM_Color="#e4e4e4" # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 

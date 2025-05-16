@@ -1,12 +1,12 @@
 # Theme name: Iridium
 
-Bc="#87d7ff"   # bracket color
-Nc="#ffffff"   # name color
-Mc="#5fd7ff"   # host color
-Tc="#ffffff"   # time color
-Dc="#ffdf87"   # date color
-Pc="#5fd7ff"   # path color
-RVMc="#ffdf87" # rvm color
+BracketColor="#87d7ff"   # bracket color
+NameColor="#ffffff"   # name color
+MachineColor="#5fd7ff"   # host color
+TimeColor="#ffffff"   # time color
+DateColor="#ffdf87"   # date color
+PathColor="#5fd7ff"   # path color
+RVM_Color="#ffdf87" # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 

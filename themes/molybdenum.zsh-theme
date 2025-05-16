@@ -1,12 +1,12 @@
 # Theme name: Molybdenum
 
-Bc="#626262"   # bracket color
-Mc="#ffffff"   # host color
-Nc="#87d7d7"   # user color
-Tc="#dadada"   # time color
-Dc="#8a8a8a"   # date color
-Pc="#eeeeee"   # path color
-RVMc="#ff5f00" # rvm color
+BracketColor="#626262"   # bracket color
+MachineColor="#ffffff"   # host color
+NameColor="#87d7d7"   # user color
+TimeColor="#dadada"   # time color
+DateColor="#8a8a8a"   # date color
+PathColor="#eeeeee"   # path color
+RVM_Color="#ff5f00" # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 

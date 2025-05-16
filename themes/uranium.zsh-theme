@@ -1,12 +1,12 @@
 # Theme name: Uranium
 
-Bc="#ffdf87"   # bracket color
-Nc="#ffffff"   # user color
-Mc="#ffaf00"   # host color
-Tc="#ffffff"   # time color
-Dc="#ffffff"   # date color
-Pc="#ffdf87"   # path color
-RVMc="#ffaf00" # rvm color
+BracketColor="#ffdf87"   # bracket color
+NameColor="#ffffff"   # user color
+MachineColor="#ffaf00"   # host color
+TimeColor="#ffffff"   # time color
+DateColor="#ffffff"   # date color
+PathColor="#ffdf87"   # path color
+RVM_Color="#ffaf00" # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 

@@ -1,12 +1,12 @@
 # Theme name: Ocodo
 
-Bc="#0087af"   # bracket color
-Nc="#ffffff"   # user color
-Mc="#5fd7ff"   # host color
-Tc="#ffffff"   # time color
-Dc="#5fd7ff"   # date color
-Pc="#5fd7ff"   # path color
-RVMc="#87d7d7" # rvm color
+BracketColor="#0087af"   # bracket color
+NameColor="#ffffff"   # user color
+MachineColor="#5fd7ff"   # host color
+TimeColor="#ffffff"   # time color
+DateColor="#5fd7ff"   # date color
+PathColor="#5fd7ff"   # path color
+RVM_Color="#87d7d7" # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
