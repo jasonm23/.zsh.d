@@ -75,12 +75,6 @@ git_info() {
   [[ ${#DIVERGENCES[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)DIVERGENCES}" )
   [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
   GIT_INFO+=( "\033[38;5;15m$GIT_LOCATION%{$reset_color%}" )
-  echo "$FG[$Bc][${(j: :)GIT_INFO}$FG[$Bc]]"
+  echo "%F{$Bc}[% ${(j: :)GIT_INFO}%F{$Bc}]%"
 }
 
-# optional line-break
-obreak="
-"
-# The final % (or #) prompt is always on a new line.
-PROMPT='$FG[$Bc][%# $FG[$Nc]%n$FG[$Bc]@$(is_ssh)$FG[$Mc]%M$FG[$Bc]|$FG[$Tc]%D{%I:%M%p}$FG[$Bc]]$(git_info)$obreak$FG[$Bc][$FG[$Pc]%~$FG[$Bc]]$reset_color
-'
