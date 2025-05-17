@@ -1,12 +1,12 @@
 # Theme name: Nebula
 
 Bc="#865e3c"   # bracket color
-Nc="#c061cb"   # user color
-Mc="#9141ac"   # host color
+Nc="#ffffff"   # user color
+Mc="#deddda"   # host color
 Tc="#ffaa00"   # time color
-Dc="#00ffaa"   # date color
-Pc="#5f5c51"   # path color
-RVMc="#ff00ff"   # rvm color
+Dc="#ff9900"   # date color
+Pc="#888888"   # path color
+RVMc="#aaaaaa"   # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
