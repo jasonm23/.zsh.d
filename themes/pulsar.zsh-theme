@@ -2,7 +2,7 @@
 
 BracketColor="#6837ef"
 NameColor="#37acff"
-MachineNameColor="#37acff"
+MachineColor="#37acff"
 TimeColor="#c777ff"
 DateColor="#7f47ff"
 PathColor="#37acff"
