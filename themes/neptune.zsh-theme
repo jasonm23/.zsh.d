@@ -1,15 +1,16 @@
-# Theme name: Neptune
+# Theme name: Nebula
 
-BracketColor="#005f5f"   # bracket color
-NameColor="#ffffff"   # name color
-MachineColor="#5fd7ff"   # host color
-TimeColor="#ffffff"   # time color
-DateColor="#5fd7ff"   # date color
-PathColor="#5fd7ff"   # path color
-RVM_Color="#87d7d7" # rvm color
+Bc="#865e3c"   # bracket color
+Nc="#c061cb"   # user color
+Mc="#9141ac"   # host color
+Tc="#ffaa00"   # time color
+Dc="#00ffaa"   # date color
+Pc="#5f5c51"   # path color
+RVMc="#ff00ff"   # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
 # Local Variables:
 # eval: (when (fboundp 'rainbow-mode) (rainbow-mode +1))
 # End:
+
