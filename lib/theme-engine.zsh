@@ -18,9 +18,8 @@ ZSH_THEME_GIT_PROMPT_BEHIND=""
 setopt prompt_subst
 autoload -U colors && colors # Enable colors in prompt
 
-# Echoes a username/host string when connected over SSH (empty otherwise)
-ssh_info() {
-  [[ "$SSH_CONNECTION" != '' ]] && echo '%(!.%{$fg[red]%}.%{$fg[yellow]%})%n%{$reset_color%}@%{$fg[green]%}%m%{$reset_color%}:' || echo ''
+is_ssh() {
+  [[ -n $SSH_CLIENT ]] && printf $ZSH_THEME_IS_SSH_SYMBOL
 }
 
 # Echoes information about Git repository status when inside a Git repository
@@ -70,11 +69,11 @@ git_info() {
   fi
 
   local -a GIT_INFO
-  GIT_INFO+=( "\033[38;5;15m±" )
+  GIT_INFO+=( "%F{#FFFFFF}%B±%b%f" )
   [ -n "$GIT_STATUS" ] && GIT_INFO+=( "$GIT_STATUS" )
   [[ ${#DIVERGENCES[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)DIVERGENCES}" )
   [[ ${#FLAGS[@]} -ne 0 ]] && GIT_INFO+=( "${(j::)FLAGS}" )
-  GIT_INFO+=( "\033[38;5;15m$GIT_LOCATION%{$reset_color%}" )
-  echo "%F{$Bc}[% ${(j: :)GIT_INFO}%F{$Bc}]%
+  GIT_INFO+=( "%F{#FFFFFF}$GIT_LOCATION%f" )
+  echo "%F{$BracketColor}[% ${(j: :)GIT_INFO}%F{$BracketColor}]%
   "
 }
