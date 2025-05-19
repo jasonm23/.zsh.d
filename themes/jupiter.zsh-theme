@@ -1,12 +1,12 @@
 # Theme name: Jupiter
 
-BracketColor="#005f5f"
-NameColor="#ffffff"
-MachineColor="#5fd7ff"
-TimeColor="#ffffff"
-DateColor="#5fd7ff"
-PathColor="#5fd7ff"
-RVM_Color="#87d7d7"
+BRACKET_COLOR="#005f5f"
+NAME_COLOR="#ffffff"
+MACHINE_COLOR="#5fd7ff"
+TIME_COLOR="#ffffff"
+DATE_COLOR="#5fd7ff"
+PATH_COLOR="#5fd7ff"
+RVM_COLOR="#87d7d7"
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 

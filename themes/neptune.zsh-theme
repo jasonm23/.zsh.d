@@ -1,12 +1,12 @@
 # Theme name: Neptune
 
-BracketColor="#865e3c"   # bracket color
-NameColor="#ffffff"   # user color
-MachineColor="#deddda"   # host color
-TimeColor="#ffaa00"   # time color
-DateColor="#ff9900"   # date color
-PathColor="#888888"   # path color
-RVM_Color="#aaaaaa"   # rvm color
+BRACKET_COLOR="#865e3c"   # bracket color
+NAME_COLOR="#ffffff"   # user color
+MACHINE_COLOR="#deddda"   # host color
+TIME_COLOR="#ffaa00"   # time color
+DATE_COLOR="#ff9900"   # date color
+PATH_COLOR="#888888"   # path color
+RVM_COLOR="#aaaaaa"   # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 

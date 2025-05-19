@@ -1,12 +1,12 @@
 # Theme name: Plutonium
 
-BracketColor="#00afaf"   # bracket color
-NameColor="#ffffff"   # user color
-MachineColor="#5fd7ff"   # host color
-TimeColor="#ffffff"   # time color
-DateColor="#ffffff"   # date color
-PathColor="#ffffff"   # path color
-RVM_Color="#5fd7ff" # rvm color
+BRACKET_COLOR="#00afaf"   # bracket color
+NAME_COLOR="#ffffff"   # user color
+MACHINE_COLOR="#5fd7ff"   # host color
+TIME_COLOR="#ffffff"   # time color
+DATE_COLOR="#ffffff"   # date color
+PATH_COLOR="#ffffff"   # path color
+RVM_COLOR="#5fd7ff" # rvm color
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
