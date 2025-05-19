@@ -1,4 +1,4 @@
-# Theme name Helios
+# Theme name: Helios
 
 AT_COLOR="#AA9966"
 BRACKET_COLOR="#c7a23c"
