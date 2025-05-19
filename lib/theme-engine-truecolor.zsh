@@ -5,7 +5,7 @@ autoload -U colors && colors # Enable colors in prompt
 
 # Themable properties
 
-: ${AT_COLOR="#B94700"}
+: ${AT_COLOR="#FFFFFF"}
 : ${BRACKET_COLOR="#c7a23c"}
 : ${NAME_COLOR="#fff2d6"}
 : ${MACHINE_COLOR="#ffaf00"}
