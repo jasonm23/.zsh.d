@@ -90,23 +90,8 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-if [[ $USER == root ]]; then
-    echo "Root user, skipping ssh-agent setup."
-else
-  if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock && $SSH_AGENT_PID == $(pidof ssh-agent) ]]; then
-      echo "ssh-agent connected"
-      ssh-add -l
-  elif pidof ssh-agent && [[ -S ~/.ssh/sock ]]; then
-      echo "ssh-agent re-connect to PID $(pidof ssh-agent)"
-  else
-    echo "ssh-agent start"
-    rm -rf ~/.ssh/sock
-    ssh-agent -a ~/.ssh/sock
-  fi
-    export SSH_AUTH_SOCK=~/.ssh/sock
-    export SSH_AGENT_PID=$(pidof ssh-agent)
-    ssh-add -l
-fi
+# SSH Agent connect or launch
+source $HOME/.zsh.d/lib/ssh-agent-control.zsh
 
 if [[ -f $HOME/.zsh.d/.check ]]; then
     echo ".zsh.d checking for updates..."
