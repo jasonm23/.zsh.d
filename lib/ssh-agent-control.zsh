@@ -4,8 +4,16 @@ if [[ $USER == root ]]; then
     echo "Root user, skipping ssh-agent setup."
 else
     if [[ -S /run/user/$UID/keyring/ssh ]]; then
-        if [[ $SSH_AUTH_SOCK =~ "${XDG_RUNTIME_DIR}/keyring/" ]]; then
+        if [[ $SSH_AUTH_SOCK =~ "/run/user/$UID/keyring/" ]]; then
             echo "Connected to Gnome keyring ssh-agent"
+        else
+            export SSH_AUTH_SOCK=/run/user/$UID/keyring/ssh
+        fi
+    elif [[ -S /run/user/$UID/keyring/.ssh ]]; then
+        if [[ $SSH_AUTH_SOCK =~ "/run/user/$UID/keyring/" ]]; then
+            echo "Connected to Gnome keyring ssh-agent"
+        else
+            export SSH_AUTH_SOCK=/run/user/$UID/keyring/.ssh
         fi
     else
         PIDOF_AGENT_SOCK="$(ps -ax | rg "$(pidof ssh-agent).*?-a.*?\s*(/.*)" -r '$1')"
