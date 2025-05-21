@@ -16,6 +16,7 @@ else
         alias ssh=ssh.exe
         alias ssh-add=ssh-add.exe
         git config --global core.sshCommand ssh.exe
+        unset SSH_AUTH_SOCK
         echo "WSL - connecting to Windows host ssh-agent"
         wsl-ssh-show-keys
     else # connect to ssh auth sock
