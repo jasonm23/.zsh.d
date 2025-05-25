@@ -1,4 +1,4 @@
-# prompt theming
+# git theming
 
 setopt prompt_subst
 autoload -U colors && colors # Enable colors in prompt

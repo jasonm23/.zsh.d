@@ -1,25 +1,42 @@
-# source from .zshrc
+ssh-list-keys() {
+    local ssh_add_output
+    ssh_add_output=$(ssh-add -l 2>&1)
+    local ssh_add_exit_code=$?
 
-ssh-show-keys() {
-    ssh-add -l 2>&1 | awk '{print "key: ",$3, $1, $4}'
-}
+    if [[ $status -ne 0 ]]; then
+        if echo "$ssh_add_output" | grep -qE "Could not open a connection to your authentication agent|Error connecting to agent"; then
+            echo "No ssh-agent connection found."
+        else
+            echo "ssh-add error: $ssh_add_output"
+        fi
+        echo "is it here??"
+        return $ssh_add_exit_code
+    fi
 
-wsl-ssh-show-keys() {
-    ssh-add.exe -l 2>&1 | awk '{print "key: ",$3, $1, $4}'
+    if [[ $ssh_add_output =~ C: ]]; then
+      echo "$ssh_add_output" \
+        | sed \
+          -e "s|\\\|/|g" \
+          -e "s|sers/||" \
+          -e "s|$USER/|~/|" \
+          -e "s|C:||" \
+        | awk '{print "key: ", $3, $1, $4}'
+    else
+      echo "$ssh_add_output" \
+        | awk '{print "key: ", $3, $1, $4}'
+    fi
 }
 
 if [[ $USER == root ]]; then
     echo "Root user, skipping ssh-agent setup."
 else
-    # on WSL use the Windows host ssh-agent
-    if command -v ssh.exe > /dev/null && command -v ssh-add.exe > /dev/null ; then
-        alias ssh=ssh.exe
-        alias ssh-add=ssh-add.exe
-        git config --global core.sshCommand ssh.exe
-        unset SSH_AUTH_SOCK
-        echo "WSL - connecting to Windows host ssh-agent"
-        wsl-ssh-show-keys
-    else # connect to ssh auth sock
+    if command -v ssh-agent.exe > /dev/null && command -v npiperelay.exe > /dev/null && command -v socat > /dev/null ; then
+        $HOME/.zsh.d/bin/ssh-wsl-socat.sh
+
+        export SSH_AUTH_SOCK=$HOME/.ssh/sock
+        ssh-list-keys
+    else
+        # fallback: connect to ssh auth sock on Linux side
         if [[ -S /run/user/$UID/keyring/ssh ]]; then
             if [[ ! $SSH_AUTH_SOCK =~ "/run/user/$UID/keyring/" ]]; then
                 export SSH_AUTH_SOCK=/run/user/$UID/keyring/ssh
@@ -55,7 +72,8 @@ else
                 echo "Connected to ssh-agent on $SSH_AUTH_SOCK"
             fi
         fi
+
+        ssh-list-keys
     fi
 fi
 
-[[ -n $SSH_AUTH_SOCK ]] && ssh-show-keys
