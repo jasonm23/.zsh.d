@@ -22,10 +22,6 @@ fi
 # Get zmv
 autoload zmv
 
-# Load local config
-[[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
-[[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
-
 # Load modules after loading config (in case environment is adjusted)
 # Source handmade modules
 
@@ -131,3 +127,7 @@ if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@gitcodo.hub:jason/.zsh.
   git -C ~/.zsh.d remote set-url origin git@gitcodo.hub:jason/.zsh.d.git
 fi
 
+# --8<----------------------------------------------------------
+# Load local config
+[[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
+[[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
