@@ -27,9 +27,9 @@ sleep 0.2
 # Verify it's working
 export SSH_AUTH_SOCK="$SOCK"
 if ssh-add -l >/dev/null 2>&1; then
-  echo "$(color24 "#00AA88" "󱘖 ") Windows/WSL : Connected to Windows ssh-agent $SOCK"
+  echo "$(color24 "#00AA88" "󱘖 ") Windows/WSL : Connected to Windows ssh-agent via $SOCK"
 else
-    echo "❌ Windows/WSL : Failed to connect to ssh-agent via $SOCK"
+    echo "🤦 Windows/WSL : Failed to connect to Windows ssh-agent via $SOCK"
     echo "Last 10 log lines:"
     tail -n 10 "$LOG"
     exit 2

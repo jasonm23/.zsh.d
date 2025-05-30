@@ -4,7 +4,8 @@ ssh-list-keys() {
     local ssh_add_exit_code=$?
 
     if [[ $status -ne 0 ]]; then
-        if echo "$ssh_add_output" | grep -qE "Could not open a connection to your authentication agent|Error connecting to agent"; then
+        if echo "$ssh_add_output" | grep -qE "Could not open a connection to your authentication
+agent|Error connecting to agent"; then
             echo "No ssh-agent connection found."
         else
             echo "ssh-add error: $ssh_add_output"
@@ -13,17 +14,19 @@ ssh-list-keys() {
         return $ssh_add_exit_code
     fi
 
-    if [[ $ssh_add_output =~ C: ]]; then
-      echo "$ssh_add_output" \
-        | sed \
-          -e "s|\\\|/|g" \
-          -e "s|sers/||" \
-          -e "s|$USER/|~/|" \
-          -e "s|C:||" \
-        | awk '{print "key: ", $3, $1, $4}'
+    if [[ -z "$ssh_add_output" || "$ssh_add_output" == *"The agent has no identities."* ]]; then
+        echo "No keys added to the ssh-agent."
+        return 0
+    fi
+
+    if command -v wslpath 2>&1 > /dev/null; then # assume we are in wsl
+      local winlogo=$(echo "󰨡")
+      wslpath "$ssh_add_output" \
+        | sed -E -e "s|[[:alpha:]]:/Users/[[:alpha:]]+?/|$winlogo@@\~/|" \
+        | awk '{print "key: ", $3, $1, $4}' \
+        | sed -E -e "s|@@|  |"
     else
-      echo "$ssh_add_output" \
-        | awk '{print "key: ", $3, $1, $4}'
+      echo "$ssh_add_output" | awk '{print "key: ", $3, $1, $4}' 
     fi
 }
 
@@ -32,7 +35,6 @@ if [[ $USER == root ]]; then
 else
     if command -v ssh-agent.exe > /dev/null && command -v npiperelay.exe > /dev/null && command -v socat > /dev/null ; then
         $HOME/.zsh.d/bin/ssh-wsl-socat.sh
-
         export SSH_AUTH_SOCK=$HOME/.ssh/sock
         ssh-list-keys
     else
