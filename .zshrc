@@ -116,8 +116,8 @@ _fzf_compgen_dir() {
 
 # Fast Node Manager
 # use: cargo install fnm
-FNM_PATH="$HOME/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
+if [ -x ~/.cargo/bin/fnm ]; then
+  export FNM_PATH="$HOME/.local/share/fnm"
   export PATH="$HOME/.local/share/fnm:$PATH"
   eval "$(fnm env --use-on-cd --shell zsh)"
   eval "$(fnm completions --shell zsh)"
