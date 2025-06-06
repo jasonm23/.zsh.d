@@ -16,9 +16,9 @@ autoload -U colors && colors # Enable colors in prompt
 
 : ${AT_COLOR="#FFFFFF"}
 : ${AHEAD_COLOR="#AA3333"}
-: ${AHEAD_ICON="🢁"}
+: ${AHEAD_ICON=""}
 : ${BEHIND_COLOR="#00FFFF"}
-: ${BEHIND_ICON="🢃"}
+: ${BEHIND_ICON=""}
 : ${MERGING_COLOR="#CC33CC"}
 : ${MERGING_ICON=" "}
 : ${UNTRACKED_COLOR="#AA3333"}
