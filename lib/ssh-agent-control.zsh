@@ -39,6 +39,7 @@ else
         ssh-list-keys
     else
         # fallback: connect to ssh auth sock on Linux side
+        # Gnome
         if [[ -S /run/user/$UID/keyring/ssh ]]; then
             if [[ ! $SSH_AUTH_SOCK =~ "/run/user/$UID/keyring/" ]]; then
                 export SSH_AUTH_SOCK=/run/user/$UID/keyring/ssh
@@ -68,7 +69,18 @@ else
                 echo "Connected to zsh.d ssh-agent"
             elif [[ $SSH_AUTH_SOCK =~ "${XDG_RUNTIME_DIR}/keyring" ]]; then
                 echo "Connected to Gnome keyring ssh-agent"
-            elif [[ $SSH_AUTH_SOCK =~ "${XDG_RUNTIME_DIR}/wezterm/agent" ]]; then
+            elif [[ $SSH_AUTH_SOCK == "/tmp/ssh-*/agent.*" ]]; then
+                echo "Connected to KDE/Gnome keyring ssh-agent"
+            elif [[ -S /tmp/ssh*/agent* ]]; then
+                for sock in /tmp/ssh*/agent*; do
+                    echo "chcking KDE sockets..."
+                    if [[ -S $sock ]]; then
+                        export SSH_AUTH_SOCK=$sock
+                        break
+                    fi
+                done
+                echo "Connected to ssh-agent on $SSH_AUTH_SOCK"
+            elif [[ $SSH_AUTH_SOCK == "${XDG_RUNTIME_DIR}/wezterm/agent" ]]; then
                 echo "WezTerm ssh-agent proxy Gnome keyring"
             else
                 echo "Connected to ssh-agent on $SSH_AUTH_SOCK"
