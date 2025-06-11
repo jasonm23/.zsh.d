@@ -9,9 +9,9 @@ DATE_COLOR="#ff9900"
 PATH_COLOR="#ffdf87"
 RVM_COLOR="#ffaf00"
 AHEAD_COLOR="#AA3333"
-AHEAD_ICON="🢁"
+AHEAD_ICON=""
 BEHIND_COLOR="#00FFFF"
-BEHIND_ICON="🢃"
+BEHIND_ICON=""
 MERGING_COLOR="#CC33CC"
 MERGING_ICON=" "
 UNTRACKED_COLOR="#AA3333"
@@ -30,7 +30,7 @@ DIVIDER="|"
 ZSH_PROMPT_WEEK_DAY=""
 
 # ZSH_PROMPT_WEEK_DAY="%(0w,อา.,)%(1w,จ.,)%(2w,อ.,)%(3w,พ.,)%(4w,พฤ.,)%(5w,ศ.,)%(6w,ส.,)"
-# ZSH_PROMPT_WEEK_DAY="%(0w,Sun,)%(1w,Mon,)%(2w,Tue,)%(3w,Wed,)%(4w,Thu,)%(5w,Fri,)%(6w,Sat,)"
+ZSH_PROMPT_WEEK_DAY="%(0w,Sun,)%(1w,Mon,)%(2w,Tue,)%(3w,Wed,)%(4w,Thu,)%(5w,Fri,)%(6w,Sat,)"
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
