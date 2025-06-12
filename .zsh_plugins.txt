@@ -1,7 +1,24 @@
 ohmyzsh/ohmyzsh
+
+ohmyzsh/ohmyzsh path:plugins/autoenv
+ohmyzsh/ohmyzsh path:plugins/cp
+ohmyzsh/ohmyzsh path:plugins/docker
+ohmyzsh/ohmyzsh path:plugins/fnm
 ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/golang
+ohmyzsh/ohmyzsh path:plugins/node
+ohmyzsh/ohmyzsh path:plugins/npm
+ohmyzsh/ohmyzsh path:plugins/nvm
+ohmyzsh/ohmyzsh path:plugins/pass
+ohmyzsh/ohmyzsh path:plugins/pnpm
+ohmyzsh/ohmyzsh path:plugins/rg
+ohmyzsh/ohmyzsh path:plugins/rust
+ohmyzsh/ohmyzsh path:plugins/tailscale
+ohmyzsh/ohmyzsh path:plugins/ubuntu
 ohmyzsh/ohmyzsh path:plugins/uv
+ohmyzsh/ohmyzsh path:plugins/vscode
 ohmyzsh/ohmyzsh path:plugins/z
+
 ocodo/ollama_zsh_completion
 jasonm23/fast-syntax-highlighting
 mollifier/cd-gitroot
