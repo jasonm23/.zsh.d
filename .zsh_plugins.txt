@@ -1,19 +1,8 @@
 ohmyzsh/ohmyzsh
 ohmyzsh/ohmyzsh path:plugins/git
-ohmyzsh/ohmyzsh path:plugins/npm
-ohmyzsh/ohmyzsh path:plugins/python
-ohmyzsh/ohmyzsh path:plugins/urltools
 ohmyzsh/ohmyzsh path:plugins/z
-ohmyzsh/ohmyzsh path:plugins/flutter
-
-ohmyzsh/ohmyzsh path:plugins/macos
-ohmyzsh/ohmyzsh path:plugins/xcode
-ohmyzsh/ohmyzsh path:plugins/brew
-
-djui/alias-tips
+ocodo/ollama_zsh_completion
+jasonm23/fast-syntax-highlighting
 mollifier/cd-gitroot
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
-jasonm23/fast-syntax-highlighting
-marlonrichert/zsh-hist
-ocodo/ollama_zsh_completion
