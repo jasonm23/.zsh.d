@@ -1,3 +1,13 @@
+ssh-connect-kde-gnome-agent() {
+    for sock in /tmp/ssh*/agent*; do
+        if [[ -S $sock ]]; then
+            echo "Connected to Plasma Keyring socket"
+            export SSH_AUTH_SOCK=$sock
+            break
+        fi
+    done
+}
+
 ssh-list-keys() {
     local ssh_add_output
     ssh_add_output=$(ssh-add -l 2>&1)
@@ -38,7 +48,15 @@ else
         export SSH_AUTH_SOCK=$HOME/.ssh/sock
         ssh-list-keys
     else
-        # fallback: connect to ssh auth sock on Linux side
+        # fallback: connect to keyring or ssh auth sock on Linux side
+        # KDE/Plama
+        if [[ -n /tmp/ssh*/agent* ]]; then
+            ssh-connect-kde-gnome-agent
+            if [[ -n $SSH_AUTH_SOCK ]]; then
+                ssh-list-keys
+                return
+            fi
+        fi
         # Gnome
         if [[ -S /run/user/$UID/keyring/ssh ]]; then
             if [[ ! $SSH_AUTH_SOCK =~ "/run/user/$UID/keyring/" ]]; then
@@ -72,14 +90,7 @@ else
             elif [[ $SSH_AUTH_SOCK == "/tmp/ssh-*/agent.*" ]]; then
                 echo "Connected to KDE/Gnome keyring ssh-agent"
             elif [[ -S /tmp/ssh*/agent* ]]; then
-                for sock in /tmp/ssh*/agent*; do
-                    echo "chcking KDE sockets..."
-                    if [[ -S $sock ]]; then
-                        export SSH_AUTH_SOCK=$sock
-                        break
-                    fi
-                done
-                echo "Connected to ssh-agent on $SSH_AUTH_SOCK"
+                ssh-connect-kde-gnome-agent
             elif [[ $SSH_AUTH_SOCK == "${XDG_RUNTIME_DIR}/wezterm/agent" ]]; then
                 echo "WezTerm ssh-agent proxy Gnome keyring"
             else
