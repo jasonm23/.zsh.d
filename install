@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dotfiles=('.zsh_plugins.txt' '.zshrc' '.zshenv' '.pairs' '.pryrc' '.irbrc')
+dotfiles=('.zsh_plugins.txt' '.zshrc' '.zshenv')
 
 # Link .zshrc and .pairs (forced) to home
 echo "!IMPORTANT! The following will be symlinked to $HOME"
@@ -19,8 +19,6 @@ echo "Linking..."
 for dotfile in ${dotfiles[@]}; do
   ln -sfv ~/.zsh.d/${dotfile} ~/${dotfile}
 done
-
-ln -sfv ~/.zsh.d/modules/iterm-shell-integration.zsh ~/.iterm2_shell_integration.zsh
 
 echo "Done."
 ls -lsa ~/
