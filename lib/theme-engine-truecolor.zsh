@@ -15,7 +15,7 @@ autoload -U colors && colors # Enable colors in prompt
 : ${RVM_COLOR="#ffaf00"}
 
 : ${AT_COLOR="#FFFFFF"}
-: ${AHEAD_COLOR="#AA3333"}
+: ${AHEAD_COLOR="#EE8800"}
 : ${AHEAD_ICON=""}
 : ${BEHIND_COLOR="#00FFFF"}
 : ${BEHIND_ICON=""}
