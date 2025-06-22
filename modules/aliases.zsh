@@ -86,3 +86,4 @@ alias xclean-whitespace="find . | grep '[.]swift' | xargs sed -i '' -E 's/[[:bla
 alias yt-mp3='yt-dlp -x --audio-format mp3'
 alias ytx='yt-dlp --trim-filenames 40  --restrict-filenames  --cookies-from-browser Firefox'
 alias jcurl='curl -H "Content-Type: application/json"'
+alias imgcat='wezterm imgcat'
