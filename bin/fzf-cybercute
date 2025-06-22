@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cybercute 100 | fzf --header "Select the next release codename after: $tagname"
+
+
