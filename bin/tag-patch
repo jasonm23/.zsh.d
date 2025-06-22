@@ -1,7 +1,33 @@
 #!/bin/bash
 
-if [[ $# == 2 && -f $2 ]]; then
-  newtag=$(tr ' ' '-' <<<$1)
-  sed -e "s/$tagname/$newtag/" $2 | tee >(xclip -selection clipboard)
+usage() {
+cat <<END
+Usage: 
+    $1 <new tag name> <text file> # e.g. README.md
+
+    replaces the last tagname $2 with <new name> in <text file>
+END
+}
+
+git ls-files 2> /dev/null  > /dev/null
+
+if [[ $? != 0 ]]; then
+  usage "$(basename $0)" 'e.g. v1.0.0'
+  echo -e "\n    Error: Not in a git repo, exiting...\n"
+  exit 1
 fi
 
+export tagname=$(git tag | head -1 2> /dev/null)
+if [[ -z $tagname ]]; then
+  usage "$(basename $0)" 'e.g. v1.0.0'
+  echo -e "\n    Error: No previous tag found, exiting...\n"
+  exit 2
+fi
+
+if [[ $# == 2 && -f $2 ]]; then
+  export newtag=$(tr ' ' '-' <<<$1)
+  sed -e "s/$tagname/$newtag/" $2 | tee >(xclip -selection clipboard)
+else
+  usage "$(basename $0)" $tagname
+  echo -e "\n    Error: $2 file not found\n"
+fi
