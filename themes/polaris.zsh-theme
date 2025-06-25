@@ -1,17 +1,13 @@
 # Theme name: Polaris
 
-AT_COLOR="#735C65"
-BRACKET_COLOR="#363327"
-MACHINE_COLOR="#6A5D59"
-NAME_COLOR="#82736D"
-TIME_COLOR="#584e3a"
-DATE_COLOR="#735C65"
-PATH_COLOR="#525050"
+AT_COLOR="#6c6255"
+BRACKET_COLOR="#4e463d"
+NAME_COLOR="#b9a58c"
+MACHINE_COLOR="#a48a6a"
+TIME_COLOR="#6c6255"
+DATE_COLOR="#6c6255"
+PATH_COLOR="#6c6255"
 RVM_COLOR="#735C65"
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
-
-# Local Variables:
-# eval: (when (fboundp 'rainbow-mode) (rainbow-mode +1))
-# End:
 
