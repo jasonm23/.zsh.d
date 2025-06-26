@@ -127,11 +127,6 @@ if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@gitcodo.hub:jason/.zsh.
   git -C ~/.zsh.d remote set-url origin git@gitcodo.hub:jason/.zsh.d.git
 fi
 
-# --8<----------------------------------------------------------
-# Load local config
-[[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
-[[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
-
 # pnpm
 export PNPM_HOME="/home/jason/.local/share/pnpm"
 case ":$PATH:" in
@@ -140,8 +135,10 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-# Gemini CLI
-echo "Add env GEMINI_API_KEY if pass is unlocked..."
-echo "(expects pass entry: google-ai-gemini-token)"
-export GEMINI_API_KEY=$(pass google-ai-gemini-token)
+# --8<----------------------------------------------------------
+# Load local config
+[[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
+[[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
+
+
 
