@@ -131,3 +131,15 @@ fi
 # Load local config
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
 [[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
+
+# pnpm
+export PNPM_HOME="/home/jason/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# Gemini CLI
+export GEMINI_API_KEY=$(pass google-ai-gemini-token)
+
