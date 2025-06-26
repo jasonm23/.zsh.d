@@ -141,6 +141,7 @@ esac
 # pnpm end
 
 # Gemini CLI
-echo Adding GEMINI_API_KEY to env is pass is unlocked
+echo "Add env GEMINI_API_KEY if pass is unlocked..."
+echo "(expects pass entry: google-ai-gemini-token)"
 export GEMINI_API_KEY=$(pass google-ai-gemini-token)
 
