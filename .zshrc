@@ -89,6 +89,20 @@ fi
 # SSH Agent connect or launch
 source $HOME/.zsh.d/lib/ssh-agent-control.zsh
 
+# X11 Forwarding Auth setup - uses: .x11auth-done check flag
+if [[ -n $SSH_CONNECTION ]]; then
+  export DISPLAY=localhost:10.0  # adjust display number if needed
+
+  if [[ ! -f ~/.x11auth-done ]]; then
+    cookie=$(xauth list "$DISPLAY")
+    if ! sudo xauth list | grep -q -- "$cookie"; then
+      xauth extract "$DISPLAY" | sudo xauth merge -
+    fi
+    touch ~/.x11auth-done
+  fi
+fi
+
+# .check flag - Update checking
 if [[ -f $HOME/.zsh.d/.check ]]; then
     echo ".zsh.d checking for updates..."
     git -C $HOME/.zsh.d remote update > /dev/null

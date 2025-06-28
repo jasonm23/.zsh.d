@@ -28,7 +28,7 @@ autoload -U colors && colors # Enable colors in prompt
 : ${STAGED_COLOR="#559955"}
 : ${STAGED_ICON="●"}
 : ${REMOTE_COLOR="#83cbff"}
-: ${REMOTE_ICON="🌐"}
+: ${REMOTE_ICON="  "}
 : ${GIT_ICON=" "}
 : ${GIT_ICON_COLOR="#FFFFFF"}
 : ${GIT_LOCATION_COLOR="#FFFFFF"}
