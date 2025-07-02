@@ -17,7 +17,8 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-export tagname=$(git tag | head -1 2> /dev/null)
+# Get the most recent tag, if it exists...
+export tagname=$(git tag --sort=-committerdate | head -1 2> /dev/null)
 if [[ -z $tagname ]]; then
   usage "$(basename $0)" 'e.g. v1.0.0'
   echo -e "\n    Error: No previous tag found, exiting...\n"
