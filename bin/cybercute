@@ -1,3 +1,8 @@
 #!/bin/bash
 
-uv run $(dirname $0)/cybercute.py $@
+if uv --version >/dev/null 2>&1; then
+    uv run $(dirname $0)/cybercute.py $@
+else
+    echo "uv is required to run cybercute"
+fi
+

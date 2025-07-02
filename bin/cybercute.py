@@ -2,6 +2,11 @@ import sys
 import os
 import sqlite3
 from pathlib import Path
+from functools import wraps
+
+
+def project_dir():
+    return Path(__file__).resolve().parent
 
 
 def get_xdg_data_home():
@@ -17,16 +22,30 @@ def get_xdg_data_home():
 
 
 db_path = get_xdg_data_home() / "cybercute" / "word_pairs.db"
-dark_list = get_xdg_data_home() / "cybercute" / "dark.txt"
-cute_list = get_xdg_data_home() / "cybercute" / "cute.txt"
+dark_list = project_dir() / "dark.txt"
+cute_list = project_dir() / "cute.txt"
 db_path.parent.mkdir(parents=True, exist_ok=True)
 
 
-# --- Database Initialization and Population ---
-def setup_database():
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+def db_connect(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Import here ensures runtime access to current db_path
+        from __main__ import db_path
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        try:
+            result = func(cursor, *args, **kwargs)
+            conn.commit()
+            return result
+        finally:
+            cursor.close()
+            conn.close()
+    return wrapper
 
+# --- Database Initialization and Population ---
+@db_connect
+def setup_database(cursor):
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS dark_words (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +53,7 @@ def setup_database():
         )
     """)
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS kawaii_words (
+        CREATE TABLE IF NOT EXISTS cute_words (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             word TEXT UNIQUE NOT NULL
         )
@@ -42,7 +61,7 @@ def setup_database():
 
     for word_list_file, table in [
             (dark_list, "dark_words"),
-            (cute_list, "kawaii_words"),
+            (cute_list, "cute_words"),
     ]:
         wordlist = filter(
             None,
@@ -58,15 +77,10 @@ def setup_database():
                 except sqlite3.IntegrityError:
                     pass
 
-    conn.commit()
-    conn.close()
-
 
 # --- Generate Single Pair from DB ---
-def generate_pairs_from_db(limit: int = 1):
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
+@db_connect
+def generate_pairs_from_db(cursor, limit: int = 1):
     cursor.execute(
         "SELECT word FROM dark_words ORDER BY RANDOM() LIMIT ?",
         (limit,)
@@ -74,13 +88,12 @@ def generate_pairs_from_db(limit: int = 1):
     dark_word = cursor.fetchall()
 
     cursor.execute(
-        "SELECT word FROM kawaii_words ORDER BY RANDOM() LIMIT ?",
+        "SELECT word FROM cute_words ORDER BY RANDOM() LIMIT ?",
         (limit,)
     )
-    kawaii_word = cursor.fetchall()
+    cute_word = cursor.fetchall()
 
-    conn.close()
-    return dark_word, kawaii_word
+    return dark_word, cute_word
 
 
 def generate_codename_strings(list1, list2):
