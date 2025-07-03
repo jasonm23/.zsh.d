@@ -141,7 +141,7 @@ if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@gitcodo.hub:jason/.zsh.
   git -C ~/.zsh.d remote set-url origin git@gitcodo.hub:jason/.zsh.d.git
 fi
 
-if [[ -f .config/tea/autocomplete.zsh ]];
+if [[ -f .config/tea/autocomplete.zsh ]]; then
    PROG=tea _CLI_ZSH_AUTOCOMPLETE_HACK=1 source .config/tea/autocomplete.zsh
 fi
    
