@@ -141,6 +141,10 @@ if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@gitcodo.hub:jason/.zsh.
   git -C ~/.zsh.d remote set-url origin git@gitcodo.hub:jason/.zsh.d.git
 fi
 
+if [[ -f .config/tea/autocomplete.zsh ]];
+   PROG=tea _CLI_ZSH_AUTOCOMPLETE_HACK=1 source .config/tea/autocomplete.zsh
+fi
+   
 # pnpm
 export PNPM_HOME="/home/jason/.local/share/pnpm"
 case ":$PATH:" in
@@ -153,6 +157,4 @@ esac
 # Load local config
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
 [[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
-
-
 

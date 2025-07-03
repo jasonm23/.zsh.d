@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [[ $# == 0 ]]; then
+    cat <<EOF
+
+Usage: $0 <file> [..<file>]
+
+   Specify file(s) to paste into gist
+EOF
+    exit 1
+fi
+
+if [[ -n $GIST_GITCODO_PWD ]]; then
+    GIST_GITCODO_PWD=":$GIST_GITCODO_PWD"
+fi
+
+TEMPDIR=$(mktemp -d)
+if cd $TEMPDIR; then
+    git init
+    git remote add origin https://$USER$GIST_GITCODO_PWD@gist.gitcodo.hub/init
+    cp $@ .
+    git add --all
+    git status --short
+    git commit -v
+    git push -u origin main
+
+    cd -
+    rm -rf $TEMPDIR
+else
+    echo "Error creating $TEMPDIR"
+fi
