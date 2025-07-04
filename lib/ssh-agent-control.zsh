@@ -45,7 +45,12 @@ if [[ $USER == root ]]; then
 else
     if [[ -n $MSYSTEM ]]; then
 	echo "Msys2 :: start a local agent"
-	eval $(ssh-agent -s -a $HOME/.ssh/sock)
+	MSYS_SOCK=$HOME/.ssh/sock.$MSYSTEM
+	if [[ -d $MSYS_SOCK ]]; then
+	    rm -rf $MSYS_SOCK
+	fi
+	mkdir -p $MSYS_SOCK
+	eval $(ssh-agent -s -a $MSYS_SOCK)
 	return
     fi
 
