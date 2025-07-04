@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ruby -run -e httpd . -p1234
+python -m http.server -d . 1234
