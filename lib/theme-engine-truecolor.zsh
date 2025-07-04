@@ -1,3 +1,4 @@
+
 # git theming
 
 setopt prompt_subst
@@ -29,6 +30,8 @@ autoload -U colors && colors # Enable colors in prompt
 : ${STAGED_ICON="●"}
 : ${REMOTE_COLOR="#83cbff"}
 : ${REMOTE_ICON="  "}
+: ${IS_MSYS_COLOR="#83cbff"}
+: ${IS_MSYS_ICON="[msys]"}
 : ${GIT_ICON=" "}
 : ${GIT_ICON_COLOR="#FFFFFF"}
 : ${GIT_LOCATION_COLOR="#FFFFFF"}
@@ -44,6 +47,10 @@ STAGED="%F{${STAGED_COLOR}}${STAGED_ICON}%f"
 
 is_ssh() {
   [[ -n $SSH_CLIENT ]] && print "%F{$REMOTE_COLOR}${REMOTE_ICON}%f"
+}
+
+is_msys() {
+  [[ -n $MSYSTEM ]] && print "%F{$IS_MSYS_COLOR}${IS_MSYS_ICON}%f"
 }
 
 # Echoes information about Git repository status when inside a Git repository
@@ -105,6 +112,6 @@ if [[ "${ZSH_PROMPT_WEEK_DAY}" == "" ]]; then
 fi
 
 # Handle mandatory long var names
-PROMPT='%F{${BRACKET_COLOR}}[%#%F{${NAME_COLOR}}%n%F{${AT_COLOR}}@%F{${MACHINE_COLOR}}%M$(is_ssh)${day_of_week}%F{${BRACKET_COLOR}}${DIVIDER}%F{${TIME_COLOR}}%D{%I:%M%p}%F{${BRACKET_COLOR}}]$(git_info)
+PROMPT='%F{${BRACKET_COLOR}}[%#%F{${NAME_COLOR}}%n%F{${AT_COLOR}}@%F{${MACHINE_COLOR}}%M$(is_msys)$(is_ssh)${day_of_week}%F{${BRACKET_COLOR}}${DIVIDER}%F{${TIME_COLOR}}%D{%I:%M%p}%F{${BRACKET_COLOR}}]$(git_info)
 %F{${BRACKET_COLOR}}[%F{${PATH_COLOR}}%~%F{${BRACKET_COLOR}}]%f
 '

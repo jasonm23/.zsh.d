@@ -43,6 +43,12 @@ agent|Error connecting to agent"; then
 if [[ $USER == root ]]; then
     echo "Root user, skipping ssh-agent setup."
 else
+    if [[ -n $MSYSTEM ]]; then
+	echo "Msys2 :: start a local agent"
+	eval $(ssh-agent -s -a $HOME/.ssh/sock)
+	return
+    fi
+
     if command -v ssh-agent.exe > /dev/null && command -v npiperelay.exe > /dev/null && command -v socat > /dev/null ; then
         $HOME/.zsh.d/bin/ssh-wsl-socat.sh
         export SSH_AUTH_SOCK=$HOME/.ssh/sock
