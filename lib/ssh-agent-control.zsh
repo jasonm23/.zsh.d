@@ -8,6 +8,22 @@ ssh-connect-kde-gnome-agent() {
     done
 }
 
+msys2-ssh() {
+    echo "Msys2 :: start a local agent"
+    MSYS_SOCK=$HOME/.ssh/sock.$MSYSTEM
+    if [[ -S $MSYS_SOCK ]]; then
+        export SSH_AUTH_SOCK=$MSYS_SOCK
+        if ssh-add -l > \dev\null; then
+            echo "Connected to existing msys ssh-agent... "
+            echo "- NOTE: Closing the other session will require a new ssh-agent here."
+        fi
+    else
+        rm -rf $MSYS_SOCK
+        echo "Connected to new msys ssh-agent... "
+        eval $(ssh-agent -s -a $MSYS_SOCK)
+    fi
+}
+
 ssh-list-keys() {
     local ssh_add_output
     ssh_add_output=$(ssh-add -l 2>&1)
@@ -30,13 +46,13 @@ agent|Error connecting to agent"; then
     fi
 
     if command -v wslpath 2>&1 > /dev/null; then # assume we are in wsl
-      local winlogo=$(echo "󰨡")
-      wslpath "$ssh_add_output" \
-        | sed -E -e "s|[[:alpha:]]:/Users/[[:alpha:]]+?/|$winlogo@@\~/|" \
-        | awk '{print "key: ", $3, $1, $4}' \
-        | sed -E -e "s|@@|  |"
+        local winlogo=$(echo "󰨡")
+        wslpath "$ssh_add_output" \
+            | sed -E -e "s|[[:alpha:]]:/Users/[[:alpha:]]+?/|$winlogo@@\~/|" \
+            | awk '{print "key: ", $3, $1, $4}' \
+            | sed -E -e "s|@@|  |"
     else
-      echo "$ssh_add_output" | awk '{print "key: ", $3, $1, $4}' 
+        echo "$ssh_add_output" | awk '{print "key: ", $3, $1, $4}' 
     fi
 }
 
@@ -44,16 +60,11 @@ if [[ $USER == root ]]; then
     echo "Root user, skipping ssh-agent setup."
 else
     if [[ -n $MSYSTEM ]]; then
-	echo "Msys2 :: start a local agent"
-	MSYS_SOCK=$HOME/.ssh/sock.$MSYSTEM
-	if [[ -d $MSYS_SOCK ]]; then
-	    rm -rf $MSYS_SOCK
-	fi
-	mkdir -p $MSYS_SOCK
-	eval $(ssh-agent -s -a $MSYS_SOCK)
-	return
+        msys2-ssh
+	ssh-list-keys
+        return
     fi
-
+    
     if command -v ssh-agent.exe > /dev/null && command -v npiperelay.exe > /dev/null && command -v socat > /dev/null ; then
         $HOME/.zsh.d/bin/ssh-wsl-socat.sh
         export SSH_AUTH_SOCK=$HOME/.ssh/sock
