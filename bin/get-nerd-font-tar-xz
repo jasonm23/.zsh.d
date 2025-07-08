@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SYSTEM_FONT_DIR=/usr/share/fonts
+LOCAL_FONT_DIR=~/.local/share/fonts
 REPO=ryanoasis/nerd-fonts \
     RELEASE=$(gh release -R $REPO list | head -1 | cut -f1) \
     FONT=$(gh release -R $REPO view $RELEASE \
@@ -8,10 +10,29 @@ REPO=ryanoasis/nerd-fonts \
 	       | cut -f2 \
 	       | sed -e 's/[.]tar[.]xz//' \
 	       | fzf)
+
+echo "Looking for installed system fonts like: ${FONT}"
+find $SYSTEM_FONT_DIR -iname "*${FONT}*" | grep .
+SYS_FONT_CODE=$?
+
+echo "Looking for installed local fonts like: ${FONT}"
+find $LOCAL_FONT_DIR -iname "*${FONT}*" | grep .
+LOCAL_FONT_CODE=$?
+
 if [[ -n $FONT ]];then
+
+    if [[ $LOCAL_FONT_CODE == 0 && $SYS_FONT_CODE == 0 ]]; then
+	echo "Continue install of $FONT?"
+	read -r -p "Are you sure? [Y/n]" -n 1
+	echo
+	if [[ "$REPLY" =~ ^[Nn]$ ]]; then
+	    exit 1
+	fi
+    fi
+
     FONT_TAR=$FONT.tar.xz
     echo "Downloading $FONT_TAR"
-    cd ~/.local/share/fonts
+    cd $LOCAL_FONT_DIR
     gh release -R $REPO download $RELEASE --pattern $FONT_TAR
     echo "Extracting $FONT_TAR to ~/.local/share/fonts"
 
@@ -20,6 +41,7 @@ if [[ -n $FONT ]];then
 	echo "🟢 Installed ok, deleting $FONT_TAR"
 	rm -v $FONT.tar.xz
     fi
+
 else
     echo "Nothing selected"
 fi
