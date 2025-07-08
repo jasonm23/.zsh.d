@@ -1,0 +1,25 @@
+#!/bin/bash
+
+REPO=ryanoasis/nerd-fonts \
+    RELEASE=$(gh release -R $REPO list | head -1 | cut -f1) \
+    FONT=$(gh release -R $REPO view $RELEASE \
+	       | grep -v 'zip' \
+	       | grep "\.xz"  \
+	       | cut -f2 \
+	       | sed -e 's/[.]tar[.]xz//' \
+	       | fzf)
+if [[ -n $FONT ]];then
+    FONT_TAR=$FONT.tar.xz
+    echo "Downloading $FONT_TAR"
+    cd ~/.local/share/fonts
+    gh release -R $REPO download $RELEASE --pattern $FONT_TAR
+    echo "Extracting $FONT_TAR to ~/.local/share/fonts"
+
+    if tar xvf $FONT_TAR $(tar tf $FONT_TAR | grep -E '(ttf|otf)$'); then
+	echo "=================================================="
+	echo "🟢 Installed ok, deleting $FONT_TAR"
+	rm -v $FONT.tar.xz
+    fi
+else
+    echo "Nothing selected"
+fi
