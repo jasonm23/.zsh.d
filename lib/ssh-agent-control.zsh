@@ -98,7 +98,8 @@ else
         local pword
         echo -n "password unlock gnome-keyring-daemon: "
         read -s pword
-        echo $pword | gnome-keyring-daemon --unlock
+        echo $pword | gnome-keyring-daemon --unlock --start -d
+	unset pword
       }
     fi
     export SSH_AUTH_SOCK=/run/user/$UID/keyring/ssh
