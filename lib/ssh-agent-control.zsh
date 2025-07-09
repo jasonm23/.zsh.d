@@ -1,11 +1,14 @@
+
 ssh-connect-kde-gnome-agent() {
-    for sock in /tmp/ssh*/agent*; do
-        if [[ -S $sock ]]; then
-            echo "Connected to Plasma Keyring socket"
-            export SSH_AUTH_SOCK=$sock
-            break
-        fi
-    done
+    if pidof ssh-agent; then
+	for sock in /tmp/ssh*/agent*; do
+            if [[ -S $sock ]]; then
+		echo "Connected to Plasma Keyring socket"
+		export SSH_AUTH_SOCK=$sock
+		break
+            fi
+	done
+    fi
 }
 
 msys2-ssh() {
@@ -58,6 +61,7 @@ agent|Error connecting to agent"; then
 
 if [[ $USER == root ]]; then
     echo "Root user, skipping ssh-agent setup."
+    return
 else
     if [[ -n $MSYSTEM ]]; then
         msys2-ssh
@@ -69,58 +73,57 @@ else
         $HOME/.zsh.d/bin/ssh-wsl-socat.sh
         export SSH_AUTH_SOCK=$HOME/.ssh/sock
         ssh-list-keys
-    else
-        # fallback: connect to keyring or ssh auth sock on Linux side
-        # KDE/Plama
-        if [[ -n /tmp/ssh*/agent* ]]; then
-            ssh-connect-kde-gnome-agent
-            if [[ -n $SSH_AUTH_SOCK ]]; then
-                ssh-list-keys
-                return
-            fi
-        fi
-        # Gnome
-        if [[ -S /run/user/$UID/keyring/ssh ]]; then
-            if [[ ! $SSH_AUTH_SOCK =~ "/run/user/$UID/keyring/" ]]; then
-                export SSH_AUTH_SOCK=/run/user/$UID/keyring/ssh
-            fi
-        elif [[ -S /run/user/$UID/keyring/.ssh ]]; then
-            if [[ ! $SSH_AUTH_SOCK =~ "/run/user/$UID/keyring/" ]]; then
-                export SSH_AUTH_SOCK=/run/user/$UID/keyring/.ssh
-            fi
-        else
-            PIDOF_AGENT_SOCK="$(ps -ax | rg "$(pidof ssh-agent).*?-a.*?\s*(/.*)" -r '$1')"
-            export PIDOF_AGENT_SOCK="${PIDOF_AGENT_SOCK#"${PIDOF_AGENT_SOCK%%[![:space:]]*}"}"
-            if [[ -S "$PIDOF_AGENT_SOCK" ]]; then
-                export SSH_AUTH_SOCK="$PIDOF_AGENT_SOCK"
-            fi
-        fi
-
-        if [[ -z $SSH_AUTH_SOCK ]]; then
-            if pidof ssh-agent; then
-                echo "Sock for ssh-agent $(pidof ssh-agent) not found"
-                echo "Connect manually"
-            else
-                echo "Connecting to new ssh-agent on $HOME/.ssh/sock"
-                eval $(ssh-agent -s -a $HOME/.ssh/sock)
-            fi
-        else # show status
-            if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock ]]; then
-                echo "Connected to zsh.d ssh-agent"
-            elif [[ $SSH_AUTH_SOCK =~ "${XDG_RUNTIME_DIR}/keyring" ]]; then
-                echo "Connected to Gnome keyring ssh-agent"
-            elif [[ $SSH_AUTH_SOCK == "/tmp/ssh-*/agent.*" ]]; then
-                echo "Connected to KDE/Gnome keyring ssh-agent"
-            elif [[ -S /tmp/ssh*/agent* ]]; then
-                ssh-connect-kde-gnome-agent
-            elif [[ $SSH_AUTH_SOCK == "${XDG_RUNTIME_DIR}/wezterm/agent" ]]; then
-                echo "WezTerm ssh-agent proxy Gnome keyring"
-            else
-                echo "Connected to ssh-agent on $SSH_AUTH_SOCK"
-            fi
-        fi
-
-        ssh-list-keys
+	return
     fi
+    
+    # KDE/Plama
+    if [[ -n /tmp/ssh*/agent* ]]; then
+        ssh-connect-kde-gnome-agent
+        if [[ -n $SSH_AUTH_SOCK ]]; then
+            ssh-list-keys
+            return
+        fi
+    fi
+
+    # Gnome
+    if [[ -S /run/user/$UID/keyring/ssh ]]; then
+        export SSH_AUTH_SOCK=/run/user/$UID/keyring/ssh
+	echo "Connected to Gnome-Keyring"
+        ssh-list-keys
+	return
+    fi
+    
+    # if ... Redundant?
+    #     PIDOF_AGENT_SOCK="$(ps -ax | rg "$(pidof ssh-agent).*?-a.*?\s*(/.*)" -r '$1')"
+    #     export PIDOF_AGENT_SOCK="${PIDOF_AGENT_SOCK#"${PIDOF_AGENT_SOCK%%[![:space:]]*}"}"
+    #     if [[ -S "$PIDOF_AGENT_SOCK" ]]; then
+    #         export SSH_AUTH_SOCK="$PIDOF_AGENT_SOCK"
+    #     fi
+    # fi
+
+    if [[ -z $SSH_AUTH_SOCK ]]; then
+        if pidof ssh-agent; then
+            echo "Sock for ssh-agent $(pidof ssh-agent) not found"
+            echo "Connect manually..."
+        else
+            echo "Connecting to new ssh-agent on $HOME/.ssh/sock"
+            eval $(ssh-agent -s -a $HOME/.ssh/sock)
+        fi
+    else # show status
+        if [[ $SSH_AUTH_SOCK == $HOME/.ssh/sock ]]; then
+            echo "Connected to zsh.d ssh-agent"
+        elif [[ $SSH_AUTH_SOCK =~ "${XDG_RUNTIME_DIR}/keyring" ]]; then
+            echo "Connected to Gnome keyring ssh-agent"
+        elif [[ $SSH_AUTH_SOCK == "/tmp/ssh-*/agent.*" ]]; then
+            echo "Connected to KDE/Gnome keyring ssh-agent"
+        elif [[ $SSH_AUTH_SOCK == "${XDG_RUNTIME_DIR}/wezterm/agent" ]]; then
+            echo "WezTerm ssh-agent proxy Gnome keyring"
+        else
+            echo "Connected to ssh-agent on $SSH_AUTH_SOCK"
+        fi
+    fi
+
+    ssh-list-keys
+fi
 fi
 
