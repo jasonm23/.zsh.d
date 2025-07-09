@@ -91,25 +91,28 @@ else
     fi
   }
 
-  # Gnome
+  # Gnome Keyring Integration
   if command -v gnome-keyring-daemon > /dev/null; then
-    if [[ ! -S /run/user/$UID/keyring/ssh ]]; then
-      {
-        local pword
-        echo -n "password unlock gnome-keyring-daemon: "
-        read -s pword
-        echo $pword | gnome-keyring-daemon --unlock --start -d
-	unset pword
-      }
+    if [[ ! -S "/run/user/$UID/keyring/ssh" ]]; then
+      echo -n "Password to unlock gnome-keyring-daemon: "
+      read -rs pword
+      printf '%s' "$pword" | gnome-keyring-daemon --unlock --start -d
+      unset pword
+      echo
     fi
-    export SSH_AUTH_SOCK=/run/user/$UID/keyring/ssh
+
+    export SSH_AUTH_SOCK="/run/user/$UID/keyring/ssh"
+
+    if ! ssh-add -T ~/.ssh/id_rsa_4096.pub &>/dev/null; then
+      ssh-add-all
+    fi
+
     echo "Connected to Gnome-Keyring"
     ssh-list-keys
     return
-  fi
+  fi  
   
-  
-  # if ... Redundant?
+  # if ...  / Hypothetical case ... 
   #     PIDOF_AGENT_SOCK="$(ps -ax | rg "$(pidof ssh-agent).*?-a.*?\s*(/.*)" -r '$1')"
   #     export PIDOF_AGENT_SOCK="${PIDOF_AGENT_SOCK#"${PIDOF_AGENT_SOCK%%[![:space:]]*}"}"
   #     if [[ -S "$PIDOF_AGENT_SOCK" ]]; then
