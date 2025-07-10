@@ -94,15 +94,14 @@ else
   # Gnome Keyring Integration
   if command -v gnome-keyring-daemon > /dev/null; then
     if [[ ! -S "/run/user/$UID/keyring/ssh" ]]; then
-      echo -n "Password to unlock gnome-keyring-daemon: "
+      echo -n "Unlock gnome-keyring-daemon: "
       read -rs pword
-      printf '%s' "$pword" | gnome-keyring-daemon --unlock --start -d
+      printf '%s' "$pword" | gnome-keyring-daemon --unlock -d
       unset pword
       echo
     fi
 
     export SSH_AUTH_SOCK="/run/user/$UID/keyring/ssh"
-
     if ! ssh-add -T ~/.ssh/id_rsa_4096.pub &>/dev/null; then
       ssh-add-all
     fi
