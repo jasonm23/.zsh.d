@@ -88,3 +88,6 @@ alias ytx='yt-dlp --trim-filenames 40  --restrict-filenames  --cookies-from-brow
 alias jcurl='curl -H "Content-Type: application/json"'
 alias imgcat='wezterm imgcat'
 alias gme='git commit -v'
+alias ocodo-page-runs='gh run list -R ocodo/ocodo-page'
+alias uvxytdlp-runs='gh run list -R ocodo/uvxytdlp'
+alias g-proot='git rev-parse --show-toplevel'

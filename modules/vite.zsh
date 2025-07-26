@@ -24,25 +24,35 @@ vite_tailwind_ts_react_shadcn (){
         echo "usage: $0 <name>"
         return
     fi
-    npm create vite@latest $1 -- --template react-ts
+    pnpm create vite@latest $1 -- --template react-ts
     cd $1
-    npm install
+    pnpm install
     echo "\n🔨 patching vite.config.ts...\n"
     patch_viteconfig
     echo "\n🔨 patching tsconfig.json...\n"
     patch_tsconfig
     echo "\n🔨 installing modules...\n"
-    npm install -D tailwindcss postcss autoprefixer
-    npm install tailwindcss tailwindcss-animate postcss autoprefixer @tailwindcss/vite
+    pnpm install -D tailwindcss postcss autoprefixer
+    pnpm install tailwindcss tailwindcss-animate postcss autoprefixer @tailwindcss/vite
     echo "\n🔨 installing jest...\n"
-    npm i -D jest jest-environment-jsdom jest-transform-stub ts-jest @types/jest @testing-library/react
-    npx ts-jest config:init
+    pnpm i -D jest jest-environment-jsdom jest-transform-stub ts-jest @types/jest @testing-library/react
+    pnpx ts-jest config:init
     mv jest.config.js jest.config.cjs
     echo "\n🔨 patching src/index.css...\n"
     patch_css
     echo "\n🔨 installing shadcn...\n"
-    yes | npx shadcn@latest init
-    npx shadcn@latest add sonner button dialog input card
+    yes | pnpx shadcn@latest init
+    pnpx shadcn@latest add sonner button dialog input card
+    
+    echo "\n🔨 cleaning up...\n"
+    echo "TODO:
+    # ...............
+    # Remove App.css
+    # Remove Vite.svg
+    # Replace App.tsx / index.css / index.html
+    # Add SwitchState, SelectState... others
+    # ..............."
+    
     git init
     git remote add origin git@gitcodo.hub:ocodo/$1.git
     if ! git ls-remote origin &>/dev/null; then
@@ -51,6 +61,7 @@ vite_tailwind_ts_react_shadcn (){
     else
       echo "\n\n👍 set origin git@gitcodo.hub:ocodo/$1 ...\n"
     fi
+        
     echo "\n\nReady ✅\n"
 
     echo "\n\nRunning dev...\n"
