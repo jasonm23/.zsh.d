@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -euo pipefail
+
+FILE="${1:-}"
+if [[ -z "$FILE" ]]; then
+  echo "Usage: $0 path/to/file" >&2
+  exit 1
+fi
+
+TMPFILE=$(mktemp)
+ORIG_REF=$(git symbolic-ref --quiet --short HEAD || git rev-parse HEAD)
+LAST_COMMIT=$(git log -n 1 --pretty=format:%H -- "$FILE")
+
+cleanup() {
+  git checkout "$ORIG_REF" --quiet
+  [[ -f "$TMPFILE" ]] && rm "$TMPFILE"
+  git stash pop --quiet || true
+}
+trap cleanup EXIT
+
+git stash push -u -k --quiet
+git checkout "$LAST_COMMIT" --quiet
+cat "$FILE" > "$TMPFILE"
+git checkout "$ORIG_REF" --quiet
+cat "$TMPFILE" > "$FILE"
