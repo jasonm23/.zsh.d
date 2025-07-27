@@ -21,7 +21,7 @@ def get_xdg_data_home():
         return Path.home() / ".local" / "share"
 
 
-db_path = get_xdg_data_home() / "cybercute" / "word_pairs.db"
+db_path = get_xdg_data_home() / "cybercute" / "cybercute.db"
 dark_list = project_dir() / "dark.txt"
 cute_list = project_dir() / "cute.txt"
 db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -30,8 +30,6 @@ db_path.parent.mkdir(parents=True, exist_ok=True)
 def db_connect(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        # Import here ensures runtime access to current db_path
-        from __main__ import db_path
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         try:
@@ -41,7 +39,9 @@ def db_connect(func):
         finally:
             cursor.close()
             conn.close()
+
     return wrapper
+
 
 # --- Database Initialization and Population ---
 @db_connect
@@ -60,40 +60,40 @@ def setup_database(cursor):
     """)
 
     for word_list_file, table in [
-            (dark_list, "dark_words"),
-            (cute_list, "cute_words"),
+        (dark_list, "dark_words"),
+        (cute_list, "cute_words"),
     ]:
         wordlist = filter(
-            None,
-            map(lambda w: w.strip(), list(open(word_list_file, 'r'))))
+            None, map(lambda w: w.strip(), list(open(word_list_file, "r")))
+        )
 
         for word in wordlist:
             if word:
                 try:
-                    cursor.execute(
-                        f"INSERT INTO {table} (word) VALUES (?)",
-                        (word,)
-                    )
+                    cursor.execute(f"INSERT INTO {table} (word) VALUES (?)", (word,))
                 except sqlite3.IntegrityError:
                     pass
 
 
-# --- Generate Single Pair from DB ---
 @db_connect
 def generate_pairs_from_db(cursor, limit: int = 1):
-    cursor.execute(
-        "SELECT word FROM dark_words ORDER BY RANDOM() LIMIT ?",
-        (limit,)
-    )
-    dark_word = cursor.fetchall()
+    cursor.execute("SELECT word FROM dark_words")
+    dark_words = cursor.fetchall()
 
-    cursor.execute(
-        "SELECT word FROM cute_words ORDER BY RANDOM() LIMIT ?",
-        (limit,)
-    )
-    cute_word = cursor.fetchall()
+    cursor.execute("SELECT word FROM cute_words")
+    cute_words = cursor.fetchall()
 
-    return dark_word, cute_word
+    from itertools import product
+    import random
+
+    combos = list(product(dark_words, cute_words))
+    random.shuffle(combos)
+    selected = combos[:limit]
+
+    list1 = [(d[0],) for d, _ in selected]
+    list2 = [(c[0],) for _, c in selected]
+
+    return list1, list2
 
 
 def generate_codename_strings(list1, list2):
@@ -116,5 +116,5 @@ if __name__ == "__main__":
             sys.exit(1)
 
     a, b = generate_pairs_from_db(limit)
-    for codename in generate_codename_strings(a,b):
+    for codename in generate_codename_strings(a, b):
         print(codename)
