@@ -1,5 +1,6 @@
 adorable
 banana
+bananacream
 bendy
 bloom
 blossom
@@ -71,7 +72,6 @@ glistening
 glitter
 glittering
 glowing
-glug
 glutinous
 gossamer
 graceful
@@ -164,17 +164,14 @@ surprise
 swan
 sweet
 sweetie
-swirl
 syrup
 syrupy
 tangerine
 tiny
 treacle
 twinkle
-twirl
 vanilla
 velvet
-vibe
 waffles
 warm
 warmth
@@ -182,9 +179,6 @@ watermelon
 wisp
 wobble
 xylophone
-yawn
-yolo
-yonder
-yum
 yummy
 zest
+zesty

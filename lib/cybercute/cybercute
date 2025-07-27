@@ -1,8 +1,7 @@
 #!/bin/bash
 
 if uv --version >/dev/null 2>&1; then
-    script_dir=$(dirname $(readlink -f "$BASH_SOURCE"))
-    uv run "${script_dir}"/cybercute.py $@
+    uv run $(dirname $0)/cybercute.py $@
 else
     echo "uv is required to run cybercute"
 fi
