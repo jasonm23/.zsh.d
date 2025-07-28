@@ -7,7 +7,7 @@ patch_tsconfig() {
 }
 
 patch_viteconfig() {
-cat <<EOF > vite.config.ts
+cat <<-EOF > vite.config.ts
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -34,19 +34,22 @@ import { ThemeProvider } from '@/contexts/theme-provider';
 import { cn } from '@/lib/utils';
 import type { FC } from 'react';
 
-export const App:FC = () => (
+const App:FC = () => (
   <ThemeProvider>
     <div>
-      <Heading titl='$1'/>
+      <Heading title='$1'/>
+      <div>....</div>
     </div>
   </ThemeProvider>
 )
+
+export default App
 EOF
 }
 
 patch_use_local_storage() {
     mkdir -p src/hooks
-    cat <<EOF > src/hooks/use-local-storage.ts
+    cat <<-EOF > src/hooks/use-local-storage.ts
 import { useState } from 'react';
 
 export const useLocalStorage = (key: string, initialValue: any) => {
@@ -79,7 +82,7 @@ EOF
 
 patch_theme_provider() {
     mkdir -p src/contexts
-    cat <<EOF > src/contexts/theme-provider.tsx
+    cat <<-EOF > src/contexts/theme-provider.tsx
 import React, { useEffect } from "react";
 import type { FC, ReactNode } from "react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -115,7 +118,7 @@ EOF
 
 patch_theme_context() {
     mkdir -p src/contexts
-    cat <<EOF > src/contexts/theme-context.tsx
+    cat <<-EOF > src/contexts/theme-context.tsx
 import { createContext } from "react";
 
 export const ThemeContext = createContext({
@@ -127,7 +130,7 @@ EOF
 }
 
 patch_heading() {
-    cat <<EOF > src/components/heading.tsx
+    cat <<-EOF > src/components/heading.tsx
 import { Menu, Moon, Sun } from 'lucide-react'
 import { toast } from 'sonner'
 import { useContext, useEffect } from 'react'
@@ -179,6 +182,7 @@ vite_tailwind_ts_react_shadcn (){
     fi
     pnpm create vite@latest $1 -- --template react-ts
     cd $1
+    mkdir -p src/components/ui
     pnpm install
     echo "\n🔨 patching vite.config.ts ...\n"
     patch_viteconfig
@@ -196,7 +200,7 @@ vite_tailwind_ts_react_shadcn (){
     echo "\n🔨 patching src/App.tsx ...\n"
     patch_use_local_storage
     echo "\n🔨 patching src/hooks/use-local-storage.ts ...\n"
-    patch_app_tsx "$1"
+    patch_app_tsx "${1}"
     echo "\n🔨 patching src/contexts/theme-context.tsx ...\n"
     patch_theme_context
     echo "\n🔨 patching src/contexts/theme-provider.tsx ...\n"
@@ -216,12 +220,10 @@ vite_tailwind_ts_react_shadcn (){
     pnpx shadcn@latest add sonner button dialog input card switch 
     
     echo "\n🔨 cleaning up...\n"
-    # ...............
-    # Add SwitchState, SelectState... others
-    # ...............
     
     git init
     git remote add origin git@gitcodo.hub:ocodo/$1.git
+    
     if ! git ls-remote origin &>/dev/null; then
       echo "\n\n💡 Making repo git@gitcodo.hub:ocodo/$1 ...\n"
         tea repo create --owner ocodo --name $1
