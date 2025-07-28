@@ -74,7 +74,7 @@ setopt HIST_SAVE_NO_DUPS
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 if [[ -e "$HOME/.autoenv/activate.sh" ]]; then
-    source ~/.autoenv/activate.sh
+    source $HOME/.autoenv/activate.sh
 fi
 
 export NVM_DIR="$HOME/.nvm"
@@ -84,7 +84,7 @@ if [[ "$(pwd)" != "$HOME" ]]; then
     cd "$HOME"
 fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
 
 # SSH Agent connect or launch
 source $HOME/.zsh.d/lib/ssh-agent-control.zsh
@@ -92,13 +92,13 @@ source $HOME/.zsh.d/lib/ssh-agent-control.zsh
 # X11 Forwarding Auth setup - uses: .x11auth-done check flag
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export DISPLAY=localhost:10.0  # adjust display number if needed
-#  
-#   if [[ ! -f ~/.x11auth-done ]]; then
+#
+#   if [[ ! -f $HOME/.x11auth-done ]]; then
 #     cookie=$(xauth list "$DISPLAY")
 #     if ! sudo xauth list | grep -q -- "$cookie"; then
 #       xauth extract "$DISPLAY" | sudo xauth merge -
 #     fi
-#     touch ~/.x11auth-done
+#     touch $HOME/.x11auth-done
 #   fi
 # fi
 
@@ -130,31 +130,32 @@ _fzf_compgen_dir() {
 
 # Fast Node Manager
 # use: cargo install fnm
-if [ -x ~/.cargo/bin/fnm ]; then
+if [ -x $HOME/.cargo/bin/fnm ]; then
   export FNM_PATH="$HOME/.local/share/fnm"
   export PATH="$HOME/.local/share/fnm:$PATH"
   eval "$(fnm env --use-on-cd --shell zsh)"
   eval "$(fnm completions --shell zsh)"
 fi
 
-if [[ "$(git -C ~/.zsh.d remote get-url origin)" != 'git@gitcodo.hub:jason/.zsh.d.git' ]]; then
-  git -C ~/.zsh.d remote set-url origin git@gitcodo.hub:jason/.zsh.d.git
+if [[ "$(git -C $HOME/.zsh.d remote get-url origin)" != 'git@gitcodo.hub:jason/.zsh.d.git' ]]; then
+  git -C $HOME/.zsh.d remote set-url origin git@gitcodo.hub:jason/.zsh.d.git
 fi
 
 if [[ -f .config/tea/autocomplete.zsh ]]; then
    PROG=tea _CLI_ZSH_AUTOCOMPLETE_HACK=1 source .config/tea/autocomplete.zsh
 fi
-   
-# pnpm
-export PNPM_HOME="/home/jason/.local/share/pnpm"
+
+if [[ -d $HOME/.opencode/bin ]]; then
+    export PATH=$HOME/.opencode/bin:$PATH
+fi
+
+export PNPM_HOME=$HOME/.local/share/pnpm
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
-# pnpm end
 
 # --8<----------------------------------------------------------
 # Load local config
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
 [[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
-
