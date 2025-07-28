@@ -49,25 +49,22 @@ EOF
 
 patch_heading() {
     cat <<-EOF > src/components/heading.tsx
-import { Menu, Moon, Sun } from 'lucide-react'
-import { toast } from 'sonner'
-import { useContext, useEffect } from 'react'
-import { ThemeContext } from '@/contexts/theme-context'
+import { Menu } from 'lucide-react'
 import { ThemeSwitch } from '@/components/theme-switch'
 
 interface HeadingProps {
   title: string
 }
 
-export const Heading = ({title}: HeadingProps) => (
-    <header className="flex items-center justify-between p-4 border-b">
-      <div className="p-2 hover:bg-accent cursor-pointer rounded-lg">
-        <Menu className="h-6 w-6" />
-      </div>
-      <div className="font-black tracking-tighter text-2xl">{title}</div>
-      <ThemeSwitch />
-    </header>
-  )
+export const Heading = ({ title }: HeadingProps) => (
+  <header className="flex items-center justify-between p-4 border-b">
+    <div className="p-2 hover:bg-accent cursor-pointer rounded-lg">
+      <Menu className="h-6 w-6" />
+    </div>
+    <div className="font-black tracking-tighter text-2xl">{title}</div>
+    <ThemeSwitch />
+  </header>
+)
 EOF
 }
 vite_tailwind_ts_react_shadcn (){
