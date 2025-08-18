@@ -67,6 +67,7 @@ export const Heading = ({ title }: HeadingProps) => (
 )
 EOF
 }
+
 vite_tailwind_ts_react_shadcn (){
     if [[ $# == 0 ]]
     then
@@ -76,7 +77,7 @@ vite_tailwind_ts_react_shadcn (){
     pnpm create vite@latest $1 -- --template react-ts
     cd $1
     mkdir -p src/components/ui
-    mkdir -p src/{contexts,hooks}
+    mkdir -p src/{contexts,hooks,lib}
     pnpm install
     echo "\n🔨 patching vite.config.ts ...\n"
     patch_viteconfig
@@ -89,11 +90,7 @@ vite_tailwind_ts_react_shadcn (){
     pnpm add -D jest jest-environment-jsdom jest-transform-stub ts-jest @types/jest @testing-library/react
     pnpx ts-jest config:init
     mv jest.config.js jest.config.cjs
-    echo "\n🔨 patching src/index.css ...\n"
-    patch_css
     echo "\n🔨 patching src/App.tsx ...\n"
-    patch_use_local_storage
-    echo "\n🔨 patching src/hooks/use-local-storage.ts ...\n"
     patch_app_tsx "${1}"
     echo "\n🔨 adding index.html \n"
     cat <<EOF > index.html
@@ -122,6 +119,8 @@ EOF
 	cp ~/workspace/hnstories/src/contexts/theme-context.tsx src/contexts/
 	echo "\n🔨 patching src/contexts/theme-provider.tsx ...\n"
 	cp ~/workspace/hnstories/src/contexts/theme-provider.tsx src/contexts/
+	echo "\n🔨 patching src/hooks/use-local-storage.ts ...\n"
+	cp ~/workspace/hnstories/src/hooks/use-local-storage.ts src/hooks/
 	echo "\n🔨 patching src/components/heading.tsx ...\n"
 	patch_heading
     fi
@@ -137,6 +136,7 @@ EOF
 	echo " ⨁  theme-switch.tsx ..."
 	cp ~/workspace/uvxytdlp/src/components/theme-switch/theme-switch.tsx src/components
     fi
+
     echo "\n🔨 installing shadcn...\n"
     yes | pnpx shadcn@latest init
     pnpx shadcn@latest add sonner button dialog input card switch
