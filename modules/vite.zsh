@@ -1,11 +1,4 @@
 
-patch_tsconfig() {
-    jq '
-    .compilerOptions.paths["@/*"] = ["src/*"] |
-    .compilerOptions.baseUrl = "."
-  ' tsconfig.json > tsconfig.tmp.json && mv tsconfig.tmp.json tsconfig.json
-}
-
 patch_viteconfig() {
     cat <<-EOF > vite.config.ts
 import tailwindcss from '@tailwindcss/vite'
@@ -38,7 +31,9 @@ const App:FC = () => (
   <ThemeProvider>
     <div>
       <Heading title='$1'/>
-      <div>....</div>
+      <div className="flex flex-wrap p-4 text-lg font-bold">
+        $1
+      </div>
     </div>
   </ThemeProvider>
 )
@@ -81,8 +76,6 @@ vite_tailwind_ts_react_shadcn (){
     pnpm install
     echo "\n🔨 patching vite.config.ts ...\n"
     patch_viteconfig
-    echo "\n🔨 patching tsconfig.json ...\n"
-    patch_tsconfig
     echo "\n🔨 installing modules...\n"
     pnpm add -D tailwindcss postcss autoprefixer
     pnpm add tailwindcss tailwindcss-animate postcss autoprefixer @tailwindcss/vite
