@@ -92,6 +92,8 @@ vite_tailwind_ts_react_shadcn (){
     mv jest.config.js jest.config.cjs
     echo "\n🔨 patching src/App.tsx ...\n"
     patch_app_tsx "${1}"
+    echo "\n🔨 patching tsconfig.app.json ...\n"
+    pnpx json -I -f tsconfig.app.json -e 'this.compilerOptions = { ...(this.compilerOptions ?? {}), baseUrl: ".", paths: { "@/*": ["./src/*"] } }'
     echo "\n🔨 adding index.html \n"
     cat <<EOF > index.html
 <!DOCTYPE html>
