@@ -167,6 +167,6 @@ if [[ -e "/usr/local/cuda/bin" ]]; then
   export PATH=/usr/local/cuda/bin:$PATH
 fi
 
-if [[ -x /opt/fnm/fnm ]]; then
+if [[ -x $(which fnm) ]]; then
     source <(fnm env --shell zsh)
 fi
