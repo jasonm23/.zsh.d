@@ -7,6 +7,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
+  base: './",
   server: {
     allowedHosts: []
   },
@@ -44,14 +45,15 @@ EOF
 
 patch_heading() {
     cat <<-EOF > src/components/heading.tsx
-import { Menu } from 'lucide-react'
-import { ThemeSwitch } from '@/components/theme-switch'
+import type { FC } from 'react';
+import { Menu } from 'lucide-react';
+import { ThemeSwitch } from '@/components/theme-switch';
 
 interface HeadingProps {
-  title: string
+  title: string;
 }
 
-export const Heading = ({ title }: HeadingProps) => (
+export const Heading:FC = ({ title }: HeadingProps) => (
   <header className="flex items-center justify-between p-4 border-b">
     <div className="p-2 hover:bg-accent cursor-pointer rounded-lg">
       <Menu className="h-6 w-6" />
@@ -69,7 +71,7 @@ vite_tailwind_ts_react_shadcn (){
         echo "usage: $0 <name>"
         return
     fi
-    pnpm create vite@latest $1 -- --template react-ts
+    pnpm create vite@latest $1 --template react-ts --no-interactive
     cd $1
     mkdir -p src/components/ui
     mkdir -p src/{contexts,hooks,lib}
@@ -78,15 +80,13 @@ vite_tailwind_ts_react_shadcn (){
     patch_viteconfig
     echo "\n🔨 installing modules...\n"
     pnpm add -D tailwindcss postcss autoprefixer
-    pnpm add tailwindcss tailwindcss-animate postcss autoprefixer @tailwindcss/vite
+    pnpm add tailwindcss tailwindcss-animate postcss autoprefixer @tailwindcss/vite usehooks-ts
     echo "\n🔨 installing jest...\n"
     pnpm add -D jest jest-environment-jsdom jest-transform-stub ts-jest @types/jest @testing-library/react
     pnpx ts-jest config:init
     mv jest.config.js jest.config.cjs
     echo "\n🔨 patching src/App.tsx ...\n"
     patch_app_tsx "${1}"
-    echo "\n🔨 patching tsconfig.app.json ...\n"
-    pnpx json -I -f tsconfig.app.json -e 'this.compilerOptions = { ...(this.compilerOptions ?? {}), baseUrl: ".", paths: { "@/*": ["./src/*"] } }'
     echo "\n🔨 adding index.html \n"
     cat <<EOF > index.html
 <!DOCTYPE html>
@@ -97,7 +97,7 @@ vite_tailwind_ts_react_shadcn (){
     <title>$1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
   <body class="transition-all duration-1800 relative overflow-hidden" style="scroll-behavior: smooth;">
     <div class="body-background-image transition-all duration-1500 z-1 absolute top-0 left-0 right-0 h-[1000px]"></div>
@@ -107,17 +107,22 @@ vite_tailwind_ts_react_shadcn (){
   </body>
 </html>
 EOF
-    if [[ -d ~/workspace/hnstories  ]]; then
+    if [[ -d ~/workspace/hn  ]]; then
 	echo "\n🔨 adding index.css\n"
-	cp ~/workspace/hnstories/src/index.css src/
+	cp ~/workspace/hn/src/index.css src/
 	echo "\n🔨 patching src/contexts/theme-context.tsx ...\n"
-	cp ~/workspace/hnstories/src/contexts/theme-context.tsx src/contexts/
+	cp ~/workspace/hn/src/contexts/theme-context.tsx src/contexts/
 	echo "\n🔨 patching src/contexts/theme-provider.tsx ...\n"
-	cp ~/workspace/hnstories/src/contexts/theme-provider.tsx src/contexts/
-	echo "\n🔨 patching src/hooks/use-local-storage.ts ...\n"
-	cp ~/workspace/hnstories/src/hooks/use-local-storage.ts src/hooks/
+	cp ~/workspace/hn/src/contexts/theme-provider.tsx src/contexts/
 	echo "\n🔨 patching src/components/heading.tsx ...\n"
 	patch_heading
+    fi
+
+    if [[ -d ~/workspace/feedbox ]]; then
+	echo "\n🔨 copy tailwind.config.ts from feedbox\n"
+	cp ~/workspace/feedbox/tailwind.config.ts .
+	echo "\n🔨 copy tsconfig from feedbox\n"
+	cp ~/workspace/feedbox/tsconfig.json .
     fi
 
     if [[ -d ~/workspace/uvxytdlp ]]; then
@@ -150,6 +155,6 @@ EOF
 
     echo "\n\nReady ✅\n"
 
-    echo "\n\nRunning dev...\n"
-    vite --host 0.0.0.0
+    echo "\n\nRun Dev...\n"
+    echo "    vite --host 0.0.0.0 --port PORT"
 }
