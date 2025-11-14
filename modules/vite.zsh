@@ -53,7 +53,7 @@ interface HeadingProps {
   title: string;
 }
 
-export const Heading:FC = ({ title }: HeadingProps) => (
+export const Heading:FC<HeadingProps> = ({ title }: HeadingProps) => (
   <header className="flex items-center justify-between p-4 border-b">
     <div className="p-2 hover:bg-accent cursor-pointer rounded-lg">
       <Menu className="h-6 w-6" />
