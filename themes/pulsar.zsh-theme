@@ -1,12 +1,13 @@
 # Theme name: Pulsar
 
-BRACKET_COLOR="#6837ef"
-NAME_COLOR="#37acff"
-MACHINE_COLOR="#37acff"
-TIME_COLOR="#c777ff"
-DATE_COLOR="#7f47ff"
-PATH_COLOR="#37acff"
-RVM_COLOR="#c777ff"
+BRACKET_COLOR="#ff8c42"
+NAME_COLOR="#f5efe6"
+MACHINE_COLOR="#e8dcc8"
+TIME_COLOR="#ffb347"
+DATE_COLOR="#ff6a00"
+PATH_COLOR="#f0e6d2"
+RVM_COLOR="#ffa552"
+
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
