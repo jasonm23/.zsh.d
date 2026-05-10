@@ -87,7 +87,12 @@ fi
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
 
 # SSH Agent connect or launch
-source $HOME/.zsh.d/lib/ssh-agent-control.zsh
+if [[ -S /run/user/1000/ssh-agent.socket ]]; then
+    export SSH_AUTH_SOCK=/run/user/1000/ssh-agent.socket
+else
+    # see ssh-agent-control.zsh
+    source $HOME/.zsh.d/lib/ssh-agent-control.zsh
+fi
 
 # X11 Forwarding Auth setup - uses: .x11auth-done check flag
 # if [[ -n $SSH_CONNECTION ]]; then
