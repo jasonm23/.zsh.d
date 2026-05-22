@@ -271,7 +271,7 @@ findmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | gui_c
 fzfmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | fzf)" }
 
 mkvtitle () {
-  title=$2
+  title=${1/.mkv/} 
   filename=$1
   mkvpropedit "$filename" -s title="$title"
 }
