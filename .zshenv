@@ -10,7 +10,7 @@ export LC_CTYPE="en_US.UTF-8"
 
 if [[ -f $HOME/.cargo/bin/bat ]]; then
   export PAGER="bat --style=grid"
-  export BAT_THEME=azure
+  export BAT_THEME=gruvbox-dark
 fi
 
 export COLORTERM=truecolor
