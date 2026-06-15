@@ -1,16 +1,34 @@
-# Theme name: Pulsar
+# Theme name: Helios
 
-BRACKET_COLOR="#ff8c42"
+BRACKET_COLOR="#6E5D54"
 NAME_COLOR="#f5efe6"
 MACHINE_COLOR="#e8dcc8"
 TIME_COLOR="#ffb347"
 DATE_COLOR="#ff6a00"
 PATH_COLOR="#f0e6d2"
 RVM_COLOR="#ffa552"
+AHEAD_COLOR="#EE8800"
+AHEAD_ICON=""
+BEHIND_ICON=""
+MERGING_ICON=" "
+UNTRACKED_ICON="●"
+MODIFIED_ICON="●"
+STAGED_ICON="●"
+BEHIND_COLOR="#64FFFF"
+MERGING_COLOR="#CC83CC"
+UNTRACKED_COLOR="#AA7676"
+MODIFIED_COLOR="#FFFFFF"
+STAGED_COLOR="#919991"
+GIT_ICON=" "
+GIT_ICON_COLOR="#FFBF32"
+GIT_LOCATION_COLOR="#AA8130"
+REMOTE_COLOR="#FFFFFF"
+DIVIDER="|"
 
+ZSH_PROMPT_WEEK_DAY=""
+
+# ZSH_PROMPT_WEEK_DAY="%(0w,อา.,)%(1w,จ.,)%(2w,อ.,)%(3w,พ.,)%(4w,พฤ.,)%(5w,ศ.,)%(6w,ส.,)"
+ZSH_PROMPT_WEEK_DAY="%(0w,Sun,)%(1w,Mon,)%(2w,Tue,)%(3w,Wed,)%(4w,Thu,)%(5w,Fri,)%(6w,Sat,)"
 
 source ~/.zsh.d/lib/theme-engine-truecolor.zsh
 
-# Local Variables:
-# eval: (when (fboundp 'rainbow-mode) (rainbow-mode +1))
-# End:
