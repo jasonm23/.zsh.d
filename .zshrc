@@ -164,3 +164,23 @@ esac
 # Load local config
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
 [[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
+
+[[ -x $HOME/.local/bin/env ]] && . $HOME/.local/bin/env
+
+PATH="$HOME/.local/bin:${PATH}"
+
+export PATH
+
+# pnpm
+export PNPM_HOME="/root/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
+
+# Added by LM Studio CLI tool (lms)
+export PATH="$PATH:/home/jason/.lmstudio/bin"
+
+# opencode
+export PATH=/home/jason/.opencode/bin:$PATH

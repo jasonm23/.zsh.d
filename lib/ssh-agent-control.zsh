@@ -56,7 +56,7 @@ agent|Error connecting to agent"; then
       | awk '{print "key: ", $3, $1, $4}' \
       | sed -E -e "s|@@|  |"
   else
-    echo "$ssh_add_output" | awk '{print "key: ", $3, $1, $4}' 
+    echo "$ssh_add_output" | awk '{print "key: ", $3, $1, $4}'
   fi
 }
 
@@ -69,7 +69,7 @@ else
     ssh-list-keys
     return
   fi
-  
+
   if command -v ssh-agent.exe > /dev/null && command -v npiperelay.exe > /dev/null && command -v socat > /dev/null ; then
     $HOME/.zsh.d/bin/ssh-wsl-socat.sh
     export SSH_AUTH_SOCK=$HOME/.ssh/sock
@@ -91,6 +91,12 @@ else
     fi
   }
 
+  if [[ -S  $XDG_RUNTIME_DIR/ssh-agent.socket ]]; then
+      export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
+      ssh-add -l
+      return
+  fi
+
   # Gnome Keyring Integration
   if command -v gnome-keyring-daemon > /dev/null; then
     if [[ ! -S "/run/user/$UID/keyring/ssh" ]]; then
@@ -109,9 +115,9 @@ else
     echo "Connected to Gnome-Keyring"
     ssh-list-keys
     return
-  fi  
-  
-  # if ...  / Hypothetical case ... 
+  fi
+
+  # if ...  / Hypothetical case ...
   #     PIDOF_AGENT_SOCK="$(ps -ax | rg "$(pidof ssh-agent).*?-a.*?\s*(/.*)" -r '$1')"
   #     export PIDOF_AGENT_SOCK="${PIDOF_AGENT_SOCK#"${PIDOF_AGENT_SOCK%%[![:space:]]*}"}"
   #     if [[ -S "$PIDOF_AGENT_SOCK" ]]; then

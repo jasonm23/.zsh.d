@@ -1,3 +1,28 @@
 #!/bin/bash
 
-ssh-add $(grep -l "BEGIN OPENSSH PRIVATE KEY" ~/.ssh/* 2>/dev/null | grep -v deploy)
+SSH_KEY_LIST=$(
+    grep \
+	-l "BEGIN OPENSSH PRIVATE KEY" \
+	~/.ssh/* 2>/dev/null \
+	| grep -v deploy
+)
+
+SSH_KEYS_LOADED=$(ssh-add -l)
+
+SSH_KEYS_TO_ADD=()
+
+while IFS= read -r key; do
+    fingerprint=$(ssh-keygen -l -f "$key" 2>/dev/null | awk '{print $2}')
+    if ! echo "$SSH_KEYS_LOADED" | grep -q "$fingerprint"; then
+        SSH_KEYS_TO_ADD+=("$key")
+    fi
+done <<< "$SSH_KEY_LIST"
+
+# uncomment to debug list build
+# printf '%s\n' "${SSH_KEYS_TO_ADD[@]}"
+if [[ "${SSH_KEYS_TO_ADD[@]}" != "" ]]; then
+    echo "adding all ssh keys to ssh-agent"
+    ssh-add ${SSH_KEYS_TO_ADD[@]}
+else
+    echo "ssh keys already in ssh-agent."
+fi
