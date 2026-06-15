@@ -164,3 +164,5 @@ esac
 # Load local config
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh
 [[ -r $HOME/.zshrc.local ]] &&  source $HOME/.zshrc.local
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
