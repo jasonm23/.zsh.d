@@ -7,12 +7,6 @@ export EDITOR=edit
 export LANGUAGE="en_US"
 export LANG='en_US.UTF-8'
 export LC_CTYPE="en_US.UTF-8"
-
-if [[ -f $HOME/.cargo/bin/bat ]]; then
-  export PAGER="bat --style=grid"
-  export BAT_THEME=gruvbox-dark
-fi
-
 export COLORTERM=truecolor
 export ZSH_PLUGINS_ALIAS_TIPS_TEXT="Alias: "
 export ZSH_DISABLE_COMPFIX=true
@@ -57,10 +51,8 @@ if (( $+commands[lesspipe.sh] )); then
   export LESSOPEN='| /usr/bin/env lesspipe.sh %s 2>&-'
 fi
 
-if [[ "$(which src-hilite-lesspipe.sh)" == "src-hilite-lesspipe.sh not found" ]]; then
-  # no src-hilite-lesspipe
-else
-  export LESSPIPE=`which src-hilite-lesspipe.sh`
+if command -v src-hilite-lesspipe.sh >/dev/null 2>&1; then
+  export LESSPIPE=$(command -v src-hilite-lesspipe.sh)
   export LESSOPEN="| ${LESSPIPE} %s"
 fi
 
@@ -167,11 +159,15 @@ if [[ -e "/usr/local/cuda/bin" ]]; then
   export PATH=/usr/local/cuda/bin:$PATH
 fi
 
-if [[ -x $(which fnm) ]]; then
+if command -v fnm >/dev/null 2>&1; then
     source <(fnm env --shell zsh)
 fi
 
 # CUDA toolkit
 [ -d "/usr/local/cuda/bin" ] && export PATH="/usr/local/cuda/bin:$PATH"
 [ -d "/usr/local/cuda/lib64" ] && export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+
+command -v bat >/dev/null 2>&1 \
+	&& export PAGER="bat --style=grid" \
+	&& export BAT_THEME=gruvbox-dark
 
