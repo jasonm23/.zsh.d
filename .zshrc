@@ -163,3 +163,7 @@ esac
 [[ -x $HOME/.local/bin/env ]] && . $HOME/.local/bin/env
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+if command -v hf > /dev/null; then
+    eval "$(_HF_COMPLETE=zsh_source hf)"
+fi

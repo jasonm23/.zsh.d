@@ -273,6 +273,7 @@ fzfmusic() { open -a VLC.app -- "$(find /Volumes/small-ssd/Music/Music/ | fzf)" 
 mkvtitle () {
   title=${1/.mkv/} 
   filename=$1
+  echo "Titling ${1} with ${title}"
   mkvpropedit "$filename" -s title="$title"
 }
 
