@@ -46,22 +46,6 @@ path=(
 # Remove -X and -F (exit if the content fits on one screen) to enable it.
 export LESS='-F -g -i -M -R -S -w -X -z-4'
 
-# Set the Less input preprocessor.
-if (( $+commands[lesspipe.sh] )); then
-  export LESSOPEN='| /usr/bin/env lesspipe.sh %s 2>&-'
-fi
-
-if command -v src-hilite-lesspipe.sh >/dev/null 2>&1; then
-  export LESSPIPE=$(command -v src-hilite-lesspipe.sh)
-  export LESSOPEN="| ${LESSPIPE} %s"
-fi
-
-if [[ -e "$TMPDIR" ]]; then
-  export TMPPREFIX="${TMPDIR%/}/zsh"
-  if [[ ! -d "$TMPPREFIX" ]]; then
-    mkdir -p "$TMPPREFIX"
-  fi
-fi
 
 if [[ -d "$HOME/go" ]]; then
   export GOPATH=$HOME/go
