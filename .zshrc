@@ -159,6 +159,9 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
+# (( $+commands[zsh-patina] )) || { command -v cargo >/dev/null 2>&1 && cargo install zsh-patina }
+# (( $+commands[zsh-patina] )) && eval "$(zsh-patina activate)"
+
 # --8<----------------------------------------------------------
 # Load local config
 [[ -r $HOME/.zsh.d/local.zsh ]] && source $HOME/.zsh.d/local.zsh

@@ -13,9 +13,11 @@ ohmyzsh/ohmyzsh path:plugins/ubuntu
 ohmyzsh/ohmyzsh path:plugins/uv
 ohmyzsh/ohmyzsh path:plugins/vscode
 ohmyzsh/ohmyzsh path:plugins/z
+ohmyzsh/ohmyzsh path:plugins/sudo
 
 ocodo/ollama_zsh_completion
-jasonm23/fast-syntax-highlighting
+ocodo/zsh-patina-plugin
+# jasonm23/fast-syntax-highlighting
 mollifier/cd-gitroot
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
