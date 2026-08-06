@@ -5,6 +5,8 @@ fi
 source ${ZDOTDIR:-~}/.antidote/antidote.zsh
 antidote load
 
+chmod -R 700 ${ZDOTDIR:-~}/.cache/antidote
+
 autoload -Uz compinit
 compinit
 
