@@ -59,8 +59,12 @@ if [[ -d "/usr/local/go" ]]; then
   export PATH=$PATH:/usr/local/go/bin
 fi
 
-if [[ -d "/usr/local/lib/ruby/gems/3.2.0/bin" ]]; then
-  export PATH=/usr/local/lib/ruby/gems/3.2.0/bin:$PATH
+if [[ $commands[gem] ]]; then
+  for gem_path in ${(f)"$(gem env gempath | tr ':' '\n')"}; do
+    if [[ -d "$gem_path/bin" ]]; then
+      export PATH="$gem_path/bin:$PATH"
+    fi
+  done
 fi
 
 if [[ -d $HOME/.rbenv/bin ]]; then
