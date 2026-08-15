@@ -171,4 +171,3 @@ esac
 [[ -x $HOME/.local/bin/env ]] && . $HOME/.local/bin/env
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
-

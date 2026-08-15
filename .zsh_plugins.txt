@@ -16,8 +16,8 @@ ohmyzsh/ohmyzsh path:plugins/z
 ohmyzsh/ohmyzsh path:plugins/sudo
 
 ocodo/ollama_zsh_completion
-ocodo/zsh-patina-plugin
 # jasonm23/fast-syntax-highlighting
 mollifier/cd-gitroot
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
+ocodo/zsh-patina-bundle
