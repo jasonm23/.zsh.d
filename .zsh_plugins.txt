@@ -20,4 +20,5 @@ ocodo/ollama_zsh_completion
 mollifier/cd-gitroot
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
-ocodo/zsh-patina-bundle
+# ocodo/zsh-patina-bundle
+michel-kraemer/zsh-patina
