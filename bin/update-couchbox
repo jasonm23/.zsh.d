@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SOURCE=$(ls --sort name /mnt/Mirage/linux-software/Couchbox-*.AppImage | tail -1)
+BASE=$(basename "$SOURCE")
+
+if [[ ! -e "$SOURCE" ]]; then
+    echo "No CouchBox AppImage in /mnt/Mirage/linux-software/"
+    exit 2
+fi
+
+cp "$SOURCE" ~/.local/bin
+ln -sf ~/.local/bin/"${BASE}" ~/.local/bin/couchbox
+
+echo "$BASE installed in ~/.local/bin/ and symlinked to couchbox"
