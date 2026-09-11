@@ -15,6 +15,7 @@ ohmyzsh/ohmyzsh path:plugins/vscode
 ohmyzsh/ohmyzsh path:plugins/z
 ohmyzsh/ohmyzsh path:plugins/sudo
 
+bgowers/omz-pnpm
 ocodo/ollama_zsh_completion
 mollifier/cd-gitroot
 zsh-users/zsh-completions
